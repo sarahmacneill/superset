@@ -1187,5 +1187,4 @@ class DatabricksHiveEngineSpec(HiveEngineSpec):
     _time_grain_expressions = time_grain_expressions
 
 
-# TODO: remove once we've upgraded to SQLAlchemy>=2.0 and databricks-sql-python>=3.x
 monkeypatch_dialect()

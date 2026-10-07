@@ -355,8 +355,7 @@ def pivot(  # pylint: disable=too-many-arguments  # noqa: C901
 
     aggregate_funcs = _get_aggregate_funcs(df, aggregates)
 
-    # TODO (villebro): Pandas 1.0.3 doesn't yet support NamedAgg in pivot_table.
-    #  Remove once/if support is added.
+    # pivot_table() doesn't accept NamedAgg, so map each column to its aggfunc.
     aggfunc = {na.column: na.aggfunc for na in aggregate_funcs.values()}
 
     # For drop_missing_columns=False: pre-compute all (metric, *col_vals) tuples

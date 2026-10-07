@@ -17,7 +17,8 @@
  * under the License.
  */
 
-// TODO: POC only component can be removed after PR approved
+// Reference example for registering a custom dashboard component,
+// see src/setup/setupDashboardComponents.ts
 export default {
   metadata: {
     name: 'Example',
