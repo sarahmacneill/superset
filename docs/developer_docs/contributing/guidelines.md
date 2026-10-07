@@ -76,7 +76,9 @@ Finally, never submit a PR that will put master branch in broken state. If the P
   - For Python, include it in `pyproject.toml` denoting any specific restrictions and
     in `requirements.txt` pinned to a specific version which ensures that the application
     build is deterministic.
-  - For TypeScript/JavaScript, include new libraries in `package.json`
+  - For TypeScript/JavaScript, include new libraries in `package.json` pinned to an exact
+    version (e.g. `"1.2.2"`, not `"^1.2.2"`). `superset-frontend/.npmrc` sets
+    `save-exact=true`, so `npm install <package>` records exact versions automatically.
 - **Tests:** The pull request should include tests, either as doctests, unit tests, or both. Make sure to resolve all errors and test failures. See [Testing](./howtos.md#testing) for how to run tests.
 - **Documentation:** If the pull request adds functionality, the docs should be updated as part of the same PR.
 - **CI:** Reviewers will not review the code until all CI tests are passed. Sometimes there can be flaky tests. You can close and open PR to re-run CI test. Please report if the issue persists. After the CI fix has been deployed to `master`, please rebase your PR.
