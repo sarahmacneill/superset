@@ -18,6 +18,7 @@
  */
 
 import PropTypes from 'prop-types';
+import { useTheme } from '@apache-superset/core/theme';
 
 import { ColumnMeta } from '@superset-ui/chart-controls';
 import { InfoTooltip } from '@superset-ui/core/components';
@@ -28,11 +29,11 @@ const propTypes = {
 
 // This component provides a general tooltip for options
 // in a SelectControl
-// TODO use theme.sizeUnit once theme can be imported in plugins
 export default function OptionDescription({ option }: { option: ColumnMeta }) {
+  const theme = useTheme();
   return (
     <span>
-      <span className="option-label" style={{ marginRight: 4 }}>
+      <span className="option-label" style={{ marginRight: theme.sizeUnit }}>
         {option.label}
       </span>
       {option.description && (

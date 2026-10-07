@@ -19,7 +19,6 @@
 import { t } from '@apache-superset/core/translation';
 import { DashboardComponentMetadata } from '@superset-ui/core';
 
-// TODO: POC only component can be removed after PR approved
 const ExampleComponent = ({
   metadata,
 }: {

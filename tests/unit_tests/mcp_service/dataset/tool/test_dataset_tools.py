@@ -1115,9 +1115,6 @@ async def test_get_dataset_info_not_found(mock_info, mcp_server):
         assert result.structured_content["error_type"] == "not_found"
 
 
-# TODO (Phase 3+): Add tests for get_dataset_available_filters tool
-
-
 @pytest.mark.asyncio
 async def test_invalid_filter_column_raises(mcp_server):
     async with fastmcp.Client(mcp_server) as client:  # noqa: F841
