@@ -17,6 +17,7 @@
 from typing import Any
 from unittest.mock import MagicMock
 
+import pytest
 from pytest_mock import MockerFixture
 
 
@@ -162,3 +163,63 @@ def test_delete_tag_by_pk_delete_failed_surfaces_as_422(
     response = client.delete("/api/v1/tag/1")
 
     assert response.status_code == 422
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        pytest.param(
+            {"data": '{"properties": {"tags": ["a"]}}', "content_type": "text/plain"},
+            id="non-json-content-type",
+        ),
+        pytest.param(
+            {"data": "not json", "content_type": "application/json"},
+            id="malformed-json",
+        ),
+        pytest.param(
+            {"data": "null", "content_type": "application/json"}, id="null-body"
+        ),
+        pytest.param({}, id="empty-body"),
+        pytest.param({"json": ["a"]}, id="non-object-body"),
+        pytest.param({"json": {}}, id="missing-properties"),
+        pytest.param({"json": {"properties": None}}, id="null-properties"),
+        pytest.param({"json": {"properties": {}}}, id="missing-tags"),
+        pytest.param({"json": {"properties": {"tags": "a"}}}, id="non-list-tags"),
+    ],
+)
+def test_add_objects_invalid_payload_returns_400(
+    client: Any,
+    full_api_access: None,
+    mocker: MockerFixture,
+    kwargs: dict[str, Any],
+) -> None:
+    """
+    Regression test: ``POST /api/v1/tag/<object_type>/<object_id>/`` used to
+    raise ``TypeError: 'NoneType' object is not subscriptable`` (500) when the
+    body wasn't a JSON object with ``properties.tags`` (e.g. sent as
+    ``text/plain``). It must fail with a 400 instead.
+    """
+    mock_command = mocker.patch("superset.tags.api.CreateCustomTagCommand")
+
+    response = client.post("/api/v1/tag/1/42/", **kwargs)
+
+    assert response.status_code == 400
+    assert response.json == {"message": "Missing required field 'tags' in 'properties'"}
+    mock_command.assert_not_called()
+
+
+def test_add_objects_valid_payload(
+    client: Any,
+    full_api_access: None,
+    mocker: MockerFixture,
+) -> None:
+    """A well-formed JSON payload creates the tags and returns 201."""
+    mock_command = mocker.patch("superset.tags.api.CreateCustomTagCommand")
+
+    response = client.post(
+        "/api/v1/tag/1/42/", json={"properties": {"tags": ["example_tag"]}}
+    )
+
+    assert response.status_code == 201
+    mock_command.assert_called_once_with(1, 42, ["example_tag"])
+    mock_command.return_value.run.assert_called_once()
