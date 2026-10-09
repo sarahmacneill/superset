@@ -21,7 +21,7 @@ import { PopoverContainer, PopoverWrapper } from '../../styles';
 
 interface Props {
   content: React.ReactNode;
-  children: React.ReactElement;
+  children: React.ReactElement<{ ref?: React.Ref<HTMLDivElement> }>;
   isOpen: boolean;
   onClose: () => void;
 }

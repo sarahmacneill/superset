@@ -127,15 +127,25 @@ describe('reactify(renderFn)', () => {
     });
   });
   describe('defaultProps', () => {
-    test('has defaultProps if renderFn.defaultProps is defined', () => {
-      expect(TheChart.defaultProps).toBe(renderFn.defaultProps);
+    test('applies renderFn.defaultProps when the prop is omitted', () => {
       render(<TheChart id="test" />);
       expect(screen.getByText('ghi')).toBeInTheDocument();
       expect(screen.getByText('ghi').parentNode).toHaveAttribute('id', 'test');
     });
-    test('does not have defaultProps if renderFn.defaultProps is not defined', () => {
+    test('applies renderFn.defaultProps when the prop is undefined', () => {
+      render(<TheChart id="test" content={undefined} />);
+      expect(screen.getByText('ghi')).toBeInTheDocument();
+    });
+    test('explicit props override renderFn.defaultProps', () => {
+      render(<TheChart id="test" content="xyz" />);
+      expect(screen.getByText('xyz')).toBeInTheDocument();
+      expect(screen.queryByText('ghi')).not.toBeInTheDocument();
+    });
+    test('does not set a defaultProps static on the reactified component', () => {
       const AnotherChart = reactify(() => {});
-      expect(AnotherChart.defaultProps).toBeUndefined();
+      expect(
+        (AnotherChart as { defaultProps?: unknown }).defaultProps,
+      ).toBeUndefined();
     });
   });
   test('calls renderFn when container is set', () => {

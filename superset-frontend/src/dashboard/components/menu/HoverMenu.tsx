@@ -25,7 +25,7 @@ import { HOVER_MENU_Z_INDEX } from 'src/dashboard/constants';
 
 interface HoverMenuProps {
   position?: 'left' | 'top';
-  innerRef?: RefObject<HTMLDivElement> | null;
+  innerRef?: RefObject<HTMLDivElement | null> | null;
   children?: ReactNode;
   onHover?: (data: { isHovered: boolean }) => void;
 }

@@ -19,6 +19,8 @@
 import { FeatureFlag } from '@superset-ui/core';
 import AccessSection from './AccessSection';
 
+import type { JSX } from 'react';
+
 export default {
   title: 'Features/Dashboard/AccessSection',
   component: AccessSection,

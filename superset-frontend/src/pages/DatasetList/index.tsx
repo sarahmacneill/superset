@@ -31,6 +31,7 @@ import {
   useCallback,
   useRef,
   Key,
+  type JSX,
 } from 'react';
 import type { CellProps } from 'react-table';
 import { Link, useHistory } from 'react-router-dom';

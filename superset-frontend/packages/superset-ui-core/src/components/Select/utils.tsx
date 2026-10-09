@@ -18,7 +18,7 @@
  */
 import { t } from '@apache-superset/core/translation';
 import { ensureIsArray } from '@superset-ui/core';
-import { ReactElement, RefObject } from 'react';
+import { ReactElement, RefObject, type JSX } from 'react';
 import { Icons } from '@superset-ui/core/components/Icons';
 import { LabeledValue as AntdLabeledValue, SELECT_ALL_VALUE } from '.';
 import { StyledHelperText, StyledLoadingText, StyledSpin } from './styles';
@@ -185,16 +185,17 @@ export const dropDownRenderHelper = (
   }
 
   // remap for accessibility for proper item count
+  const originProps = originNode.props as Record<string, any>;
   const accessibilityNode = {
     ...originNode,
     props: {
-      ...originNode.props,
-      flattenOptions: ensureIsArray(originNode.props.flattenOptions).map(
+      ...originProps,
+      flattenOptions: ensureIsArray(originProps.flattenOptions).map(
         (opt: Record<string, any>, idx: number) => ({
           ...opt,
           data: {
             ...opt.data,
-            'aria-setsize': originNode.props.flattenOptions?.length || 0,
+            'aria-setsize': originProps.flattenOptions?.length || 0,
             'aria-posinset': idx + 1,
           },
         }),

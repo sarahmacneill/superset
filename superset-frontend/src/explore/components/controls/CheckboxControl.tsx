@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useCallback, type ReactNode } from 'react';
+import { useCallback, type ReactNode, type JSX } from 'react';
 import { styled, css } from '@apache-superset/core/theme';
 import { Checkbox } from '@superset-ui/core/components';
 import ControlHeader from '../ControlHeader';

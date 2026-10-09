@@ -73,15 +73,15 @@ const MOCK_CHART_DATA_RESULT = [
   },
 ];
 
-test('Displays results table for 1 query', () => {
+test('Displays results table for 1 query', async () => {
   const { result } = renderHook(() =>
     useResultsTableView(MOCK_CHART_DATA_RESULT.slice(0, 1), '1__table', true),
   );
   render(result.current, { useRedux: true });
   expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
-  expect(screen.getByText('name')).toBeInTheDocument();
+  expect(await screen.findByText('name')).toBeInTheDocument();
   expect(screen.getByText('sum__num')).toBeInTheDocument();
-  expect(screen.getByText('Michael')).toBeInTheDocument();
+  expect(await screen.findByText('Michael')).toBeInTheDocument();
 });
 
 test('Displays results for 2 queries', async () => {
@@ -95,7 +95,7 @@ test('Displays results for 2 queries', async () => {
   expect(within(tablistElement).getByText('Results 1')).toBeInTheDocument();
   expect(within(tablistElement).getByText('Results 2')).toBeInTheDocument();
 
-  expect(screen.getByText('Michael')).toBeInTheDocument();
+  expect(await screen.findByText('Michael')).toBeInTheDocument();
 
   await userEvent.click(screen.getByText('Results 2'));
 

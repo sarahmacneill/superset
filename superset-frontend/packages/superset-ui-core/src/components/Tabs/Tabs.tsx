@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import type { FC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import { css, styled } from '@apache-superset/core/theme';
 import { Tabs as AntdTabs, TabsProps as AntdTabsProps } from 'antd';
 import { Icons } from '@superset-ui/core/components/Icons';
@@ -132,20 +132,28 @@ const StyledEditableTabs = styled(StyledTabs)`
 const StyledCloseOutlined = styled(Icons.CloseOutlined)`
   color: ${({ theme }) => theme.colorIcon};
 `;
-export const EditableTabs = Object.assign(StyledEditableTabs, {
-  TabPane: StyledTabPane,
+// rc-tabs already wraps closeIcon in its own <button role="tab"
+// aria-label="remove">; this is just decorative content inside it.
+const EditableTabPane = ({
+  closeIcon = <StyledCloseOutlined iconSize="s" />,
+  ...props
+}: ComponentProps<typeof StyledTabPane>) => (
+  <StyledTabPane closeIcon={closeIcon} {...props} />
+);
+
+const EDITABLE_TABS_ANIMATED = { inkBar: true, tabPane: false };
+
+const EditableTabsBase = ({
+  type = 'editable-card',
+  animated = EDITABLE_TABS_ANIMATED,
+  ...props
+}: TabsProps) => (
+  <StyledEditableTabs type={type} animated={animated} {...props} />
+);
+
+export const EditableTabs = Object.assign(EditableTabsBase, {
+  TabPane: EditableTabPane,
 });
-
-EditableTabs.defaultProps = {
-  type: 'editable-card',
-  animated: { inkBar: true, tabPane: false },
-};
-
-EditableTabs.TabPane.defaultProps = {
-  // rc-tabs already wraps closeIcon in its own <button role="tab"
-  // aria-label="remove">; this is just decorative content inside it.
-  closeIcon: <StyledCloseOutlined iconSize="s" />,
-};
 
 export const StyledLineEditableTabs = styled(EditableTabs)`
   &.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
@@ -181,9 +189,9 @@ export const StyledLineEditableTabs = styled(EditableTabs)`
 `;
 
 export const LineEditableTabs: FC<TabsProps> & {
-  TabPane: typeof StyledTabPane;
+  TabPane: typeof EditableTabPane;
 } = Object.assign(StyledLineEditableTabs, {
-  TabPane: StyledTabPane,
+  TabPane: EditableTabPane,
 });
 
 export default Tabs;

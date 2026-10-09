@@ -20,7 +20,7 @@ import { useCallback, ReactElement } from 'react';
 
 const NUM_COLUMNS = 12;
 
-type Control = ReactElement | null;
+type Control = ReactElement<Record<string, any>> | null;
 
 export default function ControlRow({ controls }: { controls: Control[] }) {
   const isHiddenControl = useCallback((control: Control) => {

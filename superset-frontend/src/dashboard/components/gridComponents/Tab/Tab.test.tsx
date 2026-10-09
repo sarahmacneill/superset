@@ -178,7 +178,7 @@ test('passes correct canEdit and editing props to EditableTitle', () => {
       canEdit: true,
       editing: false,
     }),
-    expect.anything(),
+    undefined,
   );
 
   (EditableTitle as jest.Mock).mockClear();
@@ -195,7 +195,7 @@ test('passes correct canEdit and editing props to EditableTitle', () => {
       canEdit: true,
       editing: true,
     }),
-    expect.anything(),
+    undefined,
   );
 });
 
@@ -337,7 +337,7 @@ test('Render tab (with content)', () => {
       onResizeStop: expect.any(Function),
       parentId: 'TAB-YT6eNksV-',
     }),
-    {},
+    undefined,
   );
   expect(DashboardComponent).toHaveBeenNthCalledWith(
     2,
@@ -355,7 +355,7 @@ test('Render tab (with content)', () => {
       onResizeStop: expect.any(Function),
       parentId: 'TAB-YT6eNksV-',
     }),
-    {},
+    undefined,
   );
   expect(queryByTestId('dragdroppable-object')).not.toBeInTheDocument();
 });
@@ -416,7 +416,7 @@ test('Render tab (with content) editMode:true', () => {
       onResizeStop: expect.any(Function),
       parentId: 'TAB-YT6eNksV-',
     }),
-    {},
+    undefined,
   );
   expect(DashboardComponent).toHaveBeenNthCalledWith(
     2,
@@ -434,7 +434,7 @@ test('Render tab (with content) editMode:true', () => {
       onResizeStop: expect.any(Function),
       parentId: 'TAB-YT6eNksV-',
     }),
-    {},
+    undefined,
   );
   // 3 droppable area exists for two child components
   expect(getAllByTestId('MockDroppable')).toHaveLength(3);

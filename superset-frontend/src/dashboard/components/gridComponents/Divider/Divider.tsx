@@ -88,7 +88,7 @@ function Divider({
       editMode={editMode}
     >
       {({ dragSourceRef }: { dragSourceRef: ConnectDragSource }) => (
-        <div ref={dragSourceRef}>
+        <div ref={dragSourceRef as unknown as React.RefObject<HTMLDivElement>}>
           {editMode && (
             <HoverMenu position="left">
               <DeleteComponentButton onDelete={handleDeleteComponent} />

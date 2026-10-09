@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import type { ReactChild } from 'react';
+import type { ReactElement } from 'react';
 import fetchMock from 'fetch-mock';
 import {
   act,
@@ -40,7 +40,11 @@ import TableExploreTree from '.';
 jest.mock(
   'react-virtualized-auto-sizer',
   () =>
-    ({ children }: { children: (params: { height: number }) => ReactChild }) =>
+    ({
+      children,
+    }: {
+      children: (params: { height: number }) => ReactElement | number | string;
+    }) =>
       children({ height: 500 }),
 );
 

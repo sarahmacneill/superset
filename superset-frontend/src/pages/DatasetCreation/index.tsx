@@ -84,9 +84,13 @@ const prevUrl =
   '/tablemodelview/list/?pageIndex=0&sortColumn=changed_on_delta_humanized&sortOrder=desc';
 
 export default function AddDataset() {
-  const [dataset, setDataset] = useReducer<
-    Reducer<Partial<DatasetObject> | null, DSReducerActionType>
-  >(datasetReducer, null);
+  const [dataset, setDataset] = useReducer(
+    datasetReducer as Reducer<
+      Partial<DatasetObject> | null,
+      DSReducerActionType
+    >,
+    null,
+  );
   const [hasColumns, setHasColumns] = useState(false);
   const [editPageIsVisible, setEditPageIsVisible] = useState(false);
 

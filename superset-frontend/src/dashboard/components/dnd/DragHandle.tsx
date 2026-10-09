@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { LegacyRef } from 'react';
+import { Ref } from 'react';
 import { css, styled } from '@apache-superset/core/theme';
 import { Icons } from '@superset-ui/core/components/Icons';
 
 interface DragHandleProps {
   position: 'left' | 'top';
-  innerRef?: LegacyRef<HTMLDivElement> | undefined;
+  innerRef?: Ref<HTMLDivElement> | undefined;
 }
 
 const DragHandleContainer = styled.div<{ position: 'left' | 'top' }>`

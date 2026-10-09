@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { forwardRef, HTMLAttributes, MouseEventHandler } from 'react';
+import { forwardRef, HTMLAttributes, MouseEventHandler, type JSX } from 'react';
 import { styled, SupersetTheme } from '@apache-superset/core/theme';
 
 interface IconButtonProps extends HTMLAttributes<HTMLButtonElement> {

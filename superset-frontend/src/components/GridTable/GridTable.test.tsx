@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { render } from 'spec/helpers/testing-library';
+import { render, waitFor } from 'spec/helpers/testing-library';
 import { setupAGGridModules } from '@superset-ui/core/components/ThemedAgGridReact';
 import { GridTable } from '.';
 
@@ -40,14 +40,14 @@ beforeAll(() => {
   setupAGGridModules();
 });
 
-test('renders a grid with 3 Table rows', () => {
-  const { queryByText } = render(<GridTable {...mockedProps} />);
-  mockedProps.data.forEach(({ b: columnBContent }) => {
-    expect(queryByText(columnBContent)).toBeInTheDocument();
-  });
+test('renders a grid with 3 Table rows', async () => {
+  const { findByText } = render(<GridTable {...mockedProps} />);
+  for (const { b: columnBContent } of mockedProps.data) {
+    expect(await findByText(columnBContent)).toBeInTheDocument();
+  }
 });
 
-test('sorts strings correctly', () => {
+test('sorts strings correctly', async () => {
   const stringProps = {
     ...mockedProps,
     columns: ['columnA'].map(key => ({
@@ -62,5 +62,7 @@ test('sorts strings correctly', () => {
   const { container } = render(<GridTable {...stringProps} />);
 
   // Original order
-  expect(container).toHaveTextContent(['Bravo', 'Alpha', 'Charlie'].join(''));
+  await waitFor(() =>
+    expect(container).toHaveTextContent(['Bravo', 'Alpha', 'Charlie'].join('')),
+  );
 });

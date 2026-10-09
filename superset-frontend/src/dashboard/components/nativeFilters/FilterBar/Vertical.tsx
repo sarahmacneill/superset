@@ -176,7 +176,7 @@ const VerticalFilterBar: FC<VerticalBarProps> = ({
 }) => {
   const theme = useTheme();
   const [isScrolling, setIsScrolling] = useState(false);
-  const timeout = useRef<any>();
+  const timeout = useRef<any>(undefined);
 
   const openFiltersBar = useCallback(
     () => toggleFiltersBar(true),

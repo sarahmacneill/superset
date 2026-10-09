@@ -51,7 +51,9 @@ jest.mock(
     ({
       children,
     }: {
-      children: (params: { height: number }) => React.ReactChild;
+      children: (params: {
+        height: number;
+      }) => React.ReactElement | number | string;
     }) =>
       children({ height: 500 }),
 );

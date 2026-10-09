@@ -24,7 +24,7 @@ import { FILTER_INPUT_POSITIONS } from '../../src/consts';
 describe('filterStateManager', () => {
   describe('getCompleteFilterState', () => {
     test('should return empty state when gridRef.current is null', async () => {
-      const gridRef = { current: null } as RefObject<AgGridReact>;
+      const gridRef = { current: null } as RefObject<AgGridReact | null>;
 
       const result = await getCompleteFilterState(gridRef, []);
 

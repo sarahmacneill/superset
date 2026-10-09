@@ -21,6 +21,7 @@ import {
   render,
   screen,
   userEvent,
+  waitFor,
   within,
 } from 'spec/helpers/testing-library';
 import { setupAGGridModules } from '@superset-ui/core/components/ThemedAgGridReact';
@@ -44,78 +45,78 @@ describe('FilterableTable', () => {
   test('is valid element', () => {
     expect(isValidElement(<FilterableTable {...mockedProps} />)).toBe(true);
   });
-  test('renders a grid with 3 Table rows', () => {
-    const { getByRole, getByText } = render(
+  test('renders a grid with 3 Table rows', async () => {
+    const { getByRole, findByText } = render(
       <FilterableTable {...mockedProps} />,
     );
     expect(getByRole('grid')).toBeInTheDocument();
-    mockedProps.data.forEach(({ b: columnBContent }) => {
-      expect(getByText(columnBContent)).toBeInTheDocument();
-    });
+    for (const { b: columnBContent } of mockedProps.data) {
+      expect(await findByText(columnBContent)).toBeInTheDocument();
+    }
   });
-  test('filters on a string', () => {
+  test('filters on a string', async () => {
     const props = {
       ...mockedProps,
       filterText: 'b1',
     };
-    const { getByText, queryByText } = render(<FilterableTable {...props} />);
-    expect(getByText(props.filterText)).toBeInTheDocument();
+    const { findByText, queryByText } = render(<FilterableTable {...props} />);
+    expect(await findByText(props.filterText)).toBeInTheDocument();
     expect(queryByText('b2')).not.toBeInTheDocument();
     expect(queryByText('b3')).not.toBeInTheDocument();
   });
-  test('filters on a number', () => {
+  test('filters on a number', async () => {
     const props = {
       ...mockedProps,
       filterText: '100',
     };
-    const { getByText, queryByText } = render(<FilterableTable {...props} />);
-    expect(getByText('b2')).toBeInTheDocument();
+    const { findByText, queryByText } = render(<FilterableTable {...props} />);
+    expect(await findByText('b2')).toBeInTheDocument();
     expect(queryByText('b1')).not.toBeInTheDocument();
     expect(queryByText('b3')).not.toBeInTheDocument();
   });
 
-  test('shows all rows when filterText is empty', () => {
+  test('shows all rows when filterText is empty', async () => {
     const props = {
       ...mockedProps,
       filterText: '',
     };
-    const { getByText } = render(<FilterableTable {...props} />);
-    expect(getByText('b1')).toBeInTheDocument();
+    const { findByText, getByText } = render(<FilterableTable {...props} />);
+    expect(await findByText('b1')).toBeInTheDocument();
     expect(getByText('b2')).toBeInTheDocument();
     expect(getByText('b3')).toBeInTheDocument();
   });
 
-  test('updates filtered rows when filterText prop changes', () => {
+  test('updates filtered rows when filterText prop changes', async () => {
     const props = {
       ...mockedProps,
       filterText: 'b1',
     };
-    const { getByText, queryByText, rerender } = render(
+    const { findByText, getByText, queryByText, rerender } = render(
       <FilterableTable {...props} />,
     );
-    expect(getByText('b1')).toBeInTheDocument();
+    expect(await findByText('b1')).toBeInTheDocument();
     expect(queryByText('b2')).not.toBeInTheDocument();
     expect(queryByText('b3')).not.toBeInTheDocument();
 
     rerender(<FilterableTable {...mockedProps} filterText="b2" />);
-    expect(queryByText('b1')).not.toBeInTheDocument();
+    await waitFor(() => expect(queryByText('b1')).not.toBeInTheDocument());
     expect(getByText('b2')).toBeInTheDocument();
     expect(queryByText('b3')).not.toBeInTheDocument();
   });
 
-  test('shows all rows when filterText is cleared', () => {
+  test('shows all rows when filterText is cleared', async () => {
     const props = {
       ...mockedProps,
       filterText: 'b1',
     };
-    const { getByText, queryByText, rerender } = render(
+    const { findByText, getByText, queryByText, rerender } = render(
       <FilterableTable {...props} />,
     );
-    expect(getByText('b1')).toBeInTheDocument();
+    expect(await findByText('b1')).toBeInTheDocument();
     expect(queryByText('b2')).not.toBeInTheDocument();
 
     rerender(<FilterableTable {...mockedProps} filterText="" />);
-    expect(getByText('b1')).toBeInTheDocument();
+    await waitFor(() => expect(getByText('b1')).toBeInTheDocument());
     expect(getByText('b2')).toBeInTheDocument();
     expect(getByText('b3')).toBeInTheDocument();
   });
@@ -149,9 +150,9 @@ describe('FilterableTable sorting - RTL', () => {
     };
     render(<FilterableTable {...stringProps} />);
 
-    const stringColumn = within(screen.getByRole('grid'))
-      .getByText('columnA')
-      .closest('[role=button]');
+    const stringColumn = (
+      await within(screen.getByRole('grid')).findByText('columnA')
+    ).closest('[role=button]');
 
     // Original order
     expect(getColumnCellsText('columnA')).toEqual(
@@ -193,9 +194,9 @@ describe('FilterableTable sorting - RTL', () => {
     };
     render(<FilterableTable {...integerProps} />);
 
-    const integerColumn = within(screen.getByRole('grid'))
-      .getByText('columnB')
-      .closest('[role=button]');
+    const integerColumn = (
+      await within(screen.getByRole('grid')).findByText('columnB')
+    ).closest('[role=button]');
 
     // Original order
     expect(getColumnCellsText('columnB')).toEqual(['21', '0', '623'].join(''));
@@ -227,9 +228,9 @@ describe('FilterableTable sorting - RTL', () => {
     };
     render(<FilterableTable {...floatProps} />);
 
-    const floatColumn = within(screen.getByRole('grid'))
-      .getByText('columnC')
-      .closest('[role=button]');
+    const floatColumn = (
+      await within(screen.getByRole('grid')).findByText('columnC')
+    ).closest('[role=button]');
 
     // Original order
     expect(getColumnCellsText('columnC')).toEqual(
@@ -281,9 +282,9 @@ describe('FilterableTable sorting - RTL', () => {
     };
     render(<FilterableTable {...mixedFloatProps} />);
 
-    const mixedFloatColumn = within(screen.getByRole('grid'))
-      .getByText('columnD')
-      .closest('[role=button]');
+    const mixedFloatColumn = (
+      await within(screen.getByRole('grid')).findByText('columnD')
+    ).closest('[role=button]');
 
     // Original order
     expect(getColumnCellsText('columnD')).toEqual(
@@ -378,9 +379,9 @@ describe('FilterableTable sorting - RTL', () => {
     };
     render(<FilterableTable {...dsProps} />);
 
-    const dsColumn = within(screen.getByRole('grid'))
-      .getByText('columnDS')
-      .closest('[role=button]');
+    const dsColumn = (
+      await within(screen.getByRole('grid')).findByText('columnDS')
+    ).closest('[role=button]');
 
     // Original order
     expect(getColumnCellsText('columnDS')).toEqual(

@@ -163,12 +163,19 @@ describe('Tabs', () => {
       expect(onEditMock).toHaveBeenCalledWith(expect.any(String), 'remove');
     });
 
-    test('should have default props set correctly', () => {
-      expect(EditableTabs.defaultProps?.type).toBe('editable-card');
-      expect(EditableTabs.defaultProps?.animated).toEqual({
-        inkBar: true,
-        tabPane: false,
-      });
+    test('should default to the editable-card type', () => {
+      const { container } = render(<EditableTabs items={defaultItems} />);
+
+      expect(container.querySelector('.ant-tabs-editable-card')).toBeTruthy();
+    });
+
+    test('should allow overriding the default type', () => {
+      const { container } = render(
+        <EditableTabs items={defaultItems} type="card" />,
+      );
+
+      expect(container.querySelector('.ant-tabs-card')).toBeTruthy();
+      expect(container.querySelector('.ant-tabs-editable-card')).toBeFalsy();
     });
   });
 

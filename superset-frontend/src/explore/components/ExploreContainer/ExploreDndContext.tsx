@@ -405,7 +405,7 @@ export const ExploreDndContextProvider: FC<ExploreDndContextProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [activeData, setActiveData] = useState<ActiveDragData | null>(null);
 
-  const dropzoneValue = useReducer(dropzoneReducer, {});
+  const dropzoneValue = useReducer<DropzoneSet, [Action]>(dropzoneReducer, {});
 
   // Configure sensors for drag detection. PointerSensor drives mouse/touch
   // drags; KeyboardSensor adds keyboard-accessible reordering (an a11y win

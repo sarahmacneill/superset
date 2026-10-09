@@ -195,7 +195,7 @@ describe('PropertiesModal', () => {
 
     expect(spyColorSchemeSelect).toHaveBeenCalledWith(
       expect.objectContaining({ value: 'supersetColors' }),
-      {},
+      undefined,
     );
   });
 
@@ -248,7 +248,7 @@ describe('PropertiesModal', () => {
     await waitFor(() => {
       expect(spyColorSchemeSelect).toHaveBeenCalledWith(
         expect.objectContaining({ value: 'supersetColors' }),
-        {},
+        undefined,
       );
     });
   });

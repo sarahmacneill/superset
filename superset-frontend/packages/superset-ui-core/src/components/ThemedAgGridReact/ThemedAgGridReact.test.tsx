@@ -138,8 +138,9 @@ test('forwards ref to AgGridReact', () => {
     expect.objectContaining({
       rowData: mockRowData,
       columnDefs: mockColumnDefs,
+      ref,
     }),
-    expect.any(Object), // ref is passed as second argument
+    undefined,
   );
 });
 
@@ -169,7 +170,7 @@ test('passes all props through to AgGridReact', () => {
       pagination: true,
       paginationPageSize: 10,
     }),
-    expect.any(Object),
+    undefined,
   );
 });
 

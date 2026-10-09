@@ -26,6 +26,7 @@ import {
   KeyboardEvent as ReactKeyboardEvent,
   useEffect,
   useRef,
+  type JSX,
 } from 'react';
 
 import {
@@ -189,6 +190,7 @@ function cellWidth({
  */
 export function sanitizeHeaderId(columnId: string): string {
   return (
+    // Trim leading/trailing underscores
     columnId
       // Semantic replacements first: preserve meaning in IDs for readability
       // (e.g., '%pct_nice' → 'percentpct_nice' instead of '_pct_nice')
@@ -199,7 +201,7 @@ export function sanitizeHeaderId(columnId: string): string {
       .replace(/\s+/g, '_')
       .replace(/[^a-zA-Z0-9_-]/g, '_')
       .replace(/_+/g, '_') // Collapse consecutive underscores
-      .replace(/^_+|_+$/g, '') // Trim leading/trailing underscores
+      .replace(/^_+|_+$/g, '')
   );
 }
 

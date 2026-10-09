@@ -142,7 +142,7 @@ const selectDataMask = createSelector(
 );
 
 const DeckMulti = (props: DeckMultiProps) => {
-  const containerRef = useRef<DeckGLContainerHandle>();
+  const containerRef = useRef<DeckGLContainerHandle>(undefined);
   const theme = useTheme();
 
   const dataMask = useSelector(selectDataMask);

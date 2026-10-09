@@ -31,7 +31,7 @@ export interface FieldProps<V> {
   value?: V;
   label: string;
   description?: ReactNode;
-  control: ReactElement;
+  control: ReactElement<Record<string, any>>;
   additionalControl?: ReactElement;
   onChange?: (fieldKey: string, newValue: V) => void;
   compact?: boolean;

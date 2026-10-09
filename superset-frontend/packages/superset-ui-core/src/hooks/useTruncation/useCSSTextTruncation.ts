@@ -38,7 +38,7 @@ export const truncationCSS = css`
  */
 const useCSSTextTruncation = <T extends HTMLElement>(
   { isVertical, isHorizontal } = { isVertical: false, isHorizontal: true },
-): [RefObject<T>, boolean] => {
+): [RefObject<T | null>, boolean] => {
   const [isTruncated, setIsTruncated] = useState(true);
   const ref = useRef<T>(null);
   const [offsetWidth, setOffsetWidth] = useState(0);

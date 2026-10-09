@@ -17,7 +17,14 @@
  * under the License.
  */
 
-import { useState, useEffect, useCallback, useRef, ReactNode } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ReactNode,
+  type JSX,
+} from 'react';
 import { t } from '@apache-superset/core/translation';
 import {
   SupersetClient,

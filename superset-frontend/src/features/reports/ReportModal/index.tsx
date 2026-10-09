@@ -149,7 +149,7 @@ function ReportModal({
   );
 
   const reportReducer = useCallback(
-    (state: ReportObjectState | null, action: 'reset' | ReportObjectState) => {
+    (state: ReportObjectState, action: 'reset' | ReportObjectState) => {
       if (action === 'reset') {
         return initialState;
       }

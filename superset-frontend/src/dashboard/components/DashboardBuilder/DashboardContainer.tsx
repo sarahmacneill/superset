@@ -169,7 +169,7 @@ const DashboardContainer: FC<DashboardContainerProps> = ({ topLevelTabs }) => {
   const dashboardLabelsColorInitiated =
     colorInitializedDashboardId === dashboardInfo?.id;
   const prevRenderedChartIds = useRef<number[]>([]);
-  const prevTabIndexRef = useRef<number>();
+  const prevTabIndexRef = useRef<number>(undefined);
   const prevFilterScopesRef = useRef<FilterScopeData[]>([]);
   const prevCustomizationScopesRef = useRef<CustomizationScopeData[]>([]);
   const tabIndex = useMemo(() => {

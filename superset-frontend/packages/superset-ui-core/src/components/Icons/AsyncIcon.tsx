@@ -24,7 +24,7 @@ import { BaseIconComponent } from './BaseIcon';
 
 const AsyncIcon = forwardRef<HTMLSpanElement, IconType>((props, ref) => {
   const [, setLoaded] = useState(false);
-  const ImportedSVG = useRef<FC<SVGProps<SVGSVGElement>>>();
+  const ImportedSVG = useRef<FC<SVGProps<SVGSVGElement>>>(undefined);
   const { fileName, customIcons, iconSize, iconColor, viewBox, ...restProps } =
     props;
 

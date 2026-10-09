@@ -108,10 +108,13 @@ MenuDotsDropdown.displayName = 'MenuDotsDropdown';
 
 export const NoAnimationDropdown = (props: NoAnimationDropdownProps) => {
   const { children, onBlur, onKeyDown, ...rest } = props;
-  const childrenWithProps = cloneElement(children as ReactElement, {
-    onBlur,
-    onKeyDown,
-  });
+  const childrenWithProps = cloneElement(
+    children as ReactElement<Record<string, unknown>>,
+    {
+      onBlur,
+      onKeyDown,
+    },
+  );
 
   return (
     <AntdDropdown autoFocus overlayStyle={props.overlayStyle} {...rest}>

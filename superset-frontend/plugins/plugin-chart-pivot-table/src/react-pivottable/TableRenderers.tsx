@@ -339,11 +339,29 @@ function convertToArray(
   return result;
 }
 
-export function TableRenderer(props: TableRendererProps) {
-  // Use the original props argument directly rather than spreading/re-memoizing.
-  // Spreading `...rest` into a memoized object produces a new reference every
-  // render, which defeats downstream memos and forces `getBasePivotSettings`
-  // (and a fresh `PivotData`) to recompute on every state update.
+function withTableRendererDefaults(
+  props: TableRendererProps,
+): TableRendererProps {
+  const defaults: Record<string, unknown> = {
+    ...PivotData.defaultProps,
+    tableOptions: {},
+  };
+  const resolved: Record<string, unknown> = { ...props };
+  Object.keys(defaults).forEach(key => {
+    if (resolved[key] === undefined) {
+      resolved[key] = defaults[key];
+    }
+  });
+  return resolved as TableRendererProps;
+}
+
+export function TableRenderer(rawProps: TableRendererProps) {
+  // React 19 no longer applies `defaultProps` to function components, so
+  // resolve them here. Memoize on the incoming props object so the resolved
+  // reference stays stable across state-only re-renders; a fresh reference
+  // would defeat downstream memos and force `getBasePivotSettings` (and a new
+  // `PivotData`) to recompute on every state update.
+  const props = useMemo(() => withTableRendererDefaults(rawProps), [rawProps]);
   const {
     cols,
     rows,
@@ -1530,4 +1548,3 @@ TableRenderer.propTypes = {
   tableOptions: PropTypes.object,
   onContextMenu: PropTypes.func,
 };
-TableRenderer.defaultProps = { ...PivotData.defaultProps, tableOptions: {} };

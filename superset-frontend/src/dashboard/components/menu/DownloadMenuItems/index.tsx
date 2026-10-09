@@ -94,7 +94,7 @@ export const useDownloadMenuItems = (
     useToasts();
   // Track the in-flight poll timer so navigating away stops the polling
   // (and the full-page navigation it would eventually trigger).
-  const pollTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const unmountedRef = useRef(false);
   useEffect(
     () => () => {

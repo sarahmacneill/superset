@@ -19,7 +19,7 @@
 
 import { t } from '@apache-superset/core/translation';
 import { JsonObject, QueryFormData } from '@superset-ui/core';
-import { useMemo, memo } from 'react';
+import { useMemo, memo, type JSX } from 'react';
 import { HandlebarsRenderer } from './HandlebarsRenderer';
 import TooltipRow from '../TooltipRow';
 import { createDefaultTemplateWithLimits } from './multiValueUtils';

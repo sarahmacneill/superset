@@ -42,7 +42,9 @@ import {
   type VersionHistoryRootState,
 } from './reducer';
 import { formatVersionMonthDay } from './display';
-import RestoreConfirmModal from './RestoreConfirmModal';
+import RestoreConfirmModal, {
+  type RestoreConfirmModalProps,
+} from './RestoreConfirmModal';
 
 /** The version a restore / open-as-new action operates on. */
 export interface VersionActionTarget {
@@ -78,7 +80,7 @@ export interface UseVersionActionsResult {
   /** True while an openAsNew fork is in flight; disable its triggers. */
   isCreating: boolean;
   /** Render this alongside the calling component. */
-  restoreModal: ReactElement | null;
+  restoreModal: ReactElement<RestoreConfirmModalProps> | null;
 }
 
 /**

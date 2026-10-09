@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { RefObject, useEffect, useRef, KeyboardEvent } from 'react';
+import { RefObject, useEffect, useRef, KeyboardEvent, type JSX } from 'react';
 
 import { useSelector } from 'react-redux';
 import { t } from '@apache-superset/core/translation';
@@ -38,8 +38,8 @@ export interface DetailsPanelProps {
   onHighlightFilterSource: (path: string[]) => void;
   children: JSX.Element;
   popoverVisible: boolean;
-  popoverContentRef: RefObject<HTMLDivElement>;
-  popoverTriggerRef: RefObject<HTMLButtonElement>;
+  popoverContentRef: RefObject<HTMLDivElement | null>;
+  popoverTriggerRef: RefObject<HTMLButtonElement | null>;
   setPopoverVisible: (visible: boolean) => void;
 }
 
@@ -141,7 +141,9 @@ const DetailsPanelPopover = ({
             <FiltersContainer>
               {appliedCrossFilterIndicators.map(indicator => (
                 <FilterIndicator
-                  ref={el => indicatorRefs.current.push(el)}
+                  ref={el => {
+                    indicatorRefs.current.push(el);
+                  }}
                   key={indicatorKey(indicator)}
                   indicator={indicator}
                   onClick={onHighlightFilterSource}
@@ -164,7 +166,9 @@ const DetailsPanelPopover = ({
                 renderItem={indicator => (
                   <List.Item>
                     <FilterIndicator
-                      ref={el => indicatorRefs.current.push(el)}
+                      ref={el => {
+                        indicatorRefs.current.push(el);
+                      }}
                       key={indicatorKey(indicator)}
                       indicator={indicator}
                       onClick={onHighlightFilterSource}

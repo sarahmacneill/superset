@@ -16,11 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import type { ComponentType } from 'react';
 import { fireEvent, render } from '@superset-ui/core/spec';
 
 import { Icons } from '../Icons';
 import { Label } from '.';
 import { LabelGallery, options } from './Label.stories';
+
+const LabelGalleryComponent = LabelGallery as ComponentType;
 
 // test the basic component
 test('renders the base component (no onClick)', () => {
@@ -76,7 +79,7 @@ test('does not add the icon gap to an icon-less label (#42139)', () => {
 
 // test stories from the storybook!
 test('renders all the storybook gallery variants', () => {
-  const { container } = render(<LabelGallery />);
+  const { container } = render(<LabelGalleryComponent />);
   const nonInteractiveLabelCount = 4;
   const renderedLabelCount = options.length * 2 + nonInteractiveLabelCount;
   expect(container.querySelectorAll('.ant-tag')).toHaveLength(
