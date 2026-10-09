@@ -613,7 +613,7 @@ export async function embedDashboard({
   const observeDataMask = (callbackFn: ObserveDataMaskCallbackFn) => {
     defineHostMethod("observeDataMask", callbackFn);
   };
-  // TODO: Add proper types once theming branch is merged
+  // TODO: Add proper types for themeConfig
   const setThemeConfig = async (
     themeConfig: Record<string, any>,
   ): Promise<void> => {

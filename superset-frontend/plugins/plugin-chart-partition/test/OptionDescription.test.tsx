@@ -60,4 +60,10 @@ describe('OptionDescription', () => {
       screen.getByText('Some option', { selector: 'span' }),
     ).toBeInTheDocument();
   });
+
+  test('spaces the label using the theme size unit', () => {
+    expect(screen.getByText('Some option', { selector: 'span' })).toHaveStyle(
+      'margin-right: 4px',
+    );
+  });
 });

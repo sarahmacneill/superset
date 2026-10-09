@@ -24,7 +24,7 @@ import { render } from '@testing-library/react';
 let renderChart = jest.fn();
 let renderLegend = jest.fn();
 
-// TODO: rewrite to rtl
+// TODO: fix the mocked ResizeObserver trigger so these tests can be re-enabled
 /* oxlint-disable-next-line jest/no-disabled-tests */
 describe.skip('WithLegend', () => {
   beforeEach(() => {
