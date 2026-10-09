@@ -25,6 +25,7 @@ import {
   useEffect,
   useRef,
   useMemo,
+  type JSX,
 } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import type { AnyAction } from 'redux';

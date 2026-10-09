@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ReactElement, useMemo } from 'react';
+import { ReactElement, useMemo, type JSX } from 'react';
 import { formatNumber, formatTime } from '@superset-ui/core';
 import { useTheme } from '@apache-superset/core/theme';
 import { GridRows } from '@visx/grid';

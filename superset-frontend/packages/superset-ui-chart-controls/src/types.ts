@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ReactElement, ReactNode, ReactText, ComponentType } from 'react';
+import { ReactElement, ReactNode, ComponentType } from 'react';
 
 import type {
   AdhocColumn,
@@ -308,7 +308,7 @@ export interface ControlValueValidator<
 /** --------------------------------------------
  * Additional Config for specific control Types
  * --------------------------------------------- */
-export type SelectOption = AnyDict | string | [ReactText, ReactNode];
+export type SelectOption = AnyDict | string | [number | string, ReactNode];
 
 export type SelectControlType =
   | 'SelectControl'

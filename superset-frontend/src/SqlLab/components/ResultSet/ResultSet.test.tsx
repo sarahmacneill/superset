@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { type ReactChild } from 'react';
+import { type ReactElement } from 'react';
 import {
   render,
   screen,
@@ -96,7 +96,11 @@ jest.mock('src/components/StreamingExportModal/useStreamingExport', () => ({
 jest.mock(
   'react-virtualized-auto-sizer',
   () =>
-    ({ children }: { children: (params: { height: number }) => ReactChild }) =>
+    ({
+      children,
+    }: {
+      children: (params: { height: number }) => ReactElement | number | string;
+    }) =>
       children({ height: 500 }),
 );
 const applicationRootMock = jest.spyOn(getBootstrapData, 'applicationRoot');
@@ -216,7 +220,7 @@ describe('ResultSet', () => {
 
   test('should render success query', async () => {
     const query = queries[0];
-    const { queryAllByText, getByTestId } = setup(
+    const { findAllByText, getByTestId } = setup(
       mockedProps,
       mockStore({
         ...initialState,
@@ -233,12 +237,12 @@ describe('ResultSet', () => {
     const table = getByTestId('table-container');
     expect(table).toBeInTheDocument();
 
-    const firstColumn = queryAllByText(
+    const [firstColumn] = await findAllByText(
       query.results?.columns[0].column_name ?? '',
-    )[0];
-    const secondColumn = queryAllByText(
+    );
+    const [secondColumn] = await findAllByText(
       query.results?.columns[1].column_name ?? '',
-    )[0];
+    );
     expect(firstColumn).toBeInTheDocument();
     expect(secondColumn).toBeInTheDocument();
 

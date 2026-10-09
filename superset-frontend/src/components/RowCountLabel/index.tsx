@@ -21,6 +21,8 @@ import { getNumberFormatter } from '@superset-ui/core';
 
 import { Label, Tooltip } from '@superset-ui/core/components';
 
+import type { JSX } from 'react';
+
 type RowCountLabelProps = {
   rowcount?: number;
   limit?: number;

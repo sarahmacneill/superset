@@ -16,7 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { Children, ReactElement, Fragment, forwardRef, Ref } from 'react';
+import {
+  Children,
+  ReactElement,
+  Fragment,
+  forwardRef,
+  Ref,
+  type ReactNode,
+} from 'react';
 import cx from 'classnames';
 import { Button as AntdButton } from 'antd';
 import { useTheme } from '@apache-superset/core/theme';
@@ -164,7 +171,7 @@ function ButtonInner(props: ButtonProps, ref: Ref<HTMLElement>) {
     color,
   } = resolvedStyleMap[buttonStyle ?? 'primary'] ?? BUTTON_STYLE_MAP.primary;
 
-  const element = children as ReactElement;
+  const element = children as ReactElement<{ children?: ReactNode }>;
 
   let renderedChildren = [];
 

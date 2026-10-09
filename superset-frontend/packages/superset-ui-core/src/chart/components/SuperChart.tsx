@@ -26,6 +26,7 @@ import {
   useCallback,
   useMemo,
   useRef,
+  type JSX,
 } from 'react';
 
 import {

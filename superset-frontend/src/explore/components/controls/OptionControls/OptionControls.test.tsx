@@ -76,7 +76,9 @@ test('should display a certification icon if saved metric is certified', async (
 
   await waitFor(
     () => {
-      const icon = container.querySelector('.metric-option > svg');
+      const icon = container.querySelector(
+        '.metric-option [data-test="certified"]',
+      );
       expect(icon).toBeInTheDocument();
     },
     { timeout: 10000 },

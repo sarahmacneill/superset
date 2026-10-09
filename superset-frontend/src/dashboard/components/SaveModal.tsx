@@ -17,7 +17,7 @@
  * under the License.
  */
 /* eslint-env browser */
-import { useRef, useState } from 'react';
+import { useRef, useState, type JSX } from 'react';
 import { Radio, RadioChangeEvent } from '@superset-ui/core/components/Radio';
 import {
   Button,
@@ -84,7 +84,7 @@ function SaveModal({
   lastModifiedTime,
 }: SaveModalProps) {
   const theme = useTheme();
-  const modal = useRef() as ModalTriggerRef;
+  const modal = useRef<ModalTriggerRef['current']>(null) as ModalTriggerRef;
 
   const [saveType, setSaveType] = useState<SaveType>(initialSaveType);
   const [newDashName, setNewDashName] = useState(

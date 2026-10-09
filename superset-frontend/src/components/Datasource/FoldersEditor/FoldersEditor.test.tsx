@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import type { ReactElement, ReactChild } from 'react';
+import type { ReactElement } from 'react';
 import {
   render,
   screen,
@@ -40,7 +40,10 @@ jest.mock(
     ({
       children,
     }: {
-      children: (params: { height: number; width: number }) => ReactChild;
+      children: (params: {
+        height: number;
+        width: number;
+      }) => ReactElement | number | string;
     }) =>
       children({ height: 500, width: 400 }),
 );

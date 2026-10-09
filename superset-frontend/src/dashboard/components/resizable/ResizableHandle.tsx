@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import type { JSX } from 'react';
+
 export function BottomRightResizeHandle(): JSX.Element {
   return <div className="resize-handle resize-handle--bottom-right" />;
 }

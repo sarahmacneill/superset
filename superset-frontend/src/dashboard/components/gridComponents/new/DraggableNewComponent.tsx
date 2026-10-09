@@ -82,7 +82,10 @@ function DraggableNewComponent({
       editMode
     >
       {({ dragSourceRef }: { dragSourceRef: ConnectDragSource }) => (
-        <NewComponent ref={dragSourceRef} data-test="new-component">
+        <NewComponent
+          ref={dragSourceRef as unknown as React.RefObject<HTMLDivElement>}
+          data-test="new-component"
+        >
           <NewComponentPlaceholder
             className={cx('new-component-placeholder', className)}
           >

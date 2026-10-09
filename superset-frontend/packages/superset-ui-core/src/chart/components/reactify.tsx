@@ -26,11 +26,11 @@ import {
 } from 'react';
 import type {
   ComponentType,
-  WeakValidationMap,
   ForwardRefExoticComponent,
   PropsWithoutRef,
   RefAttributes,
 } from 'react';
+import type { WeakValidationMap } from 'prop-types';
 
 // TODO: Note that id and className can collide between Props and ReactifyProps
 // leading to (likely) unexpected behaviors. We should either require Props to not
@@ -70,6 +70,24 @@ export interface ReactifiedComponentRef {
   container?: HTMLDivElement;
 }
 
+// React 19 ignores `defaultProps` on function and forwardRef components, so
+// resolve them manually with the same semantics (only `undefined` falls back).
+function applyDefaultProps<P extends object>(
+  props: P,
+  defaultProps?: Partial<P>,
+): P {
+  if (!defaultProps) {
+    return props;
+  }
+  const resolved = { ...props };
+  (Object.keys(defaultProps) as (keyof P)[]).forEach(key => {
+    if (resolved[key] === undefined) {
+      resolved[key] = defaultProps[key] as P[keyof P];
+    }
+  });
+  return resolved;
+}
+
 export type ReactifiedComponent<Props> = ForwardRefExoticComponent<
   PropsWithoutRef<Props & ReactifyProps> & RefAttributes<ReactifiedComponentRef>
 >;
@@ -86,7 +104,11 @@ export default function reactify<Props extends object>(
   const ReactifiedComponent = forwardRef<
     ReactifiedComponentRef,
     Props & ReactifyProps
-  >(function ReactifiedComponent(props, ref) {
+  >(function ReactifiedComponent(rawProps, ref) {
+    const props = applyDefaultProps(
+      rawProps,
+      renderFn.defaultProps as Partial<typeof rawProps> | undefined,
+    );
     const containerRef = useRef<HTMLDivElement>(null);
     // Keep the latest props available to the unmount callback — legacy
     // consumers read values off `this.props` (e.g. ReactNVD3 uses id).
@@ -94,7 +116,7 @@ export default function reactify<Props extends object>(
     // assignment only happens for committed renders (safe under Concurrent
     // Mode) and is in place before the passive unmount effect reads it.
     const propsRef = useRef(props);
-    const committedContainerRef = useRef<HTMLDivElement>();
+    const committedContainerRef = useRef<HTMLDivElement>(undefined);
     useLayoutEffect(() => {
       propsRef.current = props;
       committedContainerRef.current = containerRef.current ?? undefined;
@@ -158,10 +180,6 @@ export default function reactify<Props extends object>(
       ...result.propTypes,
       ...renderFn.propTypes,
     };
-  }
-
-  if (renderFn.defaultProps) {
-    result.defaultProps = renderFn.defaultProps;
   }
 
   return result as unknown as ComponentType<Props & ReactifyProps>;

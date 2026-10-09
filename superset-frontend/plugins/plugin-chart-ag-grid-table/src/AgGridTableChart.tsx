@@ -38,6 +38,7 @@ import {
   useRef,
   useState,
   useMemo,
+  type JSX,
 } from 'react';
 import { debounce, isEqual } from 'lodash-es';
 

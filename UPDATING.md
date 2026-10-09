@@ -24,6 +24,16 @@ assists people when migrating to a new version.
 
 ## Next
 
+- The frontend now runs on React 19 (`react`/`react-dom` `^19.3.0`). The
+  `@superset-ui/*` packages and bundled chart plugins accept
+  `react`/`react-dom` `^18.3.0 || ^19.0.0` as peers. Custom plugins and
+  extensions rendered by Superset must be React 19 compatible: React 19 ignores
+  `defaultProps` on function, `forwardRef` and Emotion `styled` components
+  (use parameter defaults instead) and removes `ReactDOM.render`,
+  `findDOMNode`, string refs and legacy context. `reactify` still honors
+  `renderFn.defaultProps` but no longer copies it onto the returned
+  component's `defaultProps` static.
+
 - Example export (`/export_as_example/`) rejects dashboards whose charts or
   native-filter targets use semantic views; use the ordinary chart/dashboard
   bundle export instead.

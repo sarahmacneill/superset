@@ -22,6 +22,7 @@ import {
   useEffect,
   useState,
   MouseEvent as ReactMouseEvent,
+  type JSX,
 } from 'react';
 import { t } from '@apache-superset/core/translation';
 import { throttle } from 'lodash-es';

@@ -46,7 +46,10 @@ export const ModalTitleWithIcon = ({
   `;
 
   const renderedIcon = isValidElement(icon) ? (
-    cloneElement(icon as React.ReactElement, { iconSize: 'l', css: iconStyles })
+    cloneElement(icon as React.ReactElement<Record<string, unknown>>, {
+      iconSize: 'l',
+      css: iconStyles,
+    })
   ) : isEditMode === true ? (
     <Icons.EditOutlined iconSize="l" css={iconStyles} />
   ) : isEditMode === false ? (

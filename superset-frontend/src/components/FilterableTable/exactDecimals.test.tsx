@@ -41,11 +41,11 @@ test('displays and sorts exact decimal strings without rounding', async () => {
     />,
   );
   for (const value of ascending) {
-    expect(screen.getByText(value)).toBeInTheDocument();
+    expect(await screen.findByText(value)).toBeInTheDocument();
   }
-  const header = within(screen.getByRole('grid'))
-    .getByText('amount')
-    .closest('[role=button]');
+  const header = (
+    await within(screen.getByRole('grid')).findByText('amount')
+  ).closest('[role=button]');
   expect(header).not.toBeNull();
   const values = () =>
     Array.from(
@@ -68,9 +68,9 @@ test('uses the new rows array for sort-key caching when data changes', async () 
       height={500}
     />,
   );
-  const header = within(screen.getByRole('grid'))
-    .getByText('amount')
-    .closest('[role=button]');
+  const header = (
+    await within(screen.getByRole('grid')).findByText('amount')
+  ).closest('[role=button]');
   expect(header).not.toBeNull();
   await userEvent.click(header!);
   expect(getCachedSortKey('10.50', data)).toBeDefined();

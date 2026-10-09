@@ -27,6 +27,7 @@ import {
   DragEvent,
   useEffect,
   useMemo,
+  type JSX,
 } from 'react';
 import { typedMemo, usePrevious } from '@superset-ui/core';
 import { t } from '@apache-superset/core/translation';

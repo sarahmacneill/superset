@@ -18,6 +18,8 @@
  */
 import { ModalTrigger } from '.';
 
+import type { JSX } from 'react';
+
 interface IModalTriggerProps {
   triggerNode: JSX.Element;
   dialogClassName?: string;

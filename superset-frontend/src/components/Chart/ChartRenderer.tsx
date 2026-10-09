@@ -26,6 +26,7 @@ import {
   MouseEvent,
   ReactNode,
   memo,
+  type JSX,
 } from 'react';
 import {
   SuperChart,

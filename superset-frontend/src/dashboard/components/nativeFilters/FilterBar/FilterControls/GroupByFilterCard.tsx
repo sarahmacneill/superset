@@ -331,7 +331,7 @@ const GroupByFilterCard: FC<GroupByFilterCardProps> = ({
 
   // Surface load failures as a toast, once per binding — the hook can
   // re-render (and StrictMode double-invokes effects) without re-toasting.
-  const toastedBindingRef = useRef<string | undefined>();
+  const toastedBindingRef = useRef<string | undefined>(undefined);
   useEffect(() => {
     if (!datasourceError || normalizedDatasetId === undefined) {
       return;

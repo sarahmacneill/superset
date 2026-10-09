@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useCallback, type ReactNode } from 'react';
+import { useCallback, type ReactNode, type JSX } from 'react';
 import { t } from '@apache-superset/core/translation';
 import { Popover, FormLabel, Label } from '@superset-ui/core/components';
 import { decimalToSexagesimal } from 'geolib';

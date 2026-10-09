@@ -34,7 +34,7 @@ test('Should send correct props to ReactCronPicker', () => {
       locale: expect.anything(),
       myCustomProp: 'myCustomProp',
     }),
-    expect.anything(),
+    undefined,
   );
 });
 

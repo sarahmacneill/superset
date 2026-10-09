@@ -23,6 +23,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  type JSX,
 } from 'react';
 import {} from '@superset-ui/core';
 import {

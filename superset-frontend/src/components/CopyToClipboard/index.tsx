@@ -79,7 +79,7 @@ function CopyToClip({
   const getDecoratedCopyNode = useCallback(() => {
     const cursor = disabled ? 'not-allowed' : 'pointer';
     if (isValidElement(copyNode)) {
-      const node = copyNode as ReactElement;
+      const node = copyNode as ReactElement<Record<string, any>>;
       return cloneElement(node, {
         style: {
           ...node.props.style,

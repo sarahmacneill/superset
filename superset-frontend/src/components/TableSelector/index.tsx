@@ -22,6 +22,7 @@ import {
   ReactNode,
   useMemo,
   useEffect,
+  type JSX,
 } from 'react';
 import type { SelectValue } from '@superset-ui/core/components';
 

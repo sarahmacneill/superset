@@ -16,7 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useState, useCallback, useEffect, type ReactNode } from 'react';
+import {
+  useState,
+  useCallback,
+  useEffect,
+  type ReactNode,
+  type JSX,
+} from 'react';
 import {
   Row,
   Col,
