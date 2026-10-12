@@ -138,6 +138,8 @@ def collect_request_payload(include_request_data: bool = True) -> dict[str, Any]
         payload.update(request.args.to_dict())
 
         if request.is_json:
+            # Only merge object bodies; a JSON array or scalar would make
+            # ``dict.update`` raise and turn the request into a 500.
             json_payload = request.get_json(cache=True, silent=True)
             if isinstance(json_payload, dict):
                 payload.update(json_payload)

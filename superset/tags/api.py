@@ -406,6 +406,9 @@ class TagRestApi(BaseSupersetModelRestApi):
             500:
               $ref: '#/components/responses/500'
         """
+        # Clients may send a non-JSON Content-Type, malformed JSON, or a body
+        # without ``properties.tags``; reject those with a 400 instead of
+        # letting the subscript raise TypeError and surface as a 500.
         body = request.get_json(silent=True)
         properties = body.get("properties") if isinstance(body, dict) else None
         tags = properties.get("tags") if isinstance(properties, dict) else None
