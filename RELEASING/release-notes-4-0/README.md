@@ -17,19 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 4.0.0
+# RELEASE NOTES FOR SUPERSET 4.0.0
 
-4.0.0 brings a plethora of exciting changes to Superset. We have introduced several breaking changes to improve the overall architecture and scalability of our codebase. These changes may require some code updates, but they are designed to enhance performance and maintainability in the long run. We have also upgraded various dependencies to their latest versions and deprecated certain features that are no longer aligned with our long-term roadmap. We encourage all developers to carefully review the `CHANGELOG.md` and `UPDATING.md` files and update their code accordingly. While our main focus was on code cleanup, this release also contains exciting new features and marks a significant milestone for the project.
+4.0.0 BRINGS A PLETHORA OF EXCITING CHANGES TO SUPERSET. WE HAVE INTRODUCED SEVERAL BREAKING CHANGES TO IMPROVE THE OVERALL ARCHITECTURE AND SCALABILITY OF OUR CODEBASE. THESE CHANGES MAY REQUIRE SOME CODE UPDATES, BUT THEY ARE DESIGNED TO ENHANCE PERFORMANCE AND MAINTAINABILITY IN THE LONG RUN. WE HAVE ALSO UPGRADED VARIOUS DEPENDENCIES TO THEIR LATEST VERSIONS AND DEPRECATED CERTAIN FEATURES THAT ARE NO LONGER ALIGNED WITH OUR LONG-TERM ROADMAP. WE ENCOURAGE ALL DEVELOPERS TO CAREFULLY REVIEW THE `CHANGELOG.md` AND `UPDATING.md` FILES AND UPDATE THEIR CODE ACCORDINGLY. WHILE OUR MAIN FOCUS WAS ON CODE CLEANUP, THIS RELEASE ALSO CONTAINS EXCITING NEW FEATURES AND MARKS A SIGNIFICANT MILESTONE FOR THE PROJECT.
 
-Here are some of the highlights of this release.
+HERE ARE SOME OF THE HIGHLIGHTS OF THIS RELEASE.
 
-### Alerts and Reports modal redesign
+### ALERTS AND REPORTS MODAL REDESIGN
 
-The Alerts and Reports modal has been [redesigned](https://github.com/apache/superset/discussions/25729) to improve the user experience and make it more intuitive. The new design has the following goals:
+THE ALERTS AND REPORTS MODAL HAS BEEN [REDESIGNED](https://github.com/apache/superset/discussions/25729) TO IMPROVE THE USER EXPERIENCE AND MAKE IT MORE INTUITIVE. THE NEW DESIGN HAS THE FOLLOWING GOALS:
 
-- Declutter the interface by providing a cleaner, more organized layout
-- Create a linear setup process with the necessary options in a step-by-step manner to make alert/report setup more intuitive
-- Prepare the interface for additional features that will be introduced in future releases, like the ability to pre-filter a dashboard being sent.
+- DECLUTTER THE INTERFACE BY PROVIDING A CLEANER, MORE ORGANIZED LAYOUT
+- CREATE A LINEAR SETUP PROCESS WITH THE NECESSARY OPTIONS IN A STEP-BY-STEP MANNER TO MAKE ALERT/REPORT SETUP MORE INTUITIVE
+- PREPARE THE INTERFACE FOR ADDITIONAL FEATURES THAT WILL BE INTRODUCED IN FUTURE RELEASES, LIKE THE ABILITY TO PRE-FILTER A DASHBOARD BEING SENT.
 
 <div>
     <img src="media/alert-modal-1.png" alt="Image" width="33%">
@@ -37,41 +37,41 @@ The Alerts and Reports modal has been [redesigned](https://github.com/apache/sup
     <img src="media/alert-modal-3.png" alt="Image" width="33%">
 </div>
 
-### Tags
+### TAGS
 
-Tags are available using the `TAGGING_SYSTEM` feature flag. They address many of the [requests made by the community](https://github.com/apache/superset/discussions/19194) and aim to make it easier to organize and curate charts, dashboards, and saved queries, allowing for effortless data discovery and collaboration within an organization. Users can create flexible and customizable tags for each piece of content, enabling different ways of organizing assets. Programmatic access to tag-related operations are supported via the RESTful API.
+TAGS ARE AVAILABLE USING THE `TAGGING_SYSTEM` FEATURE FLAG. THEY ADDRESS MANY OF THE [REQUESTS MADE BY THE COMMUNITY](https://github.com/apache/superset/discussions/19194) AND AIM TO MAKE IT EASIER TO ORGANIZE AND CURATE CHARTS, DASHBOARDS, AND SAVED QUERIES, ALLOWING FOR EFFORTLESS DATA DISCOVERY AND COLLABORATION WITHIN AN ORGANIZATION. USERS CAN CREATE FLEXIBLE AND CUSTOMIZABLE TAGS FOR EACH PIECE OF CONTENT, ENABLING DIFFERENT WAYS OF ORGANIZING ASSETS. PROGRAMMATIC ACCESS TO TAG-RELATED OPERATIONS ARE SUPPORTED VIA THE RESTFUL API.
 
 <div>
     <img src="media/tags-1.png" alt="Image" width="100%">
     <img src="media/tags-2.png" alt="Image" width="100%">
 </div>
 
-### New CHANGELOG format
+### NEW CHANGELOG FORMAT
 
-We changed the structure of the `CHANGELOG.md` file in [#26800](https://github.com/apache/superset/pull/26800) to better organize the contents of each release and also to deal with GitHub size limitations when displaying the file. Now every release will have its own file at `CHANGELOG/<version>.md`. The main `CHANGELOG.md` file is now an index with links to all releases.
+WE CHANGED THE STRUCTURE OF THE `CHANGELOG.md` FILE IN [#26800](https://github.com/apache/superset/pull/26800) TO BETTER ORGANIZE THE CONTENTS OF EACH RELEASE AND ALSO TO DEAL WITH GITHUB SIZE LIMITATIONS WHEN DISPLAYING THE FILE. NOW EVERY RELEASE WILL HAVE ITS OWN FILE AT `CHANGELOG/<version>.md`. THE MAIN `CHANGELOG.md` FILE IS NOW AN INDEX WITH LINKS TO ALL RELEASES.
 
-### Improved drag and drop experience when editing a dashboard
+### IMPROVED DRAG AND DROP EXPERIENCE WHEN EDITING A DASHBOARD
 
-When a component was being dragged towards the edge of the tab container or the row/column containers, multiple drop indicators were often displayed. This created confusion about the exact insertion point of the element. To fix this, we built in [#26699](https://github.com/apache/superset/pull/26699) and [#26313](https://github.com/apache/superset/pull/26313) a distinct, non-conflicting area for the drop zone, which is highlighted during the dragging process to clearly indicate where the element will be placed. We also improved the forbidden drop zones to prevent users from dropping elements in invalid locations.
+WHEN A COMPONENT WAS BEING DRAGGED TOWARDS THE EDGE OF THE TAB CONTAINER OR THE ROW/COLUMN CONTAINERS, MULTIPLE DROP INDICATORS WERE OFTEN DISPLAYED. THIS CREATED CONFUSION ABOUT THE EXACT INSERTION POINT OF THE ELEMENT. TO FIX THIS, WE BUILT IN [#26699](https://github.com/apache/superset/pull/26699) AND [#26313](https://github.com/apache/superset/pull/26313) A DISTINCT, NON-CONFLICTING AREA FOR THE DROP ZONE, WHICH IS HIGHLIGHTED DURING THE DRAGGING PROCESS TO CLEARLY INDICATE WHERE THE ELEMENT WILL BE PLACED. WE ALSO IMPROVED THE FORBIDDEN DROP ZONES TO PREVENT USERS FROM DROPPING ELEMENTS IN INVALID LOCATIONS.
 
 <div>
     <img src="media/dashboard-dnd-1.png" alt="Image" width="100%">
     <img src="media/dashboard-dnd-2.png" alt="Image" width="100%">
 </div>
 
-### Improved drag and drop experience when editing a chart
+### IMPROVED DRAG AND DROP EXPERIENCE WHEN EDITING A CHART
 
-Now, during dragging, all droppable zones are highlighted, with distinct colors indicating available and unavailable drop locations. This enhancement clarifies potential drop points and helps avoid inadvertent placements in invalid areas. The update also aligns the drag-over feedback with the dashboard's drag-and-drop modifications, ensuring a uniform and enhanced user experience.
+NOW, DURING DRAGGING, ALL DROPPABLE ZONES ARE HIGHLIGHTED, WITH DISTINCT COLORS INDICATING AVAILABLE AND UNAVAILABLE DROP LOCATIONS. THIS ENHANCEMENT CLARIFIES POTENTIAL DROP POINTS AND HELPS AVOID INADVERTENT PLACEMENTS IN INVALID AREAS. THE UPDATE ALSO ALIGNS THE DRAG-OVER FEEDBACK WITH THE DASHBOARD'S DRAG-AND-DROP MODIFICATIONS, ENSURING A UNIFORM AND ENHANCED USER EXPERIENCE.
 
-![Drag and drop](media/explore-dnd.png)
+![DRAG AND DROP](media/explore-dnd.png)
 
-### Dropping support for 3.0.X versions
+### DROPPING SUPPORT FOR 3.0.X VERSIONS
 
-In accordance with our [release process](https://github.com/apache/superset/wiki/Release-Process), we are dropping support for the 3.0.X versions. As a result, we will no longer be providing bug fixes for these versions. We strongly recommend that all users upgrade to the latest version to take advantage of the newest features and bug fixes. Moving forward, the supported versions will be 3.1.X and 4.0.X. Bug fixes will continue to be backported to 3.1.X until the next minor release. For more information, please refer to our [release schedule](https://github.com/apache/superset/wiki/Release-Process#schedule).
+IN ACCORDANCE WITH OUR [RELEASE PROCESS](https://github.com/apache/superset/wiki/Release-Process), WE ARE DROPPING SUPPORT FOR THE 3.0.X VERSIONS. AS A RESULT, WE WILL NO LONGER BE PROVIDING BUG FIXES FOR THESE VERSIONS. WE STRONGLY RECOMMEND THAT ALL USERS UPGRADE TO THE LATEST VERSION TO TAKE ADVANTAGE OF THE NEWEST FEATURES AND BUG FIXES. MOVING FORWARD, THE SUPPORTED VERSIONS WILL BE 3.1.X AND 4.0.X. BUG FIXES WILL CONTINUE TO BE BACKPORTED TO 3.1.X UNTIL THE NEXT MINOR RELEASE. FOR MORE INFORMATION, PLEASE REFER TO OUR [RELEASE SCHEDULE](https://github.com/apache/superset/wiki/Release-Process#schedule).
 
-### Feature flag changes
+### FEATURE FLAG CHANGES
 
-Following our 4.0 proposals, the following feature flags were removed, i.e., the feature was permanently enabled or removed.
+FOLLOWING OUR 4.0 PROPOSALS, THE FOLLOWING FEATURE FLAGS WERE REMOVED, I.E., THE FEATURE WAS PERMANENTLY ENABLED OR REMOVED.
 
 - `VERSIONED_EXPORT`
 - `DASHBOARD_FILTERS_EXPERIMENTAL`
@@ -86,66 +86,66 @@ Following our 4.0 proposals, the following feature flags were removed, i.e., the
 - `DASHBOARD_NATIVE_FILTERS`
 - `GENERIC_CHART_AXES`
 
-The following feature flags were deprecated:
+THE FOLLOWING FEATURE FLAGS WERE DEPRECATED:
 
 - `DASHBOARD_CROSS_FILTERS`
 - `ENABLE_JAVASCRIPT_CONTROLS`
 - `KV_STORE`
 
-The following feature flags were enabled by default:
+THE FOLLOWING FEATURE FLAGS WERE ENABLED BY DEFAULT:
 
 - `DASHBOARD_VIRTUALIZATION`
 - `DRILL_BY`
 
-### Removed features
+### REMOVED FEATURES
 
-As part of the 4.0 approved initiatives, the following features were removed from Superset:
+AS PART OF THE 4.0 APPROVED INITIATIVES, THE FOLLOWING FEATURES WERE REMOVED FROM SUPERSET:
 
-- Filter Box: [#26328](https://github.com/apache/superset/pull/26328) removed the Filter Box code and its associated dependencies `react-select` and `array-move`. It also removed the `DeprecatedSelect` and `AsyncSelect` components that were exclusively used by filter boxes. Existing filter boxes will be automatically migrated to native dashboard filters.
+- FILTER BOX: [#26328](https://github.com/apache/superset/pull/26328) REMOVED THE FILTER BOX CODE AND ITS ASSOCIATED DEPENDENCIES `react-select` AND `array-move`. IT ALSO REMOVED THE `DeprecatedSelect` AND `AsyncSelect` COMPONENTS THAT WERE EXCLUSIVELY USED BY FILTER BOXES. EXISTING FILTER BOXES WILL BE AUTOMATICALLY MIGRATED TO NATIVE DASHBOARD FILTERS.
 
-- Filter Sets: [#26369](https://github.com/apache/superset/pull/26369) removed the Filters Set feature including the deprecated `DASHBOARD_NATIVE_FILTERS_SET` feature flag and all related API endpoints. The feature is permanently removed as it was not being actively maintained, it was not widely used, and it was full of bugs. We also considered that if we were to provide a similar feature, it would be better to re-implement it from scratch given the amount of technical debt that the implementation had.
+- FILTER SETS: [#26369](https://github.com/apache/superset/pull/26369) REMOVED THE FILTERS SET FEATURE INCLUDING THE DEPRECATED `DASHBOARD_NATIVE_FILTERS_SET` FEATURE FLAG AND ALL RELATED API ENDPOINTS. THE FEATURE IS PERMANENTLY REMOVED AS IT WAS NOT BEING ACTIVELY MAINTAINED, IT WAS NOT WIDELY USED, AND IT WAS FULL OF BUGS. WE ALSO CONSIDERED THAT IF WE WERE TO PROVIDE A SIMILAR FEATURE, IT WOULD BE BETTER TO RE-IMPLEMENT IT FROM SCRATCH GIVEN THE AMOUNT OF TECHNICAL DEBT THAT THE IMPLEMENTATION HAD.
 
-- Profile: [#26462](https://github.com/apache/superset/pull/26462) removed the Profile feature given that it was not actively maintained nor widely used.
+- PROFILE: [#26462](https://github.com/apache/superset/pull/26462) REMOVED THE PROFILE FEATURE GIVEN THAT IT WAS NOT ACTIVELY MAINTAINED NOR WIDELY USED.
 
-- Redirect API: [#26377](https://github.com/apache/superset/pull/26377) removed the deprecated Redirect API that supported short URLs (`/r`) and the `url` metadata table used to store them that was used before the permalink feature. Users lost the ability to generate R links ~1.5 years ago which seems sufficient time to remove the API.
+- REDIRECT API: [#26377](https://github.com/apache/superset/pull/26377) REMOVED THE DEPRECATED REDIRECT API THAT SUPPORTED SHORT URLS (`/r`) AND THE `url` METADATA TABLE USED TO STORE THEM THAT WAS USED BEFORE THE PERMALINK FEATURE. USERS LOST THE ABILITY TO GENERATE R LINKS ~1.5 YEARS AGO WHICH SEEMS SUFFICIENT TIME TO REMOVE THE API.
 
-### Business logic improvements
+### BUSINESS LOGIC IMPROVEMENTS
 
-As part of [[SIP-99] Proposal for correctly handling business logic](https://github.com/apache/superset/issues/25048) (specifically [SIP-99A](https://github.com/apache/superset/issues/25107) and [SIP-99B](https://github.com/apache/superset/issues/25108)), this release contains many improvements to the handling of business logic in Superset, specifically related to SQLAlchemy sessions and transactions. The goal of these efforts is to simplify the code, improve code quality, ensure a consistent "unit of work" approach, and provide clear guidance and examples of accepted code standards. These changes aim to improve developer experience by making the code simpler, improving testing, and ensuring a more streamlined and reliable system. We still have a long way to go to fully implement the SIP-99 proposal, but we are making progress and we are excited about the improvements that have been made so far.
+AS PART OF [[SIP-99] PROPOSAL FOR CORRECTLY HANDLING BUSINESS LOGIC](https://github.com/apache/superset/issues/25048) (SPECIFICALLY [SIP-99A](https://github.com/apache/superset/issues/25107) AND [SIP-99B](https://github.com/apache/superset/issues/25108)), THIS RELEASE CONTAINS MANY IMPROVEMENTS TO THE HANDLING OF BUSINESS LOGIC IN SUPERSET, SPECIFICALLY RELATED TO SQLALCHEMY SESSIONS AND TRANSACTIONS. THE GOAL OF THESE EFFORTS IS TO SIMPLIFY THE CODE, IMPROVE CODE QUALITY, ENSURE A CONSISTENT "UNIT OF WORK" APPROACH, AND PROVIDE CLEAR GUIDANCE AND EXAMPLES OF ACCEPTED CODE STANDARDS. THESE CHANGES AIM TO IMPROVE DEVELOPER EXPERIENCE BY MAKING THE CODE SIMPLER, IMPROVING TESTING, AND ENSURING A MORE STREAMLINED AND RELIABLE SYSTEM. WE STILL HAVE A LONG WAY TO GO TO FULLY IMPLEMENT THE SIP-99 PROPOSAL, BUT WE ARE MAKING PROGRESS AND WE ARE EXCITED ABOUT THE IMPROVEMENTS THAT HAVE BEEN MADE SO FAR.
 
-### All country maps are now managed via Jupyter Notebook
+### ALL COUNTRY MAPS ARE NOW MANAGED VIA JUPYTER NOTEBOOK
 
-In this release we made updates to the Jupyter Notebook to ensure reliable execution by removing deprecated methods, adding new countries, including missing maps, and fixing filename inconsistencies. This will make it easier to add more countries, dynamically add them to the country map plugin, and update map regions periodically. You can check [#26300](https://github.com/apache/superset/pull/26300) for more details.
+IN THIS RELEASE WE MADE UPDATES TO THE JUPYTER NOTEBOOK TO ENSURE RELIABLE EXECUTION BY REMOVING DEPRECATED METHODS, ADDING NEW COUNTRIES, INCLUDING MISSING MAPS, AND FIXING FILENAME INCONSISTENCIES. THIS WILL MAKE IT EASIER TO ADD MORE COUNTRIES, DYNAMICALLY ADD THEM TO THE COUNTRY MAP PLUGIN, AND UPDATE MAP REGIONS PERIODICALLY. YOU CAN CHECK [#26300](https://github.com/apache/superset/pull/26300) FOR MORE DETAILS.
 
-### Sunburst chart migrated to ECharts
+### SUNBURST CHART MIGRATED TO ECHARTS
 
-The ECharts version of the Sunburst chart was introduced by [#22833](https://github.com/apache/superset/pull/22833) as part of our efforts to complete [SIP-50](https://github.com/apache/superset/issues/10418). In 4.0, legacy Sunburst charts are [automatically migrated](https://github.com/apache/superset/pull/26350) to ECharts and the legacy version was removed.
+THE ECHARTS VERSION OF THE SUNBURST CHART WAS INTRODUCED BY [#22833](https://github.com/apache/superset/pull/22833) AS PART OF OUR EFFORTS TO COMPLETE [SIP-50](https://github.com/apache/superset/issues/10418). IN 4.0, LEGACY SUNBURST CHARTS ARE [AUTOMATICALLY MIGRATED](https://github.com/apache/superset/pull/26350) TO ECHARTS AND THE LEGACY VERSION WAS REMOVED.
 
-![Sunburst](media/sunburst.png)
+![SUNBURST](media/sunburst.png)
 
-### Some cool stats
+### SOME COOL STATS
 
-- ~15K lines of code were removed by PRs related to 4.0 proposals
-- We reduced the number of NPM packages vulnerabilities by 72%
-  - 3.1: 90 vulnerabilities (42 moderate, 34 high, 14 critical)
-  - 4.0: 25 vulnerabilities (16 moderate, 8 high, 1 critical)
-- 40+ dependency changes (upgrades, additions, and removals)
+- ~15K LINES OF CODE WERE REMOVED BY PRS RELATED TO 4.0 PROPOSALS
+- WE REDUCED THE NUMBER OF NPM PACKAGES VULNERABILITIES BY 72%
+  - 3.1: 90 VULNERABILITIES (42 MODERATE, 34 HIGH, 14 CRITICAL)
+  - 4.0: 25 VULNERABILITIES (16 MODERATE, 8 HIGH, 1 CRITICAL)
+- 40+ DEPENDENCY CHANGES (UPGRADES, ADDITIONS, AND REMOVALS)
 
-### How to upgrade
+### HOW TO UPGRADE
 
-As with any Superset version upgrade, the process is simple in the broadest strokes, as outlined in the documentation. However, as with any upgrade, we expect to see numerous speed bumps along that path depending on your configuration, your infrastructure, your databases in use, and other customizations/configurations. To make a safe leap to this version, we'd suggest the following steps:
+AS WITH ANY SUPERSET VERSION UPGRADE, THE PROCESS IS SIMPLE IN THE BROADEST STROKES, AS OUTLINED IN THE DOCUMENTATION. HOWEVER, AS WITH ANY UPGRADE, WE EXPECT TO SEE NUMEROUS SPEED BUMPS ALONG THAT PATH DEPENDING ON YOUR CONFIGURATION, YOUR INFRASTRUCTURE, YOUR DATABASES IN USE, AND OTHER CUSTOMIZATIONS/CONFIGURATIONS. TO MAKE A SAFE LEAP TO THIS VERSION, WE'D SUGGEST THE FOLLOWING STEPS:
 
-- Back up your databases
-- Carefully read `CHANGELOG.md` for all the incremental changes in this version (and any prior versions between your current installation and 4.0.0).
-- Similarly, review `UPDATING.md` to keep an eye out for all changes that have been explicitly marked as breaking changes.
-- Adjust your feature flags and configurations to meet your feature requirements and preferences.
-- Execute the migrations
-- If you have third-party apps interacting with Superset, check for relevant dependency updates or API endpoint changes that may affect compatibility.
+- BACK UP YOUR DATABASES
+- CAREFULLY READ `CHANGELOG.md` FOR ALL THE INCREMENTAL CHANGES IN THIS VERSION (AND ANY PRIOR VERSIONS BETWEEN YOUR CURRENT INSTALLATION AND 4.0.0).
+- SIMILARLY, REVIEW `UPDATING.md` TO KEEP AN EYE OUT FOR ALL CHANGES THAT HAVE BEEN EXPLICITLY MARKED AS BREAKING CHANGES.
+- ADJUST YOUR FEATURE FLAGS AND CONFIGURATIONS TO MEET YOUR FEATURE REQUIREMENTS AND PREFERENCES.
+- EXECUTE THE MIGRATIONS
+- IF YOU HAVE THIRD-PARTY APPS INTERACTING WITH SUPERSET, CHECK FOR RELEVANT DEPENDENCY UPDATES OR API ENDPOINT CHANGES THAT MAY AFFECT COMPATIBILITY.
 
-Your mileage may vary depending on:
+YOUR MILEAGE MAY VARY DEPENDING ON:
 
-- How you install and deploy Superset (e.g. docker vs. pip vs. helm)
-- How you’ve configured Superset
-- What integrations, databases, etc. you're using
+- HOW YOU INSTALL AND DEPLOY SUPERSET (E.G. DOCKER VS. PIP VS. HELM)
+- HOW YOU’VE CONFIGURED SUPERSET
+- WHAT INTEGRATIONS, DATABASES, ETC. YOU'RE USING
 
-Reach out in `#deploying-superset` on Slack in case you find any problems, and if you find a reproducible bug, please file a new issue on GitHub.
+REACH OUT IN `#deploying-superset` ON SLACK IN CASE YOU FIND ANY PROBLEMS, AND IF YOU FIND A REPRODUCIBLE BUG, PLEASE FILE A NEW ISSUE ON GITHUB.

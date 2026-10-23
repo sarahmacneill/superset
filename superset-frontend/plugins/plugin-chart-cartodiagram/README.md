@@ -17,18 +17,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-cartodiagram
+## @SUPERSET-UI/PLUGIN-CHART-CARTODIAGRAM
 
-This plugin allows visualizing charts on a map. To do so, the plugin makes use of existing charts and renders them on the
-provided locations.
+THIS PLUGIN ALLOWS VISUALIZING CHARTS ON A MAP. TO DO SO, THE PLUGIN MAKES USE OF EXISTING CHARTS AND RENDERS THEM ON THE
+PROVIDED LOCATIONS.
 
-Configuring the charts: Charts will be configured in their respective editors. So all configuration options of any chart are supported.
+CONFIGURING THE CHARTS: CHARTS WILL BE CONFIGURED IN THEIR RESPECTIVE EDITORS. SO ALL CONFIGURATION OPTIONS OF ANY CHART ARE SUPPORTED.
 
-Configuring the map: For the map, an arbitrary number of background layers (WMS, WFS, XYZ), the initial map extent, the chart background color and border radius, as well as the chart size (per zoom level) can be configured.
+CONFIGURING THE MAP: FOR THE MAP, AN ARBITRARY NUMBER OF BACKGROUND LAYERS (WMS, WFS, XYZ), THE INITIAL MAP EXTENT, THE CHART BACKGROUND COLOR AND BORDER RADIUS, AS WELL AS THE CHART SIZE (PER ZOOM LEVEL) CAN BE CONFIGURED.
 
-### Usage
+### USAGE
 
-The plugin is configured in `superset-frontend/src/visualizations/presets/MainPreset.js`.
+THE PLUGIN IS CONFIGURED IN `superset-frontend/src/visualizations/presets/MainPreset.js`.
 
 ```js
 import { CartodiagramPlugin } from '@superset-ui/plugin-chart-cartodiagram';
@@ -36,9 +36,9 @@ import { CartodiagramPlugin } from '@superset-ui/plugin-chart-cartodiagram';
 new CartodiagramPlugin().configure({ key: 'cartodiagram' }).register();
 ```
 
-Default layers can be added to the constructor. These layers will be added to each chart by default (but can be removed by editors). See also `./src/types.ts` for the definitions of types `WmsLayerConf`, `WfsLayerConf` and `XyzLayerConf`.
+DEFAULT LAYERS CAN BE ADDED TO THE CONSTRUCTOR. THESE LAYERS WILL BE ADDED TO EACH CHART BY DEFAULT (BUT CAN BE REMOVED BY EDITORS). SEE ALSO `./src/types.ts` FOR THE DEFINITIONS OF TYPES `WmsLayerConf`, `WfsLayerConf` AND `XyzLayerConf`.
 
-Example for an XYZ default layer:
+EXAMPLE FOR AN XYZ DEFAULT LAYER:
 
 ```js
 import { CartodiagramPlugin } from '@superset-ui/plugin-chart-cartodiagram';
@@ -57,11 +57,11 @@ const opts = {
 new CartodiagramPlugin(opts).configure({ key: 'cartodiagram' }).register();
 ```
 
-Please note that by default, Superset rejects requests to third-party domains. If you want to include
-layers from those, you have to adjust the CSP settings. See also docs/docs/security/security.mdx.
+PLEASE NOTE THAT BY DEFAULT, SUPERSET REJECTS REQUESTS TO THIRD-PARTY DOMAINS. IF YOU WANT TO INCLUDE
+LAYERS FROM THOSE, YOU HAVE TO ADJUST THE CSP SETTINGS. SEE ALSO DOCS/DOCS/SECURITY/SECURITY.MDX.
 
-### Geometry Column
+### GEOMETRY COLUMN
 
-The plugin requires the selection of a geometry column for a dataset.
-This is expected to be a GeoJSON-Point-Geometry string in WGS 84/Pseudo-Mercator (EPSG:3857). Other formats and projections
-will be supported in the future.
+THE PLUGIN REQUIRES THE SELECTION OF A GEOMETRY COLUMN FOR A DATASET.
+THIS IS EXPECTED TO BE A GEOJSON-POINT-GEOMETRY STRING IN WGS 84/PSEUDO-MERCATOR (EPSG:3857). OTHER FORMATS AND PROJECTIONS
+WILL BE SUPPORTED IN THE FUTURE.

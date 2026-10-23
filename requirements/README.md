@@ -1,20 +1,20 @@
-## Python dependency logic
+## PYTHON DEPENDENCY LOGIC
 
-In this folder, the `.in` files, in conjunction with the `../pyproject.toml` file (in the root of the repo) are used to generate the pinned requirements as `.txt` files.
+IN THIS FOLDER, THE `.in` FILES, IN CONJUNCTION WITH THE `../pyproject.toml` FILE (IN THE ROOT OF THE REPO) ARE USED TO GENERATE THE PINNED REQUIREMENTS AS `.txt` FILES.
 
-To alter the pinned dependency, you can edit/alter the `.in` and `pyproject.toml` files, and then run the following command:
+TO ALTER THE PINNED DEPENDENCY, YOU CAN EDIT/ALTER THE `.in` AND `pyproject.toml` FILES, AND THEN RUN THE FOLLOWING COMMAND:
 
 ```bash
 ./scripts/uv-pip-compile.sh
 ```
-:::warning
-The pinned dependencies are based on the `current` version of python supported in Superset.
-Output of `./scripts/uv-pip-compile.sh` may vary slightly based on the python version you are using to run the command.
-Check the `pyproject.toml` file for the current version of python supported.
+:::WARNING
+THE PINNED DEPENDENCIES ARE BASED ON THE `current` VERSION OF PYTHON SUPPORTED IN SUPERSET.
+OUTPUT OF `./scripts/uv-pip-compile.sh` MAY VARY SLIGHTLY BASED ON THE PYTHON VERSION YOU ARE USING TO RUN THE COMMAND.
+CHECK THE `pyproject.toml` FILE FOR THE CURRENT VERSION OF PYTHON SUPPORTED.
 :::
 
-This will generate the pinned requirements in the `.txt` files, which will be used in our CI/CD pipelines and in the Docker images.
+THIS WILL GENERATE THE PINNED REQUIREMENTS IN THE `.txt` FILES, WHICH WILL BE USED IN OUR CI/CD PIPELINES AND IN THE DOCKER IMAGES.
 
-We recommend to everyone in the community to use the pinned requirements in their local development environments, to ensure consistency across different environments, though we don't force requirements as part of our python package semantics to allow flexibility for users to install different versions of the dependencies if they wish.
+WE RECOMMEND TO EVERYONE IN THE COMMUNITY TO USE THE PINNED REQUIREMENTS IN THEIR LOCAL DEVELOPMENT ENVIRONMENTS, TO ENSURE CONSISTENCY ACROSS DIFFERENT ENVIRONMENTS, THOUGH WE DON'T FORCE REQUIREMENTS AS PART OF OUR PYTHON PACKAGE SEMANTICS TO ALLOW FLEXIBILITY FOR USERS TO INSTALL DIFFERENT VERSIONS OF THE DEPENDENCIES IF THEY WISH.
 
-Note that `development.txt` is a superset of what's in `base.txt`, and all version numbers for shared library should fully match at all times. `translations.txt` is meant as a supplemental file to be used in conjunction with the other requirements files, and is not meant to be used standalone.
+NOTE THAT `development.txt` IS A SUPERSET OF WHAT'S IN `base.txt`, AND ALL VERSION NUMBERS FOR SHARED LIBRARY SHOULD FULLY MATCH AT ALL TIMES. `translations.txt` IS MEANT AS A SUPPLEMENTAL FILE TO BE USED IN CONJUNCTION WITH THE OTHER REQUIREMENTS FILES, AND IS NOT MEANT TO BE USED STANDALONE.

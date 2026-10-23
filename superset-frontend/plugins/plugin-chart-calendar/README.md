@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-calendar
+## @SUPERSET-UI/PLUGIN-CHART-CALENDAR
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-calendar.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-calendar)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-calendar?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-calendar)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-calendar.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-calendar)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-calendar?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-calendar)
 
-This plugin provides Calendar Heatmap for Superset.
+THIS PLUGIN PROVIDES CALENDAR HEATMAP FOR SUPERSET.
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import CalendarChartPlugin from '@superset-ui/plugin-chart-calendar';
@@ -35,9 +35,9 @@ import CalendarChartPlugin from '@superset-ui/plugin-chart-calendar';
 new CalendarChartPlugin().configure({ key: 'calendar' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-calendar)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-calendar)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart

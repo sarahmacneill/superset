@@ -17,49 +17,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 3.1.0
+# RELEASE NOTES FOR SUPERSET 3.1.0
 
-Superset 3.1.0 brings a range of new features and quality of life improvements. This release is a minor version, meaning it doesn't include any breaking changes to ensure a seamless transition for our users. Here are some of the highlights of this release.
+SUPERSET 3.1.0 BRINGS A RANGE OF NEW FEATURES AND QUALITY OF LIFE IMPROVEMENTS. THIS RELEASE IS A MINOR VERSION, MEANING IT DOESN'T INCLUDE ANY BREAKING CHANGES TO ENSURE A SEAMLESS TRANSITION FOR OUR USERS. HERE ARE SOME OF THE HIGHLIGHTS OF THIS RELEASE.
 
-### Waterfall chart
+### WATERFALL CHART
 
-The new [Waterfall chart](https://github.com/apache/superset/pull/25557) visualization provides a visual representation of how a value changes over time or across different categories. They are very helpful to show the cumulative effect of positive and negative changes from a starting value. Superset's Waterfall chart supports Breakdowns which can be used to analyze the contribution of different dimensions or factors to a specific metric. By breaking down the data into various categories or dimensions, you can identify the individual components that contribute to the overall variation or change in the metric.
+THE NEW [WATERFALL CHART](https://github.com/apache/superset/pull/25557) VISUALIZATION PROVIDES A VISUAL REPRESENTATION OF HOW A VALUE CHANGES OVER TIME OR ACROSS DIFFERENT CATEGORIES. THEY ARE VERY HELPFUL TO SHOW THE CUMULATIVE EFFECT OF POSITIVE AND NEGATIVE CHANGES FROM A STARTING VALUE. SUPERSET'S WATERFALL CHART SUPPORTS BREAKDOWNS WHICH CAN BE USED TO ANALYZE THE CONTRIBUTION OF DIFFERENT DIMENSIONS OR FACTORS TO A SPECIFIC METRIC. BY BREAKING DOWN THE DATA INTO VARIOUS CATEGORIES OR DIMENSIONS, YOU CAN IDENTIFY THE INDIVIDUAL COMPONENTS THAT CONTRIBUTE TO THE OVERALL VARIATION OR CHANGE IN THE METRIC.
 
-The chart example below displays the total sales grouped by year and broken down by product line.
+THE CHART EXAMPLE BELOW DISPLAYS THE TOTAL SALES GROUPED BY YEAR AND BROKEN DOWN BY PRODUCT LINE.
 
-![Waterfall](media/waterfall_chart.png)
+![WATERFALL](media/waterfall_chart.png)
 
-### Bubble Chart ECharts version
+### BUBBLE CHART ECHARTS VERSION
 
-The new ECharts [Bubble chart](https://github.com/apache/superset/pull/22107) offers feature parity with the previous NVD3 version which should be removed in the next major release. This work is part of the [ECharts migration effort](https://github.com/apache/superset/issues/10418) to increase consistency and quality of our plugins. We'll add a migration to the new plugin soon which you'll be able to execute using the new CLI command.
+THE NEW ECHARTS [BUBBLE CHART](https://github.com/apache/superset/pull/22107) OFFERS FEATURE PARITY WITH THE PREVIOUS NVD3 VERSION WHICH SHOULD BE REMOVED IN THE NEXT MAJOR RELEASE. THIS WORK IS PART OF THE [ECHARTS MIGRATION EFFORT](https://github.com/apache/superset/issues/10418) TO INCREASE CONSISTENCY AND QUALITY OF OUR PLUGINS. WE'LL ADD A MIGRATION TO THE NEW PLUGIN SOON WHICH YOU'LL BE ABLE TO EXECUTE USING THE NEW CLI COMMAND.
 
-![Bubble](media/bubble_chart.png)
+![BUBBLE](media/bubble_chart.png)
 
-### Improved Dataset selectors
+### IMPROVED DATASET SELECTORS
 
-The [dataset selectors](https://github.com/apache/superset/pull/25569) have been improved to also display the database and schema names which will help users locate the correct dataset, particularly when there are multiple tables/datasets with the same name that could benefit from disambiguation.
+THE [DATASET SELECTORS](https://github.com/apache/superset/pull/25569) HAVE BEEN IMPROVED TO ALSO DISPLAY THE DATABASE AND SCHEMA NAMES WHICH WILL HELP USERS LOCATE THE CORRECT DATASET, PARTICULARLY WHEN THERE ARE MULTIPLE TABLES/DATASETS WITH THE SAME NAME THAT COULD BENEFIT FROM DISAMBIGUATION.
 
-![Dataset](media/dataset_selector.png)
+![DATASET](media/dataset_selector.png)
 
-### SQL Lab improvements
+### SQL LAB IMPROVEMENTS
 
-SQL Lab received many user experience and performance improvements in this release. We’ll continue to improve the capabilities of SQL Lab with feedback from the community.
+SQL LAB RECEIVED MANY USER EXPERIENCE AND PERFORMANCE IMPROVEMENTS IN THIS RELEASE. WE’LL CONTINUE TO IMPROVE THE CAPABILITIES OF SQL LAB WITH FEEDBACK FROM THE COMMUNITY.
 
-Now users can [automatically format](https://github.com/apache/superset/pull/25344) their SQL queries using the `Ctrl+Shift+F` shortcut or the Format SQL menu option available in the SQL configuration panel. Another improvement is that the results panel now shows the [executed query](https://github.com/apache/superset/pull/24787) which is very helpful when your SQL Lab editor has multiple queries.
+NOW USERS CAN [AUTOMATICALLY FORMAT](https://github.com/apache/superset/pull/25344) THEIR SQL QUERIES USING THE `Ctrl+Shift+F` SHORTCUT OR THE FORMAT SQL MENU OPTION AVAILABLE IN THE SQL CONFIGURATION PANEL. ANOTHER IMPROVEMENT IS THAT THE RESULTS PANEL NOW SHOWS THE [EXECUTED QUERY](https://github.com/apache/superset/pull/24787) WHICH IS VERY HELPFUL WHEN YOUR SQL LAB EDITOR HAS MULTIPLE QUERIES.
 
-![SQL Formatting](media/sql_formatting.png)
+![SQL FORMATTING](media/sql_formatting.png)
 
-In the SQL panel configurations, there's a menu option to show the [keyboard shortcuts](https://github.com/apache/superset/pull/25542) a user has access to.
+IN THE SQL PANEL CONFIGURATIONS, THERE'S A MENU OPTION TO SHOW THE [KEYBOARD SHORTCUTS](https://github.com/apache/superset/pull/25542) A USER HAS ACCESS TO.
 
-![Keyboard Shortcuts](media/keyboard_shortcuts.png)
+![KEYBOARD SHORTCUTS](media/keyboard_shortcuts.png)
 
-SQL Lab has launched a non-blocking persistence mode, as outlined in [SIP-93](https://github.com/apache/superset/issues/21385). This enhancement ensures that your SQL editor content is preserved, even if your internet or service goes offline. Moreover, it improves user interaction by saving changes in a non-blocking way, similar to how Google Docs does.
+SQL LAB HAS LAUNCHED A NON-BLOCKING PERSISTENCE MODE, AS OUTLINED IN [SIP-93](https://github.com/apache/superset/issues/21385). THIS ENHANCEMENT ENSURES THAT YOUR SQL EDITOR CONTENT IS PRESERVED, EVEN IF YOUR INTERNET OR SERVICE GOES OFFLINE. MOREOVER, IT IMPROVES USER INTERACTION BY SAVING CHANGES IN A NON-BLOCKING WAY, SIMILAR TO HOW GOOGLE DOCS DOES.
 
-Finally, the [SQL Lab module was moved to the Single Page Application](https://github.com/apache/superset/pull/25151) context. This means that both navigation and loading time of that module is significantly faster than previous versions (particularly when navigating to and from this page from other pages in Superset). This also reduces the number of requests to the server and pays some of our technical debt. Try it out! The difference is quite impressive!
+FINALLY, THE [SQL LAB MODULE WAS MOVED TO THE SINGLE PAGE APPLICATION](https://github.com/apache/superset/pull/25151) CONTEXT. THIS MEANS THAT BOTH NAVIGATION AND LOADING TIME OF THAT MODULE IS SIGNIFICANTLY FASTER THAN PREVIOUS VERSIONS (PARTICULARLY WHEN NAVIGATING TO AND FROM THIS PAGE FROM OTHER PAGES IN SUPERSET). THIS ALSO REDUCES THE NUMBER OF REQUESTS TO THE SERVER AND PAYS SOME OF OUR TECHNICAL DEBT. TRY IT OUT! THE DIFFERENCE IS QUITE IMPRESSIVE!
 
-### Country Map improvements
+### COUNTRY MAP IMPROVEMENTS
 
-The Country Map visualization received some improvements in this release. The community added [France's regions](https://github.com/apache/superset/pull/25676) in addition to its departments and also many [Central Asia countries](https://github.com/apache/superset/pull/24870).
+THE COUNTRY MAP VISUALIZATION RECEIVED SOME IMPROVEMENTS IN THIS RELEASE. THE COMMUNITY ADDED [FRANCE'S REGIONS](https://github.com/apache/superset/pull/25676) IN ADDITION TO ITS DEPARTMENTS AND ALSO MANY [CENTRAL ASIA COUNTRIES](https://github.com/apache/superset/pull/24870).
 
 <table>
   <tr>
@@ -84,18 +84,18 @@ The Country Map visualization received some improvements in this release. The co
   </tr>
 </table>
 
-### Deck.gl ContourLayer
+### DECK.GL CONTOURLAYER
 
-We [added](https://github.com/apache/superset/pull/24154) the Deck.gl [ContourLayer](https://deck.gl/docs/api-reference/aggregation-layers/contour-layer) which aggregates data into Isolines or Isobands for a given threshold and cell size. By expanding the range of available [Deck.gl](https://deck.gl/) visualization layers, users will have more options to choose from when creating their visualizations. This will allow them to tailor their visualizations to their specific needs and explore their data in different ways.
+WE [ADDED](https://github.com/apache/superset/pull/24154) THE DECK.GL [CONTOURLAYER](https://deck.gl/docs/api-reference/aggregation-layers/contour-layer) WHICH AGGREGATES DATA INTO ISOLINES OR ISOBANDS FOR A GIVEN THRESHOLD AND CELL SIZE. BY EXPANDING THE RANGE OF AVAILABLE [DECK.GL](https://deck.gl/) VISUALIZATION LAYERS, USERS WILL HAVE MORE OPTIONS TO CHOOSE FROM WHEN CREATING THEIR VISUALIZATIONS. THIS WILL ALLOW THEM TO TAILOR THEIR VISUALIZATIONS TO THEIR SPECIFIC NEEDS AND EXPLORE THEIR DATA IN DIFFERENT WAYS.
 
-![Contour](media/contour.png)
+![CONTOUR](media/contour.png)
 
-### New Databases
+### NEW DATABASES
 
-Superset has added support for two new databases:
+SUPERSET HAS ADDED SUPPORT FOR TWO NEW DATABASES:
 
-- [Databend](https://databend.rs/), an open-source, elastic, and workload-aware cloud data warehouse built in Rust. You can see the PR [here](https://github.com/apache/superset/pull/23308), and the updated documentation [here](https://superset.apache.org/docs/databases/databend).
-- [Apache Doris](https://doris.apache.org/), which is based on the MySQL protocol and introduces the concept of Multi Catalog. You can see the PR [here](https://github.com/apache/superset/pull/24714/) and the updated documentation [here](https://superset.apache.org/docs/databases/doris).
+- [DATABEND](https://databend.rs/), AN OPEN-SOURCE, ELASTIC, AND WORKLOAD-AWARE CLOUD DATA WAREHOUSE BUILT IN RUST. YOU CAN SEE THE PR [HERE](https://github.com/apache/superset/pull/23308), AND THE UPDATED DOCUMENTATION [HERE](https://superset.apache.org/docs/databases/databend).
+- [APACHE DORIS](https://doris.apache.org/), WHICH IS BASED ON THE MYSQL PROTOCOL AND INTRODUCES THE CONCEPT OF MULTI CATALOG. YOU CAN SEE THE PR [HERE](https://github.com/apache/superset/pull/24714/) AND THE UPDATED DOCUMENTATION [HERE](https://superset.apache.org/docs/databases/doris).
 
 <table>
   <tr>
@@ -104,11 +104,11 @@ Superset has added support for two new databases:
   </tr>
 </table>
 
-### CLI command to execute viz migrations
+### CLI COMMAND TO EXECUTE VIZ MIGRATIONS
 
-A new [CLI command](https://github.com/apache/superset/pull/25304) called viz-migrations was added to allow users to migrate charts of a specific type. This command is particularly helpful to migrate visualizations to their latest version and at the same time disable their legacy versions with the `VIZ_TYPE_DENYLIST` configuration. The main advantage of this command is that you can migrate your visualizations without needing to wait for a major release, where we generally remove the legacy plugins.
+A NEW [CLI COMMAND](https://github.com/apache/superset/pull/25304) CALLED VIZ-MIGRATIONS WAS ADDED TO ALLOW USERS TO MIGRATE CHARTS OF A SPECIFIC TYPE. THIS COMMAND IS PARTICULARLY HELPFUL TO MIGRATE VISUALIZATIONS TO THEIR LATEST VERSION AND AT THE SAME TIME DISABLE THEIR LEGACY VERSIONS WITH THE `VIZ_TYPE_DENYLIST` CONFIGURATION. THE MAIN ADVANTAGE OF THIS COMMAND IS THAT YOU CAN MIGRATE YOUR VISUALIZATIONS WITHOUT NEEDING TO WAIT FOR A MAJOR RELEASE, WHERE WE GENERALLY REMOVE THE LEGACY PLUGINS.
 
-Currently, you can use the command to migrate Area, Bubble, Line, and Sunburst chart types but we'll add more as the ECharts migrations continue. Note that migrations for deprecated charts may be forced in upcoming major versions when the code is removed. Running migrations earlier will allow you to de-risk future upgrades while improving user experience.
+CURRENTLY, YOU CAN USE THE COMMAND TO MIGRATE AREA, BUBBLE, LINE, AND SUNBURST CHART TYPES BUT WE'LL ADD MORE AS THE ECHARTS MIGRATIONS CONTINUE. NOTE THAT MIGRATIONS FOR DEPRECATED CHARTS MAY BE FORCED IN UPCOMING MAJOR VERSIONS WHEN THE CODE IS REMOVED. RUNNING MIGRATIONS EARLIER WILL ALLOW YOU TO DE-RISK FUTURE UPGRADES WHILE IMPROVING USER EXPERIENCE.
 
 ```bash
 Usage: superset viz-migrations [OPTIONS] COMMAND [ARGS]...
@@ -120,18 +120,18 @@ Commands:
   upgrade    Upgrade a viz to the latest version.
 ```
 
-Note: When migrating dashboards from one Superset instance to another (using import/export features or the Superset CLI), or restoring a backup of prior charts and dashboards, Superset will apply the existing migrations that are used during version upgrades. This will ensure that your charts and dashboards are using the latest and greatest charts that Superset officially supports.
+NOTE: WHEN MIGRATING DASHBOARDS FROM ONE SUPERSET INSTANCE TO ANOTHER (USING IMPORT/EXPORT FEATURES OR THE SUPERSET CLI), OR RESTORING A BACKUP OF PRIOR CHARTS AND DASHBOARDS, SUPERSET WILL APPLY THE EXISTING MIGRATIONS THAT ARE USED DURING VERSION UPGRADES. THIS WILL ENSURE THAT YOUR CHARTS AND DASHBOARDS ARE USING THE LATEST AND GREATEST CHARTS THAT SUPERSET OFFICIALLY SUPPORTS.
 
-### Database engine spec improvements
+### DATABASE ENGINE SPEC IMPROVEMENTS
 
-Many database engine improvements were added in this release. Some highlights:
+MANY DATABASE ENGINE IMPROVEMENTS WERE ADDED IN THIS RELEASE. SOME HIGHLIGHTS:
 
-- [feat: improve SQLite DB engine spec](https://github.com/apache/superset/pull/24909)
-- [feat: add MotherDuck DB engine spec](https://github.com/apache/superset/pull/24934)
-- [feat: Add week time grain for Elasticsearch datasets](https://github.com/apache/superset/pull/25683)
-- [feat: method for dynamic allows_alias_in_select](https://github.com/apache/superset/pull/25882)
+- [FEAT: IMPROVE SQLITE DB ENGINE SPEC](https://github.com/apache/superset/pull/24909)
+- [FEAT: ADD MOTHERDUCK DB ENGINE SPEC](https://github.com/apache/superset/pull/24934)
+- [FEAT: ADD WEEK TIME GRAIN FOR ELASTICSEARCH DATASETS](https://github.com/apache/superset/pull/25683)
+- [FEAT: METHOD FOR DYNAMIC ALLOWS_ALIAS_IN_SELECT](https://github.com/apache/superset/pull/25882)
 
-We even added a new [CLI command](https://github.com/apache/superset/pull/24918) to test DB engine specs, SQLAlchemy dialects, and database connections.
+WE EVEN ADDED A NEW [CLI COMMAND](https://github.com/apache/superset/pull/24918) TO TEST DB ENGINE SPECS, SQLALCHEMY DIALECTS, AND DATABASE CONNECTIONS.
 
 ```bash
 Usage: superset test-db [OPTIONS] SQLALCHEMY_URI
@@ -151,16 +151,16 @@ Options:
   --help                   Show this message and exit.
 ```
 
-### Playwright as an alternative to Selenium
+### PLAYWRIGHT AS AN ALTERNATIVE TO SELENIUM
 
-Per [SIP-98](https://github.com/apache/superset/issues/24948), we [introduced Playwright](https://github.com/apache/superset/pull/25247) for rendering charts in Superset reports. [Playwright](https://playwright.dev/) is an open-source library for automating web browsers, similar to Selenium but with better support for modern browser features and improved performance. By using Playwright, we aim to provide a more stable and accurate chart rendering experience in Superset reports, especially for [Deck.gl](https://deck.gl/) charts.
+PER [SIP-98](https://github.com/apache/superset/issues/24948), WE [INTRODUCED PLAYWRIGHT](https://github.com/apache/superset/pull/25247) FOR RENDERING CHARTS IN SUPERSET REPORTS. [PLAYWRIGHT](https://playwright.dev/) IS AN OPEN-SOURCE LIBRARY FOR AUTOMATING WEB BROWSERS, SIMILAR TO SELENIUM BUT WITH BETTER SUPPORT FOR MODERN BROWSER FEATURES AND IMPROVED PERFORMANCE. BY USING PLAYWRIGHT, WE AIM TO PROVIDE A MORE STABLE AND ACCURATE CHART RENDERING EXPERIENCE IN SUPERSET REPORTS, ESPECIALLY FOR [DECK.GL](https://deck.gl/) CHARTS.
 
-Since configuring Playwright requires installing additional dependencies, in order to prevent breaking changes in existing deployments, we put the new flow behind a feature flag called `PLAYWRIGHT_REPORTS_AND_THUMBNAILS`. Users that don't enable the feature flag will be unaffected by the changes.
+SINCE CONFIGURING PLAYWRIGHT REQUIRES INSTALLING ADDITIONAL DEPENDENCIES, IN ORDER TO PREVENT BREAKING CHANGES IN EXISTING DEPLOYMENTS, WE PUT THE NEW FLOW BEHIND A FEATURE FLAG CALLED `PLAYWRIGHT_REPORTS_AND_THUMBNAILS`. USERS THAT DON'T ENABLE THE FEATURE FLAG WILL BE UNAFFECTED BY THE CHANGES.
 
-### Pandas upgraded to v2
+### PANDAS UPGRADED TO V2
 
-We [upgraded Pandas to v2](https://github.com/apache/superset/pull/24705) and [added performance dependencies](https://github.com/apache/superset/pull/24768) to provide speed improvements, especially when working with large data sets. For the full list of changes, check [Pandas 2.0.0 Release Notes](https://pandas.pydata.org/docs/dev/whatsnew/v2.0.0.html).
+WE [UPGRADED PANDAS TO V2](https://github.com/apache/superset/pull/24705) AND [ADDED PERFORMANCE DEPENDENCIES](https://github.com/apache/superset/pull/24768) TO PROVIDE SPEED IMPROVEMENTS, ESPECIALLY WHEN WORKING WITH LARGE DATA SETS. FOR THE FULL LIST OF CHANGES, CHECK [PANDAS 2.0.0 RELEASE NOTES](https://pandas.pydata.org/docs/dev/whatsnew/v2.0.0.html).
 
-### Tags
+### TAGS
 
-Tags evolved a lot since 3.0, with many PRs that further improved the feature. During this phase, the community also made [great suggestions](https://github.com/apache/superset/discussions/25918) to make sure the feature is scalable, adhere to our security model, and offer a consistent design. We're still working on this feedback and new improvements will follow. For that reason, we're keeping the feature as beta behind the `TAGGING_SYSTEM` feature flag.
+TAGS EVOLVED A LOT SINCE 3.0, WITH MANY PRS THAT FURTHER IMPROVED THE FEATURE. DURING THIS PHASE, THE COMMUNITY ALSO MADE [GREAT SUGGESTIONS](https://github.com/apache/superset/discussions/25918) TO MAKE SURE THE FEATURE IS SCALABLE, ADHERE TO OUR SECURITY MODEL, AND OFFER A CONSISTENT DESIGN. WE'RE STILL WORKING ON THIS FEEDBACK AND NEW IMPROVEMENTS WILL FOLLOW. FOR THAT REASON, WE'RE KEEPING THE FEATURE AS BETA BEHIND THE `TAGGING_SYSTEM` FEATURE FLAG.

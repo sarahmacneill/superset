@@ -17,20 +17,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Test client application
+# TEST CLIENT APPLICATION
 
-This Express web application is provided for testing the WebSocket server. It is not required for running the server application, and is provided here for testing and development purposes only.
+THIS EXPRESS WEB APPLICATION IS PROVIDED FOR TESTING THE WEBSOCKET SERVER. IT IS NOT REQUIRED FOR RUNNING THE SERVER APPLICATION, AND IS PROVIDED HERE FOR TESTING AND DEVELOPMENT PURPOSES ONLY.
 
-## Running
+## RUNNING
 
-First, start the WebSocket server:
+FIRST, START THE WEBSOCKET SERVER:
 
 ```bash
 cd ..
 npm run dev-server
 ```
 
-Then run the client application:
+THEN RUN THE CLIENT APPLICATION:
 
 ```bash
 cd client-ws-app
@@ -38,10 +38,10 @@ npm install
 npm start
 ```
 
-Open http://127.0.0.1:3000 in your web browser.
+OPEN http://127.0.0.1:3000 IN YOUR WEB BROWSER.
 
-You can customize the number of WebSocket connections by passing the count in the `sockets` query param, e.g. `http://127.0.0.1:3000?sockets=180`, though beware that browsers limit the number of open WebSocket connections to around 200.
+YOU CAN CUSTOMIZE THE NUMBER OF WEBSOCKET CONNECTIONS BY PASSING THE COUNT IN THE `sockets` QUERY PARAM, E.G. `http://127.0.0.1:3000?sockets=180`, THOUGH BEWARE THAT BROWSERS LIMIT THE NUMBER OF OPEN WEBSOCKET CONNECTIONS TO AROUND 200.
 
-Run in conjunction with the `loadtest.js` script to populate the Redis streams with event data.
+RUN IN CONJUNCTION WITH THE `loadtest.js` SCRIPT TO POPULATE THE REDIS STREAMS WITH EVENT DATA.
 
-**Note:** this test application is configured to use the server's local `config.json` values, so care should be taken to not overwrite any sensitive data.
+**NOTE:** THIS TEST APPLICATION IS CONFIGURED TO USE THE SERVER'S LOCAL `config.json` VALUES, SO CARE SHOULD BE TAKEN TO NOT OVERWRITE ANY SENSITIVE DATA.

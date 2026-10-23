@@ -17,21 +17,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Releases
+# APACHE RELEASES
 
-Until things settle and we create scripts that streamline this,
-you'll probably want to run these commands manually and understand what
-they do prior to doing so.
+UNTIL THINGS SETTLE AND WE CREATE SCRIPTS THAT STREAMLINE THIS,
+YOU'LL PROBABLY WANT TO RUN THESE COMMANDS MANUALLY AND UNDERSTAND WHAT
+THEY DO PRIOR TO DOING SO.
 
-For coordinating on releases, on operational topics that require more
-synchronous communications, we recommend using the release channel
-on the Superset Slack. People crafting releases and those interested in
-partaking in the process should join the channel.
+FOR COORDINATING ON RELEASES, ON OPERATIONAL TOPICS THAT REQUIRE MORE
+SYNCHRONOUS COMMUNICATIONS, WE RECOMMEND USING THE RELEASE CHANNEL
+ON THE SUPERSET SLACK. PEOPLE CRAFTING RELEASES AND THOSE INTERESTED IN
+PARTAKING IN THE PROCESS SHOULD JOIN THE CHANNEL.
 
-## Release setup (First Time Only)
+## RELEASE SETUP (FIRST TIME ONLY)
 
-First you need to setup a few things. This is a one-off and doesn't
-need to be done at every release.
+FIRST YOU NEED TO SETUP A FEW THINGS. THIS IS A ONE-OFF AND DOESN'T
+NEED TO BE DONE AT EVERY RELEASE.
 
 ```bash
     # Create PGP Key, and use your @apache.org email address
@@ -57,9 +57,9 @@ need to be done at every release.
     svn update
 ```
 
-To minimize the risk of mixing up your local development environment, it's recommended to work on the
-release in a different directory than where the devenv is located. In this example, we'll clone
-the repo directly from the main `apache/superset` repo to a new directory `superset-release`:
+TO MINIMIZE THE RISK OF MIXING UP YOUR LOCAL DEVELOPMENT ENVIRONMENT, IT'S RECOMMENDED TO WORK ON THE
+RELEASE IN A DIFFERENT DIRECTORY THAN WHERE THE DEVENV IS LOCATED. IN THIS EXAMPLE, WE'LL CLONE
+THE REPO DIRECTLY FROM THE MAIN `apache/superset` REPO TO A NEW DIRECTORY `superset-release`:
 
 ```bash
 cd <MY PROJECTS PATH>
@@ -67,53 +67,53 @@ git clone https://github.com/apache/superset.git superset-release
 cd superset-release
 ```
 
-We recommend setting up a virtual environment to isolate the python dependencies from your main
-setup:
+WE RECOMMEND SETTING UP A VIRTUAL ENVIRONMENT TO ISOLATE THE PYTHON DEPENDENCIES FROM YOUR MAIN
+SETUP:
 
 ```bash
 virtualenv venv
 source venv/bin/activate
 ```
 
-In addition, we recommend using the [`cherrytree`](https://pypi.org/project/cherrytree/) tool for
-automating cherry picking, as it will help speed up the release process. To install `cherrytree`
-and other dependencies that are required for the release process, run the following commands:
+IN ADDITION, WE RECOMMEND USING THE [`cherrytree`](https://pypi.org/project/cherrytree/) TOOL FOR
+AUTOMATING CHERRY PICKING, AS IT WILL HELP SPEED UP THE RELEASE PROCESS. TO INSTALL `cherrytree`
+AND OTHER DEPENDENCIES THAT ARE REQUIRED FOR THE RELEASE PROCESS, RUN THE FOLLOWING COMMANDS:
 
 ```bash
 pip install -r RELEASING/requirements.txt
 ```
 
-## Setting up the release environment (do every time)
+## SETTING UP THE RELEASE ENVIRONMENT (DO EVERY TIME)
 
-As the vote process takes a minimum of 72h, sometimes stretching over several weeks
-of calendar time if votes don't pass, chances are
-the same terminal session won't be used for crafting the release candidate and the
-final release. Therefore, it's a good idea to do the following every time you
-work on a new phase of the release process to make sure you aren't releasing
-the wrong files/using wrong names. There's a script to help you set correctly all the
-necessary environment variables. Change your current directory to `RELEASING`
-and execute the `set_release_env.sh` script with the relevant parameters:
+AS THE VOTE PROCESS TAKES A MINIMUM OF 72H, SOMETIMES STRETCHING OVER SEVERAL WEEKS
+OF CALENDAR TIME IF VOTES DON'T PASS, CHANCES ARE
+THE SAME TERMINAL SESSION WON'T BE USED FOR CRAFTING THE RELEASE CANDIDATE AND THE
+FINAL RELEASE. THEREFORE, IT'S A GOOD IDEA TO DO THE FOLLOWING EVERY TIME YOU
+WORK ON A NEW PHASE OF THE RELEASE PROCESS TO MAKE SURE YOU AREN'T RELEASING
+THE WRONG FILES/USING WRONG NAMES. THERE'S A SCRIPT TO HELP YOU SET CORRECTLY ALL THE
+NECESSARY ENVIRONMENT VARIABLES. CHANGE YOUR CURRENT DIRECTORY TO `RELEASING`
+AND EXECUTE THE `set_release_env.sh` SCRIPT WITH THE RELEVANT PARAMETERS:
 
-Usage (MacOS/ZSH):
+USAGE (MACOS/ZSH):
 
 ```bash
 cd RELEASING
 source set_release_env.sh <SUPERSET_RC_VERSION> <PGP_KEY_FULLNAME>
 ```
 
-Usage (BASH):
+USAGE (BASH):
 
 ```bash
 . set_release_env.sh <SUPERSET_RC_VERSION> <PGP_KEY_FULLNAME>
 ```
 
-Example:
+EXAMPLE:
 
 ```bash
 source set_release_env.sh 1.5.1rc1 myid@apache.org
 ```
 
-The script will output the exported variables. Here's example for 1.5.1rc1:
+THE SCRIPT WILL OUTPUT THE EXPORTED VARIABLES. HERE'S EXAMPLE FOR 1.5.1RC1:
 
 ```env
 -------------------------------
@@ -131,17 +131,17 @@ SUPERSET_TMP_ASF_SITE_PATH=/tmp/incubator-superset-site-1.5.1
 -------------------------------
 ```
 
-## Crafting a source release
+## CRAFTING A SOURCE RELEASE
 
-When crafting a new minor or major release we create
-a branch named with the release MAJOR.MINOR version (on this example 0.37).
-This new branch will hold all PATCH and release candidates
-that belong to the MAJOR.MINOR version.
+WHEN CRAFTING A NEW MINOR OR MAJOR RELEASE WE CREATE
+A BRANCH NAMED WITH THE RELEASE MAJOR.MINOR VERSION (ON THIS EXAMPLE 0.37).
+THIS NEW BRANCH WILL HOLD ALL PATCH AND RELEASE CANDIDATES
+THAT BELONG TO THE MAJOR.MINOR VERSION.
 
-### Creating an initial minor release (e.g. 1.5.0)
+### CREATING AN INITIAL MINOR RELEASE (E.G. 1.5.0)
 
-The MAJOR.MINOR branch is normally a "cut" from a specific point in time from the master branch.
-When creating the initial minor release (e.g. 1.5.0), create a new branch:
+THE MAJOR.MINOR BRANCH IS NORMALLY A "CUT" FROM A SPECIFIC POINT IN TIME FROM THE MASTER BRANCH.
+WHEN CREATING THE INITIAL MINOR RELEASE (E.G. 1.5.0), CREATE A NEW BRANCH:
 
 ```bash
 git checkout master
@@ -150,12 +150,12 @@ git checkout -b ${SUPERSET_GITHUB_BRANCH}
 git push origin $SUPERSET_GITHUB_BRANCH
 ```
 
-Note that this initializes a new "release cut", and is NOT needed when creating a patch release
-(e.g. 1.5.1).
+NOTE THAT THIS INITIALIZES A NEW "RELEASE CUT", AND IS NOT NEEDED WHEN CREATING A PATCH RELEASE
+(E.G. 1.5.1).
 
-### Creating a patch release (e.g. 1.5.1)
+### CREATING A PATCH RELEASE (E.G. 1.5.1)
 
-When getting ready to bake a patch release, simply checkout the relevant branch:
+WHEN GETTING READY TO BAKE A PATCH RELEASE, SIMPLY CHECKOUT THE RELEVANT BRANCH:
 
 ```bash
 git checkout master
@@ -163,112 +163,112 @@ git pull
 git checkout ${SUPERSET_GITHUB_BRANCH}
 ```
 
-### Cherry picking
+### CHERRY PICKING
 
-It is customary to label PRs that have been introduced after the cut with the label
-`v<MAJOR>.<MINOR>`. For example, for any PRs that should be included in the 1.5 branch, the
-label `v1.5` should be added.
+IT IS CUSTOMARY TO LABEL PRS THAT HAVE BEEN INTRODUCED AFTER THE CUT WITH THE LABEL
+`v<MAJOR>.<MINOR>`. FOR EXAMPLE, FOR ANY PRS THAT SHOULD BE INCLUDED IN THE 1.5 BRANCH, THE
+LABEL `v1.5` SHOULD BE ADDED.
 
-To see how well the labelled PRs would apply to the current branch, run the following command:
+TO SEE HOW WELL THE LABELLED PRS WOULD APPLY TO THE CURRENT BRANCH, RUN THE FOLLOWING COMMAND:
 
 ```bash
 cherrytree bake -r apache/superset -m master -l v${SUPERSET_GITHUB_BRANCH} ${SUPERSET_GITHUB_BRANCH}
 ```
 
-This requires the presence of an environment variable `GITHUB_TOKEN`. Alternatively,
-you can pass the token directly via the `--access-token` parameter (`-at` for short).
+THIS REQUIRES THE PRESENCE OF AN ENVIRONMENT VARIABLE `GITHUB_TOKEN`. ALTERNATIVELY,
+YOU CAN PASS THE TOKEN DIRECTLY VIA THE `--access-token` PARAMETER (`-at` FOR SHORT).
 
-#### Happy path: no conflicts
+#### HAPPY PATH: NO CONFLICTS
 
-This will show how many cherries will apply cleanly. If there are no conflicts, you can simply apply all cherries
-by adding the `--no-dry-run` flag (`-nd` for short):
+THIS WILL SHOW HOW MANY CHERRIES WILL APPLY CLEANLY. IF THERE ARE NO CONFLICTS, YOU CAN SIMPLY APPLY ALL CHERRIES
+BY ADDING THE `--no-dry-run` FLAG (`-nd` FOR SHORT):
 
 ```bash
 cherrytree bake -r apache/superset -m master -l v${SUPERSET_GITHUB_BRANCH} -nd ${SUPERSET_GITHUB_BRANCH}
 ```
 
-#### Resolving conflicts
+#### RESOLVING CONFLICTS
 
-If there are conflicts, you can issue the following command to apply all cherries up until the conflict automatically, and then
-break by adding the `-error-mode break` flag (`-e break` for short):
+IF THERE ARE CONFLICTS, YOU CAN ISSUE THE FOLLOWING COMMAND TO APPLY ALL CHERRIES UP UNTIL THE CONFLICT AUTOMATICALLY, AND THEN
+BREAK BY ADDING THE `-error-mode break` FLAG (`-e break` FOR SHORT):
 
 ```bash
 cherrytree bake -r apache/superset -m master -l v${SUPERSET_GITHUB_BRANCH} -nd -e break ${SUPERSET_GITHUB_BRANCH}
 ```
 
-After applying the cleanly merged cherries, `cherrytree` will specify the SHA of the conflicted cherry. To resolve the conflict,
-simply issue the following command:
+AFTER APPLYING THE CLEANLY MERGED CHERRIES, `cherrytree` WILL SPECIFY THE SHA OF THE CONFLICTED CHERRY. TO RESOLVE THE CONFLICT,
+SIMPLY ISSUE THE FOLLOWING COMMAND:
 
 ```bash
 git cherry-pick <SHA>
 ```
 
-Then fix all conflicts, followed by
+THEN FIX ALL CONFLICTS, FOLLOWED BY
 
 ```bash
 git add -u  # add all changes
 git cherry-pick --continue
 ```
 
-After this, rerun all the above steps until all cherries have been picked, finally pushing all new commits to the release branch
-on the main repo:
+AFTER THIS, RERUN ALL THE ABOVE STEPS UNTIL ALL CHERRIES HAVE BEEN PICKED, FINALLY PUSHING ALL NEW COMMITS TO THE RELEASE BRANCH
+ON THE MAIN REPO:
 
 ```bash
 git push
 ```
 
-### Updating changelog
+### UPDATING CHANGELOG
 
-Next, update the `CHANGELOG/<version>.md` with all the changes that are included in the release.
-Make sure the branch has been pushed to `origin` to ensure the changelog generator
-can pick up changes since the previous release.
-Similar to `cherrytree`, the change log script requires a github token, either as an env var
-(`GITHUB_TOKEN`) or as the parameter `--access_token`.
+NEXT, UPDATE THE `CHANGELOG/<version>.md` WITH ALL THE CHANGES THAT ARE INCLUDED IN THE RELEASE.
+MAKE SURE THE BRANCH HAS BEEN PUSHED TO `origin` TO ENSURE THE CHANGELOG GENERATOR
+CAN PICK UP CHANGES SINCE THE PREVIOUS RELEASE.
+SIMILAR TO `cherrytree`, THE CHANGE LOG SCRIPT REQUIRES A GITHUB TOKEN, EITHER AS AN ENV VAR
+(`GITHUB_TOKEN`) OR AS THE PARAMETER `--access_token`.
 
-#### Initial release (e.g. 1.5.0)
+#### INITIAL RELEASE (E.G. 1.5.0)
 
-When generating the changelog for an initial minor release, you should compare with
-the previous release (in the example, the previous release branch is `1.4`, so remember to
-update it accordingly):
+WHEN GENERATING THE CHANGELOG FOR AN INITIAL MINOR RELEASE, YOU SHOULD COMPARE WITH
+THE PREVIOUS RELEASE (IN THE EXAMPLE, THE PREVIOUS RELEASE BRANCH IS `1.4`, SO REMEMBER TO
+UPDATE IT ACCORDINGLY):
 
 ```bash
 python changelog.py --previous_version 1.4 --current_version ${SUPERSET_GITHUB_BRANCH} changelog
 ```
 
-You can get a list of pull requests with labels started with blocking, risk, hold, revert and security by using the parameter `--risk`.
-Example:
+YOU CAN GET A LIST OF PULL REQUESTS WITH LABELS STARTED WITH BLOCKING, RISK, HOLD, REVERT AND SECURITY BY USING THE PARAMETER `--risk`.
+EXAMPLE:
 
 ```bash
 python changelog.py --previous_version 0.37 --current_version 0.38 changelog --access_token {GITHUB_TOKEN} --risk
 ```
 
-The script will checkout both branches, compare all the PRs, and output the lines that are needed to be added to the
-`CHANGELOG/<version>.md` file in the root of the repo. Remember to also make sure to update the branch id (with the above command
-`1.5` needs to be changed to `1.5.0`)
+THE SCRIPT WILL CHECKOUT BOTH BRANCHES, COMPARE ALL THE PRS, AND OUTPUT THE LINES THAT ARE NEEDED TO BE ADDED TO THE
+`CHANGELOG/<version>.md` FILE IN THE ROOT OF THE REPO. REMEMBER TO ALSO MAKE SURE TO UPDATE THE BRANCH ID (WITH THE ABOVE COMMAND
+`1.5` NEEDS TO BE CHANGED TO `1.5.0`)
 
-Then, in `UPDATING.md`, a file that contains a list of notifications around
-deprecations and upgrading-related topics,
-make sure to move the content now under the `Next Version` section under a new
-section for the new release.
+THEN, IN `UPDATING.md`, A FILE THAT CONTAINS A LIST OF NOTIFICATIONS AROUND
+DEPRECATIONS AND UPGRADING-RELATED TOPICS,
+MAKE SURE TO MOVE THE CONTENT NOW UNDER THE `Next Version` SECTION UNDER A NEW
+SECTION FOR THE NEW RELEASE.
 
-#### Patch release (e.g. 1.5.1)
+#### PATCH RELEASE (E.G. 1.5.1)
 
-To compare the forthcoming patch release with the latest release from the same branch, set
-`--previous_version` as the tag of the previous release (in this example `1.5.0`; remember to update accordingly)
+TO COMPARE THE FORTHCOMING PATCH RELEASE WITH THE LATEST RELEASE FROM THE SAME BRANCH, SET
+`--previous_version` AS THE TAG OF THE PREVIOUS RELEASE (IN THIS EXAMPLE `1.5.0`; REMEMBER TO UPDATE ACCORDINGLY)
 
 ```bash
 python changelog.py --previous_version 1.5.0 --current_version ${SUPERSET_GITHUB_BRANCH} changelog
 ```
 
-### Set version number
+### SET VERSION NUMBER
 
-Finally, bump the version number on `superset-frontend/package.json` (replace with whichever version is being released excluding the RC version):
+FINALLY, BUMP THE VERSION NUMBER ON `superset-frontend/package.json` (REPLACE WITH WHICHEVER VERSION IS BEING RELEASED EXCLUDING THE RC VERSION):
 
 ```json
 "version": "0.38.0"
 ```
 
-Commit the change with the version number, then git tag the version with the release candidate and push to the branch:
+COMMIT THE CHANGE WITH THE VERSION NUMBER, THEN GIT TAG THE VERSION WITH THE RELEASE CANDIDATE AND PUSH TO THE BRANCH:
 
 ```bash
 # add changed files and commit
@@ -279,12 +279,12 @@ git tag ${SUPERSET_VERSION_RC}
 git push origin ${SUPERSET_VERSION_RC}
 ```
 
-## Preparing the release candidate
+## PREPARING THE RELEASE CANDIDATE
 
-The first step of preparing an Apache Release is packaging a release candidate
-to be voted on. Make sure you have correctly prepared and tagged the ready to ship
-release on Superset's repo (MAJOR.MINOR branch), the following script will clone
-the tag and create a signed source tarball from it:
+THE FIRST STEP OF PREPARING AN APACHE RELEASE IS PACKAGING A RELEASE CANDIDATE
+TO BE VOTED ON. MAKE SURE YOU HAVE CORRECTLY PREPARED AND TAGGED THE READY TO SHIP
+RELEASE ON SUPERSET'S REPO (MAJOR.MINOR BRANCH), THE FOLLOWING SCRIPT WILL CLONE
+THE TAG AND CREATE A SIGNED SOURCE TARBALL FROM IT:
 
 ```bash
 # make_tarball will use the previously set environment variables
@@ -292,16 +292,16 @@ the tag and create a signed source tarball from it:
 ./make_tarball.sh
 ```
 
-Note that `make_tarball.sh`:
+NOTE THAT `make_tarball.sh`:
 
-- By default, the script assumes you have already executed an SVN checkout to `$HOME/svn/superset_dev`.
-  This can be overridden by setting `SUPERSET_SVN_DEV_PATH` environment var to a different svn dev directory
-- Will refuse to craft a new release candidate if a release already exists on your local svn dev directory
-- Will check `package.json` version number and fails if it's not correctly set
+- BY DEFAULT, THE SCRIPT ASSUMES YOU HAVE ALREADY EXECUTED AN SVN CHECKOUT TO `$HOME/svn/superset_dev`.
+  THIS CAN BE OVERRIDDEN BY SETTING `SUPERSET_SVN_DEV_PATH` ENVIRONMENT VAR TO A DIFFERENT SVN DEV DIRECTORY
+- WILL REFUSE TO CRAFT A NEW RELEASE CANDIDATE IF A RELEASE ALREADY EXISTS ON YOUR LOCAL SVN DEV DIRECTORY
+- WILL CHECK `package.json` VERSION NUMBER AND FAILS IF IT'S NOT CORRECTLY SET
 
-### Build and test the created source tarball
+### BUILD AND TEST THE CREATED SOURCE TARBALL
 
-To build and run the **local copy** of the recently created tarball:
+TO BUILD AND RUN THE **LOCAL COPY** OF THE RECENTLY CREATED TARBALL:
 
 ```bash
 # Build and run a release candidate tarball
@@ -310,9 +310,9 @@ To build and run the **local copy** of the recently created tarball:
 # login using admin/admin
 ```
 
-### Shipping to SVN
+### SHIPPING TO SVN
 
-Now let's ship this RC into svn's dev folder
+NOW LET'S SHIP THIS RC INTO SVN'S DEV FOLDER
 
 ```bash
 cd ~/svn/superset_dev/
@@ -321,9 +321,9 @@ svn commit -m "Release ${SUPERSET_VERSION_RC}"
 svn update
 ```
 
-### Build and test from SVN source tarball
+### BUILD AND TEST FROM SVN SOURCE TARBALL
 
-To build and run the recently created tarball **from SVN**:
+TO BUILD AND RUN THE RECENTLY CREATED TARBALL **FROM SVN**:
 
 ```bash
 # Build and run a release candidate tarball
@@ -332,39 +332,39 @@ To build and run the recently created tarball **from SVN**:
 # login using admin/admin
 ```
 
-## Create a release on GitHub
+## CREATE A RELEASE ON GITHUB
 
-After submitting the tag and testing the release candidate, follow the steps [here](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) to create the release on GitHub. Use the vote email text as the content for the release description. Make sure to check the "This is a pre-release" checkbox for release candidates. You can check previous releases if you need an example.
+AFTER SUBMITTING THE TAG AND TESTING THE RELEASE CANDIDATE, FOLLOW THE STEPS [HERE](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) TO CREATE THE RELEASE ON GITHUB. USE THE VOTE EMAIL TEXT AS THE CONTENT FOR THE RELEASE DESCRIPTION. MAKE SURE TO CHECK THE "THIS IS A PRE-RELEASE" CHECKBOX FOR RELEASE CANDIDATES. YOU CAN CHECK PREVIOUS RELEASES IF YOU NEED AN EXAMPLE.
 
-## Voting
+## VOTING
 
-Now you're ready to start the [VOTE] thread. Here's an example of a
-previous release vote thread:
+NOW YOU'RE READY TO START THE [VOTE] THREAD. HERE'S AN EXAMPLE OF A
+PREVIOUS RELEASE VOTE THREAD:
 https://lists.apache.org/thread.html/e60f080ebdda26896214f7d3d5be1ccadfab95d48fbe813252762879@<dev.superset.apache.org>
 
-To easily send a voting request to Superset community, still on the `superset/RELEASING` directory:
+TO EASILY SEND A VOTING REQUEST TO SUPERSET COMMUNITY, STILL ON THE `superset/RELEASING` DIRECTORY:
 
 ```bash
 # Note: use Superset's virtualenv
 (venv)$ python generate_email.py vote_pmc
 ```
 
-The script will generate the email text that should be sent to dev@superset.apache.org using an email client. The release version and release candidate number are fetched from the previously set environment variables.
+THE SCRIPT WILL GENERATE THE EMAIL TEXT THAT SHOULD BE SENT TO dev@superset.apache.org USING AN EMAIL CLIENT. THE RELEASE VERSION AND RELEASE CANDIDATE NUMBER ARE FETCHED FROM THE PREVIOUSLY SET ENVIRONMENT VARIABLES.
 
-Once 3+ binding votes (by PMC members) have been cast and at
-least 72 hours have past, you can post a [RESULT] thread:
+ONCE 3+ BINDING VOTES (BY PMC MEMBERS) HAVE BEEN CAST AND AT
+LEAST 72 HOURS HAVE PAST, YOU CAN POST A [RESULT] THREAD:
 https://lists.apache.org/thread.html/50a6b134d66b86b237d5d7bc89df1b567246d125a71394d78b45f9a8@%3Cdev.superset.apache.org%3E
 
-To easily send the result email, still on the `superset/RELEASING` directory:
+TO EASILY SEND THE RESULT EMAIL, STILL ON THE `superset/RELEASING` DIRECTORY:
 
 ```bash
 # Note: use Superset's virtualenv
 python generate_email.py result_pmc
 ```
 
-The script will interactively ask for extra information needed to fill out the email template. Based on the
-voting description, it will generate a passing, non passing or non conclusive email.
-Here's an example:
+THE SCRIPT WILL INTERACTIVELY ASK FOR EXTRA INFORMATION NEEDED TO FILL OUT THE EMAIL TEMPLATE. BASED ON THE
+VOTING DESCRIPTION, IT WILL GENERATE A PASSING, NON PASSING OR NON CONCLUSIVE EMAIL.
+HERE'S AN EXAMPLE:
 
 ```text
 A List of people with +1 binding vote (ex: Max,Grace,Krist): Daniel,Alan,Max,Grace
@@ -372,31 +372,31 @@ A List of people with +1 non binding vote (ex: Ville): Ville
 A List of people with -1 vote (ex: John):
 ```
 
-The script will generate the email text that should be sent to dev@superset.apache.org using an email client. The release version and release candidate number are fetched from the previously set environment variables.
+THE SCRIPT WILL GENERATE THE EMAIL TEXT THAT SHOULD BE SENT TO dev@superset.apache.org USING AN EMAIL CLIENT. THE RELEASE VERSION AND RELEASE CANDIDATE NUMBER ARE FETCHED FROM THE PREVIOUSLY SET ENVIRONMENT VARIABLES.
 
-## Validating a release
+## VALIDATING A RELEASE
 
-Official instructions:
+OFFICIAL INSTRUCTIONS:
 https://www.apache.org/info/verification.html
 
-We now have a handy script for anyone validating a release to use. The core of it is in this very folder, `verify_release.py`. Just make sure you have all three release files in the same directory (`{some version}.tar.gz`, `{some version}.tar.gz.asc` and `{some version}tar.gz.sha512`). Then you can pass this script the path to the `.gz` file like so:
+WE NOW HAVE A HANDY SCRIPT FOR ANYONE VALIDATING A RELEASE TO USE. THE CORE OF IT IS IN THIS VERY FOLDER, `verify_release.py`. JUST MAKE SURE YOU HAVE ALL THREE RELEASE FILES IN THE SAME DIRECTORY (`{some version}.tar.gz`, `{some version}.tar.gz.asc` AND `{some version}tar.gz.sha512`). THEN YOU CAN PASS THIS SCRIPT THE PATH TO THE `.gz` FILE LIKE SO:
 `python verify_release.py ~/path/tp/apache_superset-{version/candidate}-source.tar.gz`
 
-If all goes well, you will see this result in your terminal:
+IF ALL GOES WELL, YOU WILL SEE THIS RESULT IN YOUR TERMINAL:
 
 ```bash
 SHA-512 verified
 RSA key verified
 ```
 
-There are also additional support scripts leveraging this to make it easy for those downloading a release to test it in-situ. You can do either of the following to validate these release assets:
+THERE ARE ALSO ADDITIONAL SUPPORT SCRIPTS LEVERAGING THIS TO MAKE IT EASY FOR THOSE DOWNLOADING A RELEASE TO TEST IT IN-SITU. YOU CAN DO EITHER OF THE FOLLOWING TO VALIDATE THESE RELEASE ASSETS:
 
-- `cd` into `superset-frontend` and run `npm run validate-release`
-- `cd` into `RELEASES` and run `./validate_this_release.sh`
+- `cd` INTO `superset-frontend` AND RUN `npm run validate-release`
+- `cd` INTO `RELEASES` AND RUN `./validate_this_release.sh`
 
-## Publishing a successful release
+## PUBLISHING A SUCCESSFUL RELEASE
 
-Upon a successful vote, you'll have to copy the folder into the non-"dev/" folder.
+UPON A SUCCESSFUL VOTE, YOU'LL HAVE TO COPY THE FOLDER INTO THE NON-"DEV/" FOLDER.
 
 ```bash
 cp -r ~/svn/superset_dev/${SUPERSET_VERSION_RC}/ ~/svn/superset/${SUPERSET_VERSION}/
@@ -408,7 +408,7 @@ svn commit -m "Release ${SUPERSET_VERSION}"
 svn update
 ```
 
-Then tag the final release:
+THEN TAG THE FINAL RELEASE:
 
 ```bash
 # Go to the root directory of the repo, e.g. `~/src/superset`
@@ -421,16 +421,16 @@ git tag -f ${SUPERSET_VERSION}
 git push origin ${SUPERSET_VERSION}
 ```
 
-### Publishing a Convenience Release to PyPI
+### PUBLISHING A CONVENIENCE RELEASE TO PYPI
 
-Extract the release to the `/tmp` folder to build the PyPI release. Files in the `/tmp` folder will be automatically deleted by the OS.
+EXTRACT THE RELEASE TO THE `/tmp` FOLDER TO BUILD THE PYPI RELEASE. FILES IN THE `/tmp` FOLDER WILL BE AUTOMATICALLY DELETED BY THE OS.
 
 ```bash
 mkdir -p /tmp/superset && cd /tmp/superset
 tar xfvz ~/svn/superset/${SUPERSET_VERSION}/${SUPERSET_RELEASE_TARBALL}
 ```
 
-Create a virtual environment and install the dependencies
+CREATE A VIRTUAL ENVIRONMENT AND INSTALL THE DEPENDENCIES
 
 ```bash
 cd ${SUPERSET_RELEASE_RC}
@@ -440,7 +440,7 @@ pip install -r requirements/base.txt
 pip install build twine
 ```
 
-Create the distribution
+CREATE THE DISTRIBUTION
 
 ```bash
 cd superset-frontend/
@@ -461,12 +461,12 @@ sed -i '' "s/version_string = .*/version_string = \"$SUPERSET_VERSION\"/" setup.
 python -m build
 ```
 
-Publish to PyPI
+PUBLISH TO PYPI
 
-You may need to ask a fellow committer to grant
-you access to it if you don't have access already. Make sure to create
-an account first if you don't have one, and reference your username
-while requesting access to push packages.
+YOU MAY NEED TO ASK A FELLOW COMMITTER TO GRANT
+YOU ACCESS TO IT IF YOU DON'T HAVE ACCESS ALREADY. MAKE SURE TO CREATE
+AN ACCOUNT FIRST IF YOU DON'T HAVE ONE, AND REFERENCE YOUR USERNAME
+WHILE REQUESTING ACCESS TO PUSH PACKAGES.
 
 ```bash
 # Run this first to make sure you are uploading the right version.
@@ -476,70 +476,70 @@ twine check dist/*
 twine upload dist/*
 ```
 
-Set your username to `__token__`
+SET YOUR USERNAME TO `__token__`
 
-Set your password to the token value, including the `pypi-` prefix
+SET YOUR PASSWORD TO THE TOKEN VALUE, INCLUDING THE `pypi-` PREFIX
 
-More information on https://pypi.org/help/#apitoken
+MORE INFORMATION ON https://pypi.org/help/#apitoken
 
-### Announcing
+### ANNOUNCING
 
-Once it's all done, an [ANNOUNCE] thread announcing the release to the dev@ mailing list is the final step.
+ONCE IT'S ALL DONE, AN [ANNOUNCE] THREAD ANNOUNCING THE RELEASE TO THE DEV@ MAILING LIST IS THE FINAL STEP.
 
 ```bash
 # Note use Superset's virtualenv
 python generate_email.py announce
 ```
 
-The script will generate the email text that should be sent to dev@superset.apache.org using an email client. The release version is fetched from the previously set environment variables.
+THE SCRIPT WILL GENERATE THE EMAIL TEXT THAT SHOULD BE SENT TO dev@superset.apache.org USING AN EMAIL CLIENT. THE RELEASE VERSION IS FETCHED FROM THE PREVIOUSLY SET ENVIRONMENT VARIABLES.
 
-### GitHub Release
+### GITHUB RELEASE
 
-Finally, so the GitHub UI reflects the latest release, you should create a release from the
-tag corresponding with the new version. Go to https://github.com/apache/superset/tags,
-click the 3-dot icon and select `Create Release`, paste the content of the ANNOUNCE thread in the
-release notes, and publish the new release.
+FINALLY, SO THE GITHUB UI REFLECTS THE LATEST RELEASE, YOU SHOULD CREATE A RELEASE FROM THE
+TAG CORRESPONDING WITH THE NEW VERSION. GO TO https://github.com/apache/superset/tags,
+CLICK THE 3-DOT ICON AND SELECT `Create Release`, PASTE THE CONTENT OF THE ANNOUNCE THREAD IN THE
+RELEASE NOTES, AND PUBLISH THE NEW RELEASE.
 
-At this point, a GitHub action will run that will check whether this release's version number is higher than the current 'latest' release. If that condition is true, this release sha will automatically be tagged as `latest` so that the most recent release can be referenced simply by using the 'latest' tag instead of looking up the version number. The existing version number tag will still exist, and can also be used for reference.
+AT THIS POINT, A GITHUB ACTION WILL RUN THAT WILL CHECK WHETHER THIS RELEASE'S VERSION NUMBER IS HIGHER THAN THE CURRENT 'LATEST' RELEASE. IF THAT CONDITION IS TRUE, THIS RELEASE SHA WILL AUTOMATICALLY BE TAGGED AS `latest` SO THAT THE MOST RECENT RELEASE CAN BE REFERENCED SIMPLY BY USING THE 'LATEST' TAG INSTEAD OF LOOKING UP THE VERSION NUMBER. THE EXISTING VERSION NUMBER TAG WILL STILL EXIST, AND CAN ALSO BE USED FOR REFERENCE.
 
-### Update Superset files
+### UPDATE SUPERSET FILES
 
-Now that we have a final Apache release we need to open a pull request on Superset with the changes on [CHANGELOG/\<version\>.md](../CHANGELOG) and [UPDATING.md](../UPDATING.md).
+NOW THAT WE HAVE A FINAL APACHE RELEASE WE NEED TO OPEN A PULL REQUEST ON SUPERSET WITH THE CHANGES ON [CHANGELOG/\<version\>.MD](../CHANGELOG) AND [UPDATING.MD](../UPDATING.md).
 
-We also need to update the Environment section of [ISSUE_TEMPLATE/bug-report.yml](../.github/ISSUE_TEMPLATE//bug-report.yml) to reflect the new release changes. This includes removing versions that are not supported anymore and adding new ones.
+WE ALSO NEED TO UPDATE THE ENVIRONMENT SECTION OF [ISSUE_TEMPLATE/BUG-REPORT.YML](../.github/ISSUE_TEMPLATE//bug-report.yml) TO REFLECT THE NEW RELEASE CHANGES. THIS INCLUDES REMOVING VERSIONS THAT ARE NOT SUPPORTED ANYMORE AND ADDING NEW ONES.
 
-### Docker Releases
+### DOCKER RELEASES
 
-Docker release with proper tags should happen automatically as version
-tags get pushed to the `apache/superset` GitHub repository through this
-[GitHub action](https://github.com/apache/superset/blob/master/.github/workflows/docker.yml)
+DOCKER RELEASE WITH PROPER TAGS SHOULD HAPPEN AUTOMATICALLY AS VERSION
+TAGS GET PUSHED TO THE `apache/superset` GITHUB REPOSITORY THROUGH THIS
+[GITHUB ACTION](https://github.com/apache/superset/blob/master/.github/workflows/docker.yml)
 
-Note that this GH action implements a `workflow_dispatch` trigger,
-meaning that it can be triggered manually from the GitHub UI. If anything
-was to go wrong in the automated process, it's possible to re-generate
-and re-push the proper images and tags through this interface. The action
-takes the version (ie `3.1.1`), the git reference (any SHA, tag or branch
-reference), and whether to force the `latest` Docker tag on the
-generated images.
+NOTE THAT THIS GH ACTION IMPLEMENTS A `workflow_dispatch` TRIGGER,
+MEANING THAT IT CAN BE TRIGGERED MANUALLY FROM THE GITHUB UI. IF ANYTHING
+WAS TO GO WRONG IN THE AUTOMATED PROCESS, IT'S POSSIBLE TO RE-GENERATE
+AND RE-PUSH THE PROPER IMAGES AND TAGS THROUGH THIS INTERFACE. THE ACTION
+TAKES THE VERSION (IE `3.1.1`), THE GIT REFERENCE (ANY SHA, TAG OR BRANCH
+REFERENCE), AND WHETHER TO FORCE THE `latest` DOCKER TAG ON THE
+GENERATED IMAGES.
 
-**NOTE:** If the docker image isn't built, you'll need to run this [GH action](https://github.com/apache/superset/actions/workflows/tag-release.yml) where you provide it the tag sha.
+**NOTE:** IF THE DOCKER IMAGE ISN'T BUILT, YOU'LL NEED TO RUN THIS [GH ACTION](https://github.com/apache/superset/actions/workflows/tag-release.yml) WHERE YOU PROVIDE IT THE TAG SHA.
 
-### Npm Release
+### NPM RELEASE
 
-You might want to publish the latest @superset-ui release to npm
+YOU MIGHT WANT TO PUBLISH THE LATEST @SUPERSET-UI RELEASE TO NPM
 
 ```bash
 cd superset/superset-frontend
 ```
 
-An automated GitHub action will run and generate a new tag, which will contain a version number provided as a parameter.
+AN AUTOMATED GITHUB ACTION WILL RUN AND GENERATE A NEW TAG, WHICH WILL CONTAIN A VERSION NUMBER PROVIDED AS A PARAMETER.
 
 ```bash
 export GH_TOKEN={GITHUB_TOKEN}
 npx lerna version {VERSION} --conventional-commits --create-release github --no-private --yes --message {COMMIT_MESSAGE}
 ```
 
-This action will publish the specified version to npm registry.
+THIS ACTION WILL PUBLISH THE SPECIFIED VERSION TO NPM REGISTRY.
 
 ```bash
 npx lerna publish from-package --yes

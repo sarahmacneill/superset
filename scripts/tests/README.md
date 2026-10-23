@@ -17,64 +17,64 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Utility script to run tests faster
+# UTILITY SCRIPT TO RUN TESTS FASTER
 
-By default tests will be run using the Postgres container defined at the `docker compose` file (`docker-compose.yml`) on the root of the repo,
-so prior to using this script make sure to launch the dev containers.
+BY DEFAULT TESTS WILL BE RUN USING THE POSTGRES CONTAINER DEFINED AT THE `docker compose` FILE (`docker-compose.yml`) ON THE ROOT OF THE REPO,
+SO PRIOR TO USING THIS SCRIPT MAKE SURE TO LAUNCH THE DEV CONTAINERS.
 
-You can use a different DB backend by defining `SUPERSET__SQLALCHEMY_DATABASE_URI` env var.
+YOU CAN USE A DIFFERENT DB BACKEND BY DEFINING `SUPERSET__SQLALCHEMY_DATABASE_URI` ENV VAR.
 
-This script will not install any dependencies for you, so you must be on an already set virtualenv
+THIS SCRIPT WILL NOT INSTALL ANY DEPENDENCIES FOR YOU, SO YOU MUST BE ON AN ALREADY SET VIRTUALENV
 
-## Usage
+## USAGE
 
-To show all supported switches:
+TO SHOW ALL SUPPORTED SWITCHES:
 
 ```bash
 scripts/tests/run.sh --help
 ```
 
-From the superset repo root directory:
+FROM THE SUPERSET REPO ROOT DIRECTORY:
 
-- Example run all tests:
+- EXAMPLE RUN ALL TESTS:
 
 ```bash
 scripts/tests/run.sh
 ```
 
-- Example run a single test module:
+- EXAMPLE RUN A SINGLE TEST MODULE:
 
 ```bash
 scripts/tests/run.sh --module tests/charts/api_tests.py
 ```
 
-- Example run a single test:
+- EXAMPLE RUN A SINGLE TEST:
 
 ```bash
 scripts/tests/run.sh --module tests/charts/api_tests.py::TestChartApi::test_get_charts
 ```
 
-- Example run a single test, without any init procedures. Init procedures include:
-  resetting test database, db upgrade, superset init, loading example data. If your tests
-  are idempotent, after the first run, subsequent runs are really fast
+- EXAMPLE RUN A SINGLE TEST, WITHOUT ANY INIT PROCEDURES. INIT PROCEDURES INCLUDE:
+  RESETTING TEST DATABASE, DB UPGRADE, SUPERSET INIT, LOADING EXAMPLE DATA. IF YOUR TESTS
+  ARE IDEMPOTENT, AFTER THE FIRST RUN, SUBSEQUENT RUNS ARE REALLY FAST
 
 ```bash
 scripts/tests/run.sh --module tests/charts/api_tests.py::TestChartApi::test_get_charts --no-init
 ```
 
-- Example for not recreating the test DB (will still run all the tests init procedures)
+- EXAMPLE FOR NOT RECREATING THE TEST DB (WILL STILL RUN ALL THE TESTS INIT PROCEDURES)
 
 ```bash
 scripts/tests/run.sh --module tests/charts/api_tests.py::TestChartApi::test_get_charts --no-reset-db
 ```
 
-- Example for not running tests just initialize the test DB (drop/create, upgrade and load examples)
+- EXAMPLE FOR NOT RUNNING TESTS JUST INITIALIZE THE TEST DB (DROP/CREATE, UPGRADE AND LOAD EXAMPLES)
 
 ```bash
 scripts/tests/run.sh --no-tests
 ```
 
-- Example for just resetting the tests DB
+- EXAMPLE FOR JUST RESETTING THE TESTS DB
 
 ```bash
 scripts/tests/run.sh --reset-db --no-tests

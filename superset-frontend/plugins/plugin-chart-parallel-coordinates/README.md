@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-parallel-coordinates
+## @SUPERSET-UI/PLUGIN-CHART-PARALLEL-COORDINATES
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-parallel-coordinates.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-parallel-coordinates)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-parallel-coordinates?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-parallel-coordinates)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-parallel-coordinates.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-parallel-coordinates)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-parallel-coordinates?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-parallel-coordinates)
 
-This plugin provides Parallel Coordinates for Superset.
+THIS PLUGIN PROVIDES PARALLEL COORDINATES FOR SUPERSET.
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import ParallelCoordinatesChartPlugin from '@superset-ui/plugin-chart-parallel-coordinates';
@@ -37,9 +37,9 @@ new ParallelCoordinatesChartPlugin()
   .register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-parallel-coordinates)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-parallel-coordinates)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart

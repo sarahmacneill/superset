@@ -17,22 +17,22 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# @apache-superset/core
+# @APACHE-SUPERSET/CORE
 
-[![npm version](https://badge.fury.io/js/%40apache-superset%2Fcore.svg)](https://badge.fury.io/js/%40apache-superset%2Fcore)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![NPM VERSION](https://badge.fury.io/js/%40apache-superset%2Fcore.svg)](https://badge.fury.io/js/%40apache-superset%2Fcore)
+[![LICENSE](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-The official core package for building Apache Superset extensions and integrations. This package provides essential building blocks including shared UI components, utility functions, APIs, and type definitions for both the host application and extensions.
+THE OFFICIAL CORE PACKAGE FOR BUILDING APACHE SUPERSET EXTENSIONS AND INTEGRATIONS. THIS PACKAGE PROVIDES ESSENTIAL BUILDING BLOCKS INCLUDING SHARED UI COMPONENTS, UTILITY FUNCTIONS, APIS, AND TYPE DEFINITIONS FOR BOTH THE HOST APPLICATION AND EXTENSIONS.
 
-## 📦 Installation
+## 📦 INSTALLATION
 
 ```bash
 npm install @apache-superset/core
 ```
 
-## 🏗️ Package Structure
+## 🏗️ PACKAGE STRUCTURE
 
-The source is organized into focused namespaces, each in its own directory:
+THE SOURCE IS ORGANIZED INTO FOCUSED NAMESPACES, EACH IN ITS OWN DIRECTORY:
 
 ```
 src/
@@ -53,13 +53,13 @@ src/
 └── index.ts
 ```
 
-## 🚀 Quick Start
+## 🚀 QUICK START
 
-Frontend contributions are registered as module-level side effects from your extension's entry point.
+FRONTEND CONTRIBUTIONS ARE REGISTERED AS MODULE-LEVEL SIDE EFFECTS FROM YOUR EXTENSION'S ENTRY POINT.
 
-### Views
+### VIEWS
 
-Add custom panels or UI components at specific locations in the application:
+ADD CUSTOM PANELS OR UI COMPONENTS AT SPECIFIC LOCATIONS IN THE APPLICATION:
 
 ```tsx
 import { views } from '@apache-superset/core';
@@ -72,9 +72,9 @@ views.registerView(
 );
 ```
 
-### Commands
+### COMMANDS
 
-Define named actions that can be triggered from menus, keyboard shortcuts, or code:
+DEFINE NAMED ACTIONS THAT CAN BE TRIGGERED FROM MENUS, KEYBOARD SHORTCUTS, OR CODE:
 
 ```typescript
 import { commands } from '@apache-superset/core';
@@ -92,9 +92,9 @@ commands.registerCommand(
 );
 ```
 
-### Menus
+### MENUS
 
-Attach commands to primary, secondary, or context menus at a given location:
+ATTACH COMMANDS TO PRIMARY, SECONDARY, OR CONTEXT MENUS AT A GIVEN LOCATION:
 
 ```typescript
 import { menus } from '@apache-superset/core';
@@ -106,9 +106,9 @@ menus.registerMenuItem(
 );
 ```
 
-### Editors
+### EDITORS
 
-Replace the default text editor for one or more languages:
+REPLACE THE DEFAULT TEXT EDITOR FOR ONE OR MORE LANGUAGES:
 
 ```typescript
 import { editors } from '@apache-superset/core';
@@ -124,12 +124,12 @@ editors.registerEditor(
 );
 ```
 
-## 📄 License
+## 📄 LICENSE
 
-Licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) for details.
+LICENSED UNDER THE APACHE LICENSE, VERSION 2.0. SEE [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) FOR DETAILS.
 
-## 🔗 Links
+## 🔗 LINKS
 
-- [Community](https://superset.apache.org/community/)
-- [GitHub Repository](https://github.com/apache/superset)
-- [Extensions Documentation](https://superset.apache.org/developer-docs/extensions/overview)
+- [COMMUNITY](https://superset.apache.org/community/)
+- [GITHUB REPOSITORY](https://github.com/apache/superset)
+- [EXTENSIONS DOCUMENTATION](https://superset.apache.org/developer-docs/extensions/overview)

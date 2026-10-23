@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/chart-controls
+## @SUPERSET-UI/CHART-CONTROLS
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/chart-controls.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/chart-controls)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fchart-controls)](https://libraries.io/npm/@superset-ui%2Fchart-controls)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/chart-controls.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/chart-controls)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fchart-controls)](https://libraries.io/npm/@superset-ui%2Fchart-controls)
 
-Description
+DESCRIPTION
 
-#### Example usage
+#### EXAMPLE USAGE
 
 ```js
 import { xxx } from '@superset-ui/chart-controls';
@@ -34,9 +34,9 @@ import { xxx } from '@superset-ui/chart-controls';
 
 `fn(args)`
 
-- Do something
+- DO SOMETHING
 
-### Development
+### DEVELOPMENT
 
-`@data-ui/build-config` is used to manage the build configuration for this package including babel
-builds, jest testing, eslint, and prettier.
+`@data-ui/build-config` IS USED TO MANAGE THE BUILD CONFIGURATION FOR THIS PACKAGE INCLUDING BABEL
+BUILDS, JEST TESTING, ESLINT, AND PRETTIER.

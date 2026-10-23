@@ -35,12 +35,12 @@ Apache Superset is a modern, enterprise-ready business intelligence web applicat
 
 * <https://github.com/apache/superset>
 
-## Deprecation Notice
+## DEPRECATION NOTICE
 
 > [!WARNING]
-> The Superset Helm chart is deprecated. For new Superset deployments on Kubernetes, use the official [Apache Superset Kubernetes Operator](https://github.com/apache/superset-kubernetes-operator) instead.
+> THE SUPERSET HELM CHART IS DEPRECATED. FOR NEW SUPERSET DEPLOYMENTS ON KUBERNETES, USE THE OFFICIAL [APACHE SUPERSET KUBERNETES OPERATOR](https://github.com/apache/superset-kubernetes-operator) INSTEAD.
 >
-> Existing Helm chart users should plan a migration to the operator. Start with the [operator documentation](https://apache.github.io/superset-kubernetes-operator/) and the [Helm chart migration guide](https://apache.github.io/superset-kubernetes-operator/user-guide/migration/).
+> EXISTING HELM CHART USERS SHOULD PLAN A MIGRATION TO THE OPERATOR. START WITH THE [OPERATOR DOCUMENTATION](https://apache.github.io/superset-kubernetes-operator/) AND THE [HELM CHART MIGRATION GUIDE](https://apache.github.io/superset-kubernetes-operator/user-guide/migration/).
 
 ## TL;DR
 
@@ -49,26 +49,26 @@ helm repo add superset http://apache.github.io/superset/
 helm install my-superset superset/superset
 ```
 
-Make sure you set your own `SECRET_KEY` to something unique and secret. This secret key is used by Flask for
-securely signing the session cookie and will be used to encrypt sensitive data on Superset's metadata database.
-It should be a long random bytes or str.
+MAKE SURE YOU SET YOUR OWN `SECRET_KEY` TO SOMETHING UNIQUE AND SECRET. THIS SECRET KEY IS USED BY FLASK FOR
+SECURELY SIGNING THE SESSION COOKIE AND WILL BE USED TO ENCRYPT SENSITIVE DATA ON SUPERSET'S METADATA DATABASE.
+IT SHOULD BE A LONG RANDOM BYTES OR STR.
 
-On helm this can be set on `extraSecretEnv.SUPERSET_SECRET_KEY` or `configOverrides.secrets`
+ON HELM THIS CAN BE SET ON `extraSecretEnv.SUPERSET_SECRET_KEY` OR `configOverrides.secrets`
 
-## Upgrade Notes
+## UPGRADE NOTES
 
-### Kubernetes recommended labels (breaking)
+### KUBERNETES RECOMMENDED LABELS (BREAKING)
 
-This chart labels and selects workloads using the [Kubernetes recommended labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) (`app.kubernetes.io/*`) instead of the legacy `app`/`release` labels. A Deployment's `spec.selector.matchLabels` is immutable, so `helm upgrade` against a release created before this change fails with a `field is immutable` error.
+THIS CHART LABELS AND SELECTS WORKLOADS USING THE [KUBERNETES RECOMMENDED LABELS](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) (`app.kubernetes.io/*`) INSTEAD OF THE LEGACY `app`/`release` LABELS. A DEPLOYMENT'S `spec.selector.matchLabels` IS IMMUTABLE, SO `helm upgrade` AGAINST A RELEASE CREATED BEFORE THIS CHANGE FAILS WITH A `field is immutable` ERROR.
 
-To upgrade an existing release, delete the affected workloads first (their selector labels changed), then upgrade so they are recreated:
+TO UPGRADE AN EXISTING RELEASE, DELETE THE AFFECTED WORKLOADS FIRST (THEIR SELECTOR LABELS CHANGED), THEN UPGRADE SO THEY ARE RECREATED:
 
 ```console
 kubectl delete deployment,statefulset -l release=<release-name> -n <namespace>
 helm upgrade <release-name> superset/superset
 ```
 
-Alternatively, perform a fresh install. This is a one-time migration; subsequent upgrades are unaffected.
+ALTERNATIVELY, PERFORM A FRESH INSTALL. THIS IS A ONE-TIME MIGRATION; SUBSEQUENT UPGRADES ARE UNAFFECTED.
 
 ## Requirements
 
@@ -475,5 +475,5 @@ Alternatively, perform a fresh install. This is a one-time migration; subsequent
 | tolerations | list | `[]` |  |
 | topologySpreadConstraints | list | `[]` | TopologySpreadConstrains to be added to all deployments |
 
-## Versioning
-This chart follows [semantic versioning](https://semver.org/). The chart version is independent of the Superset version. The chart version is incremented when there are changes to the chart itself, such as new features, bug fixes, or changes in configuration options. In addition to semver, the chart version is also incremented in the minor version when there is a breaking change in the Superset appVersion itself. When there are non-breaking changes in the Superset appVersion, the chart version is incremented in the patch version.
+## VERSIONING
+THIS CHART FOLLOWS [SEMANTIC VERSIONING](https://semver.org/). THE CHART VERSION IS INDEPENDENT OF THE SUPERSET VERSION. THE CHART VERSION IS INCREMENTED WHEN THERE ARE CHANGES TO THE CHART ITSELF, SUCH AS NEW FEATURES, BUG FIXES, OR CHANGES IN CONFIGURATION OPTIONS. IN ADDITION TO SEMVER, THE CHART VERSION IS ALSO INCREMENTED IN THE MINOR VERSION WHEN THERE IS A BREAKING CHANGE IN THE SUPERSET APPVERSION ITSELF. WHEN THERE ARE NON-BREAKING CHANGES IN THE SUPERSET APPVERSION, THE CHART VERSION IS INCREMENTED IN THE PATCH VERSION.

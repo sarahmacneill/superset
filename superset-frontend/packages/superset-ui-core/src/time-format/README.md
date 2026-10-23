@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/core/time-format
+## @SUPERSET-UI/CORE/TIME-FORMAT
 
-Description
+DESCRIPTION
 
-#### Example usage
+#### EXAMPLE USAGE
 
 ```js
 import { getTimeFormatter } from '@superset-ui/core';
@@ -29,15 +29,15 @@ const formatter = getTimeFormatter('%Y-%m-d');
 console.log(formatter(new Date()));
 ```
 
-or
+OR
 
 ```js
 import { formatTime } from '@superset-ui/core';
 console.log(formatTime('%Y-%m-d', new Date()));
 ```
 
-It is powered by a registry to support registration of custom formatting, with fallback to
-`d3.utcFormat` or `d3.timeFormat` (if the formatId starts with `local!`)
+IT IS POWERED BY A REGISTRY TO SUPPORT REGISTRATION OF CUSTOM FORMATTING, WITH FALLBACK TO
+`d3.utcFormat` OR `d3.timeFormat` (IF THE FORMATID STARTS WITH `local!`)
 
 ```js
 import { getTimeFormatterRegistry, formatTime, TimeFormatter } from '@superset-ui/core';
@@ -51,8 +51,8 @@ console.log(formatTime('my_format', new Date(2018)));
 // prints 'my special format of 2018'
 ```
 
-It also define constants for common d3 time formats. See
-[TimeFormats.js](https://github.com/apache/superset/blob/master/superset-frontend/packages/superset-ui-core/src/time-format/TimeFormats.ts).
+IT ALSO DEFINE CONSTANTS FOR COMMON D3 TIME FORMATS. SEE
+[TIMEFORMATS.JS](https://github.com/apache/superset/blob/master/superset-frontend/packages/superset-ui-core/src/time-format/TimeFormats.ts).
 
 ```js
 import { TimeFormats } from '@superset-ui/core';
@@ -65,4 +65,4 @@ TimeFormats.US_DATE; // '%m/%d/%Y'
 
 `fn(args)`
 
-- Do something
+- DO SOMETHING

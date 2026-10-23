@@ -1,5 +1,5 @@
-# Superset Development with GitHub Codespaces
+# SUPERSET DEVELOPMENT WITH GITHUB CODESPACES
 
-For complete documentation on using GitHub Codespaces with Apache Superset, please see:
+FOR COMPLETE DOCUMENTATION ON USING GITHUB CODESPACES WITH APACHE SUPERSET, PLEASE SEE:
 
-**[Setting up a Development Environment - GitHub Codespaces](https://superset.apache.org/docs/contributing/development#github-codespaces-cloud-development)**
+**[SETTING UP A DEVELOPMENT ENVIRONMENT - GITHUB CODESPACES](https://superset.apache.org/docs/contributing/development#github-codespaces-cloud-development)**

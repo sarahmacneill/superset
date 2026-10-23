@@ -17,98 +17,98 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 1.1.0
+# RELEASE NOTES FOR SUPERSET 1.1.0
 
-Superset 1.1.0 continues to build on the [1.0](https://github.com/apache/superset/blob/master/RELEASING/release-notes-1-0/README.md) release with big improvements to user experience, security, dashboard level access, and database connectivity.
+SUPERSET 1.1.0 CONTINUES TO BUILD ON THE [1.0](https://github.com/apache/superset/blob/master/RELEASING/release-notes-1-0/README.md) RELEASE WITH BIG IMPROVEMENTS TO USER EXPERIENCE, SECURITY, DASHBOARD LEVEL ACCESS, AND DATABASE CONNECTIVITY.
 
-- [**User Experience**](#user-experience)
-- [**Dashboard Level Security**](#dashboard-level-security)
-- [**Database Connectivity**](#database-connectivity)
-- [**PR Highlights**](#pr-highlights)
-- [**Breaking Changes and Full Changelog**](#breaking-changes-and-full-changelog)
+- [**USER EXPERIENCE**](#user-experience)
+- [**DASHBOARD LEVEL SECURITY**](#dashboard-level-security)
+- [**DATABASE CONNECTIVITY**](#database-connectivity)
+- [**PR HIGHLIGHTS**](#pr-highlights)
+- [**BREAKING CHANGES AND FULL CHANGELOG**](#breaking-changes-and-full-changelog)
 
-# User Experience
+# USER EXPERIENCE
 
-In general, the quality, usability, and aesthetics of the Superset user experience continues to develop in the direction of [SIP-34](https://github.com/apache/superset/issues/8976) and more tests have been added to ui components to ensure usability is maintained.
+IN GENERAL, THE QUALITY, USABILITY, AND AESTHETICS OF THE SUPERSET USER EXPERIENCE CONTINUES TO DEVELOP IN THE DIRECTION OF [SIP-34](https://github.com/apache/superset/issues/8976) AND MORE TESTS HAVE BEEN ADDED TO UI COMPONENTS TO ENSURE USABILITY IS MAINTAINED.
 
-The migration to Apache ECharts continues with the addition of a [new force-directed graph](https://github.com/apache/superset/pull/13111).
+THE MIGRATION TO APACHE ECHARTS CONTINUES WITH THE ADDITION OF A [NEW FORCE-DIRECTED GRAPH](https://github.com/apache/superset/pull/13111).
 
-![Force Directed Graph](media/force_directed_graph.jpg)
+![FORCE DIRECTED GRAPH](media/force_directed_graph.jpg)
 
-The ECharts library included with Superset was also bumped to 5.0.2, which includes some [fixes to pie charts.](https://github.com/apache/superset/pull/13052) The overall improvement of chart options and quality can be expected to continue in future releases. New 'sort by' controls have also been [added](https://github.com/apache/superset/pull/13049) to [many charts](https://github.com/apache/superset/pull/13057).
+THE ECHARTS LIBRARY INCLUDED WITH SUPERSET WAS ALSO BUMPED TO 5.0.2, WHICH INCLUDES SOME [FIXES TO PIE CHARTS.](https://github.com/apache/superset/pull/13052) THE OVERALL IMPROVEMENT OF CHART OPTIONS AND QUALITY CAN BE EXPECTED TO CONTINUE IN FUTURE RELEASES. NEW 'SORT BY' CONTROLS HAVE ALSO BEEN [ADDED](https://github.com/apache/superset/pull/13049) TO [MANY CHARTS](https://github.com/apache/superset/pull/13057).
 
-The dashboard native filter feature, [while still behind a feature flag in this release,](https://github.com/apache/superset/blob/master/RELEASING/release-notes-1-0/README.md#feature-flags) has been improved and is ready to test out.
+THE DASHBOARD NATIVE FILTER FEATURE, [WHILE STILL BEHIND A FEATURE FLAG IN THIS RELEASE,](https://github.com/apache/superset/blob/master/RELEASING/release-notes-1-0/README.md#feature-flags) HAS BEEN IMPROVED AND IS READY TO TEST OUT.
 
-![Native Filter](media/native_filters.jpg)
+![NATIVE FILTER](media/native_filters.jpg)
 
-Since the 1.0 release, we have seen a surge of support from the community around updating Superset's [documentation](https://superset.apache.org/docs/intro) and adding more tests to the UI. Thanks to all who contributed in this area. This is what open-source software is all about!
+SINCE THE 1.0 RELEASE, WE HAVE SEEN A SURGE OF SUPPORT FROM THE COMMUNITY AROUND UPDATING SUPERSET'S [DOCUMENTATION](https://superset.apache.org/docs/intro) AND ADDING MORE TESTS TO THE UI. THANKS TO ALL WHO CONTRIBUTED IN THIS AREA. THIS IS WHAT OPEN-SOURCE SOFTWARE IS ALL ABOUT!
 
-# Dashboard Level Security
+# DASHBOARD LEVEL SECURITY
 
-Dashboard providers in an organization with many subgroups need the ability manage user access to dashboards and different levels of permissions (read, write, granter, owner). Improving dashboard level access was proposed (and approved) in [SIP-51](https://github.com/apache/superset/issues/10408).
+DASHBOARD PROVIDERS IN AN ORGANIZATION WITH MANY SUBGROUPS NEED THE ABILITY MANAGE USER ACCESS TO DASHBOARDS AND DIFFERENT LEVELS OF PERMISSIONS (READ, WRITE, GRANTER, OWNER). IMPROVING DASHBOARD LEVEL ACCESS WAS PROPOSED (AND APPROVED) IN [SIP-51](https://github.com/apache/superset/issues/10408).
 
 ![SIP 51](media/sip_51.jpg)
 
-In 1.1, some key steps were taken towards the vision laid out in SIP-51. **Note that this functionality is still hidden behind feature flags and is an active area of development.** You can view a list of relevant PR's in [PR Highlights](#pr-highlights)
+IN 1.1, SOME KEY STEPS WERE TAKEN TOWARDS THE VISION LAID OUT IN SIP-51. **NOTE THAT THIS FUNCTIONALITY IS STILL HIDDEN BEHIND FEATURE FLAGS AND IS AN ACTIVE AREA OF DEVELOPMENT.** YOU CAN VIEW A LIST OF RELEVANT PR'S IN [PR HIGHLIGHTS](#pr-highlights)
 
 
-# Database Connectivity
+# DATABASE CONNECTIVITY
 
-Superset is only as good as the databases it can query. This release saw the expanded support of existing databases and foundational support for new databases.
+SUPERSET IS ONLY AS GOOD AS THE DATABASES IT CAN QUERY. THIS RELEASE SAW THE EXPANDED SUPPORT OF EXISTING DATABASES AND FOUNDATIONAL SUPPORT FOR NEW DATABASES.
 
-- [Opendistro](https://github.com/apache/superset/pull/12602)
-- [Trino](https://github.com/apache/superset/pull/13105)
-- [CrateDB](https://github.com/apache/superset/pull/13152/files)
-- [Apache Pinot](https://github.com/apache/superset/pull/13163)
-- [Presto](https://github.com/apache/superset/pull/13214)
-- [BigQuery](https://github.com/apache/superset/pull/12581)
-- [Postgres](https://github.com/apache/superset/pull/11720)
-- [Google Sheets](https://github.com/apache/superset/pull/13185)
-- [Athena](https://github.com/apache/superset/pull/13201)
+- [OPENDISTRO](https://github.com/apache/superset/pull/12602)
+- [TRINO](https://github.com/apache/superset/pull/13105)
+- [CRATEDB](https://github.com/apache/superset/pull/13152/files)
+- [APACHE PINOT](https://github.com/apache/superset/pull/13163)
+- [PRESTO](https://github.com/apache/superset/pull/13214)
+- [BIGQUERY](https://github.com/apache/superset/pull/12581)
+- [POSTGRES](https://github.com/apache/superset/pull/11720)
+- [GOOGLE SHEETS](https://github.com/apache/superset/pull/13185)
+- [ATHENA](https://github.com/apache/superset/pull/13201)
 
-# PR Highlights
+# PR HIGHLIGHTS
 
-**Progress On Dashboard Native Filters**
+**PROGRESS ON DASHBOARD NATIVE FILTERS**
 
-- feat(chart-data): add rowcount, timegrain and column result types (#[13271](https://github.com/apache/superset/pull/13271))
-- feat(native-filters): enable filter indicator and make datasource optional (#[13148](https://github.com/apache/superset/pull/13148))
-- feat(native-filters): hide filterBar and toggle icon when in editMode (#[13108](https://github.com/apache/superset/pull/13108))
-- feat(native-filters): add storybook entry for select filter (#[13005](https://github.com/apache/superset/pull/13005))
-- feat(native-filters): Time native filter (#[12992](https://github.com/apache/superset/pull/12992))
-- feat(native-filters): Add defaultValue for Native filters modal (#[12199](https://github.com/apache/superset/pull/12199))
-- feat(native-filters): apply scoping of native filters to dashboard (#[12716](https://github.com/apache/superset/pull/12716))
+- FEAT(CHART-DATA): ADD ROWCOUNT, TIMEGRAIN AND COLUMN RESULT TYPES (#[13271](https://github.com/apache/superset/pull/13271))
+- FEAT(NATIVE-FILTERS): ENABLE FILTER INDICATOR AND MAKE DATASOURCE OPTIONAL (#[13148](https://github.com/apache/superset/pull/13148))
+- FEAT(NATIVE-FILTERS): HIDE FILTERBAR AND TOGGLE ICON WHEN IN EDITMODE (#[13108](https://github.com/apache/superset/pull/13108))
+- FEAT(NATIVE-FILTERS): ADD STORYBOOK ENTRY FOR SELECT FILTER (#[13005](https://github.com/apache/superset/pull/13005))
+- FEAT(NATIVE-FILTERS): TIME NATIVE FILTER (#[12992](https://github.com/apache/superset/pull/12992))
+- FEAT(NATIVE-FILTERS): ADD DEFAULTVALUE FOR NATIVE FILTERS MODAL (#[12199](https://github.com/apache/superset/pull/12199))
+- FEAT(NATIVE-FILTERS): APPLY SCOPING OF NATIVE FILTERS TO DASHBOARD (#[12716](https://github.com/apache/superset/pull/12716))
 
-**Progress On Dashboard Level Access**
+**PROGRESS ON DASHBOARD LEVEL ACCESS**
 
-- feat(dashboard-rbac): dashboard lists (#[12680](https://github.com/apache/superset/pull/12680))
-- feat(dashboard-rbac): add support for related roles (#[13035](https://github.com/apache/superset/pull/13035))
-- feat(dashboard-rbac): dashboards API support for roles create/update + roles validation (#[12865](https://github.com/apache/superset/pull/12865))
-- feat(dashboard-rbac): `dashboard_view` access enforcement (#[12875](https://github.com/apache/superset/pull/12875))
+- FEAT(DASHBOARD-RBAC): DASHBOARD LISTS (#[12680](https://github.com/apache/superset/pull/12680))
+- FEAT(DASHBOARD-RBAC): ADD SUPPORT FOR RELATED ROLES (#[13035](https://github.com/apache/superset/pull/13035))
+- FEAT(DASHBOARD-RBAC): DASHBOARDS API SUPPORT FOR ROLES CREATE/UPDATE + ROLES VALIDATION (#[12865](https://github.com/apache/superset/pull/12865))
+- FEAT(DASHBOARD-RBAC): `dashboard_view` ACCESS ENFORCEMENT (#[12875](https://github.com/apache/superset/pull/12875))
 
-**Improvements to Explore**
+**IMPROVEMENTS TO EXPLORE**
 
-- feat: Add sort by metric for charts with multiple metrics (#[13057](https://github.com/apache/superset/pull/13057))
-- feat: add sort_by_metric for charts with single metric (#[13058](https://github.com/apache/superset/pull/13058))
-- feat: Add sort by for dist bar chart (#[13049](https://github.com/apache/superset/pull/13049))
-- feat: reset metrics on dataset change (#[12782](https://github.com/apache/superset/pull/12782))
-- feat: clear search on dataset change (#[12909](https://github.com/apache/superset/pull/12909))
-- feat: default timepicker to last week when dataset is changed (#[12609](https://github.com/apache/superset/pull/12609))
+- FEAT: ADD SORT BY METRIC FOR CHARTS WITH MULTIPLE METRICS (#[13057](https://github.com/apache/superset/pull/13057))
+- FEAT: ADD SORT_BY_METRIC FOR CHARTS WITH SINGLE METRIC (#[13058](https://github.com/apache/superset/pull/13058))
+- FEAT: ADD SORT BY FOR DIST BAR CHART (#[13049](https://github.com/apache/superset/pull/13049))
+- FEAT: RESET METRICS ON DATASET CHANGE (#[12782](https://github.com/apache/superset/pull/12782))
+- FEAT: CLEAR SEARCH ON DATASET CHANGE (#[12909](https://github.com/apache/superset/pull/12909))
+- FEAT: DEFAULT TIMEPICKER TO LAST WEEK WHEN DATASET IS CHANGED (#[12609](https://github.com/apache/superset/pull/12609))
 
-**Improvements to Developer Experience**
+**IMPROVEMENTS TO DEVELOPER EXPERIENCE**
 
-- chore: add non-dev docker-compose workflow (#[13143](https://github.com/apache/superset/pull/13143))
-- feat(style-theme): add support for custom superset themes (#[12858](https://github.com/apache/superset/pull/12858))
-- feat: Move SQLAlchemy url reference to config (#[13182](https://github.com/apache/superset/pull/13182))
-- feat(helm): Evaluate configOverrides as templates (#[13130](https://github.com/apache/superset/pull/13130))
-- feat(helm): Helm template for Celery beat (for reporting and alerting) (#[13116](https://github.com/apache/superset/pull/13116))
-- feat: Custom superset_config.py + secret envs (#[13096](https://github.com/apache/superset/pull/13096))
-- feat: Force pod restart on config changes (#[13056](https://github.com/apache/superset/pull/13056))
-- feat: add separate endpoint to fetch function names for autocomplete (#[12840](https://github.com/apache/superset/pull/12840))
-- feat: request ids on API related endpoints (#[12663](https://github.com/apache/superset/pull/12663))
-- feat: Adding option to `set_database_uri` CLI command (#[12740](https://github.com/apache/superset/pull/12740))
-- feat: add decorator to guard public APIs (#[12635](https://github.com/apache/superset/pull/12635))
+- CHORE: ADD NON-DEV DOCKER-COMPOSE WORKFLOW (#[13143](https://github.com/apache/superset/pull/13143))
+- FEAT(STYLE-THEME): ADD SUPPORT FOR CUSTOM SUPERSET THEMES (#[12858](https://github.com/apache/superset/pull/12858))
+- FEAT: MOVE SQLALCHEMY URL REFERENCE TO CONFIG (#[13182](https://github.com/apache/superset/pull/13182))
+- FEAT(HELM): EVALUATE CONFIGOVERRIDES AS TEMPLATES (#[13130](https://github.com/apache/superset/pull/13130))
+- FEAT(HELM): HELM TEMPLATE FOR CELERY BEAT (FOR REPORTING AND ALERTING) (#[13116](https://github.com/apache/superset/pull/13116))
+- FEAT: CUSTOM SUPERSET_CONFIG.PY + SECRET ENVS (#[13096](https://github.com/apache/superset/pull/13096))
+- FEAT: FORCE POD RESTART ON CONFIG CHANGES (#[13056](https://github.com/apache/superset/pull/13056))
+- FEAT: ADD SEPARATE ENDPOINT TO FETCH FUNCTION NAMES FOR AUTOCOMPLETE (#[12840](https://github.com/apache/superset/pull/12840))
+- FEAT: REQUEST IDS ON API RELATED ENDPOINTS (#[12663](https://github.com/apache/superset/pull/12663))
+- FEAT: ADDING OPTION TO `set_database_uri` CLI COMMAND (#[12740](https://github.com/apache/superset/pull/12740))
+- FEAT: ADD DECORATOR TO GUARD PUBLIC APIS (#[12635](https://github.com/apache/superset/pull/12635))
 
-## Breaking Changes and Full Changelog
+## BREAKING CHANGES AND FULL CHANGELOG
 
-- To see the complete changelog in this release, head to [CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG.md).
-- You can find a list of backwards incompatible changes [here](https://github.com/apache/superset/blob/3d103e66fcaee42a6b4a42b2638e13d5e2208c3b/UPDATING.md).
+- TO SEE THE COMPLETE CHANGELOG IN THIS RELEASE, HEAD TO [CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG.md).
+- YOU CAN FIND A LIST OF BACKWARDS INCOMPATIBLE CHANGES [HERE](https://github.com/apache/superset/blob/3d103e66fcaee42a6b4a42b2638e13d5e2208c3b/UPDATING.md).

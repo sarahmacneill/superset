@@ -17,21 +17,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# apache-superset-core
+# APACHE-SUPERSET-CORE
 
-[![PyPI version](https://badge.fury.io/py/apache-superset-core.svg)](https://badge.fury.io/py/apache-superset-core)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![PYPI VERSION](https://badge.fury.io/py/apache-superset-core.svg)](https://badge.fury.io/py/apache-superset-core)
+[![LICENSE](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PYTHON 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
-The official core package for building Apache Superset backend extensions and integrations. This package provides essential building blocks including base classes, API utilities, type definitions, and decorators for both the host application and extensions.
+THE OFFICIAL CORE PACKAGE FOR BUILDING APACHE SUPERSET BACKEND EXTENSIONS AND INTEGRATIONS. THIS PACKAGE PROVIDES ESSENTIAL BUILDING BLOCKS INCLUDING BASE CLASSES, API UTILITIES, TYPE DEFINITIONS, AND DECORATORS FOR BOTH THE HOST APPLICATION AND EXTENSIONS.
 
-## 📦 Installation
+## 📦 INSTALLATION
 
 ```bash
 pip install apache-superset-core
 ```
 
-## 🏗️ Package Structure
+## 🏗️ PACKAGE STRUCTURE
 
 ```
 src/superset_core/
@@ -44,9 +44,9 @@ src/superset_core/
 └── __init__.py
 ```
 
-## 🚀 Quick Start
+## 🚀 QUICK START
 
-### Basic Extension API
+### BASIC EXTENSION API
 
 ```python
 from flask_appbuilder.api import expose, permission_name, protect, safe
@@ -65,7 +65,7 @@ class DatasetReferencesAPI(RestApi):
         # ... endpoint implementation
 ```
 
-### Background Tasks
+### BACKGROUND TASKS
 
 ```python
 from superset_core.tasks.decorators import task
@@ -76,7 +76,7 @@ def generate_report(chart_id: int) -> None:
     # ... task implementation
 ```
 
-### MCP Tools
+### MCP TOOLS
 
 ```python
 from superset_core.mcp.decorators import tool
@@ -86,7 +86,7 @@ def my_extension_tool(param: str) -> dict:
     # ... tool implementation
 ```
 
-### MCP Prompts
+### MCP PROMPTS
 
 ```python
 from superset_core.mcp.decorators import prompt
@@ -96,12 +96,12 @@ async def my_prompt_handler(ctx: Context) -> str:
     # ... prompt implementation
 ```
 
-## 📄 License
+## 📄 LICENSE
 
-Licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) for details.
+LICENSED UNDER THE APACHE LICENSE, VERSION 2.0. SEE [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) FOR DETAILS.
 
-## 🔗 Links
+## 🔗 LINKS
 
-- [Community](https://superset.apache.org/community/)
-- [GitHub Repository](https://github.com/apache/superset)
-- [Extensions Documentation](https://superset.apache.org/developer-docs/extensions/overview)
+- [COMMUNITY](https://superset.apache.org/community/)
+- [GITHUB REPOSITORY](https://github.com/apache/superset)
+- [EXTENSIONS DOCUMENTATION](https://superset.apache.org/developer-docs/extensions/overview)

@@ -17,26 +17,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# generator-superset
+# GENERATOR-SUPERSET
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/generator-superset.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/generator-superset)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fgenerator-superset)](https://libraries.io/npm/@superset-ui%2Fgenerator-superset)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/generator-superset.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/generator-superset)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fgenerator-superset)](https://libraries.io/npm/@superset-ui%2Fgenerator-superset)
 
-> Scaffolder for Superset
+> SCAFFOLDER FOR SUPERSET
 
-## Installation
+## INSTALLATION
 
-First, install [Yeoman](http://yeoman.io) and `generator-superset` using
-[npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+FIRST, INSTALL [YEOMAN](http://yeoman.io) AND `generator-superset` USING
+[NPM](https://www.npmjs.com/) (WE ASSUME YOU HAVE PRE-INSTALLED [NODE.JS](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
 npm install -g @superset-ui/generator-superset
 ```
 
-## Usage
+## USAGE
 
-Generate a new package or visualization plugin:
+GENERATE A NEW PACKAGE OR VISUALIZATION PLUGIN:
 
 ```bash
 mkdir /tmp/superset-plugin-chart-hello-world
@@ -44,8 +44,8 @@ cd /tmp/superset-plugin-chart-hello-world
 yo @superset-ui/superset
 ```
 
-## License
+## LICENSE
 
-Apache-2.0
+APACHE-2.0
 
-[learn more about Yeoman](http://yeoman.io/).
+[LEARN MORE ABOUT YEOMAN](http://yeoman.io/).

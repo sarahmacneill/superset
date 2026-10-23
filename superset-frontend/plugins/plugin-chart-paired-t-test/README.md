@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-paired-t-test
+## @SUPERSET-UI/PLUGIN-CHART-PAIRED-T-TEST
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-paired-t-test.svg?style=flat)](hhttps://www.npmjs.com/package/@superset-ui/plugin-chart-paired-t-test)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-paired-t-test?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-paired-t-test)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-paired-t-test.svg?style=flat)](hhttps://www.npmjs.com/package/@superset-ui/plugin-chart-paired-t-test)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-paired-t-test?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-paired-t-test)
 
-This plugin provides Paired T Test for Superset.
+THIS PLUGIN PROVIDES PAIRED T TEST FOR SUPERSET.
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import PairedTTestChartPlugin from '@superset-ui/plugin-chart-paired-t-test';
@@ -35,9 +35,9 @@ import PairedTTestChartPlugin from '@superset-ui/plugin-chart-paired-t-test';
 new PairedTTestChartPlugin().configure({ key: 'paired-t-test' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-paired-t-test)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-paired-t-test)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart

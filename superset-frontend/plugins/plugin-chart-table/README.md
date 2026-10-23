@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-table
+## @SUPERSET-UI/PLUGIN-CHART-TABLE
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-table.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-table)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-table?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-table)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-table.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-table)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-table?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-table)
 
-This plugin provides Table chart for Superset.
+THIS PLUGIN PROVIDES TABLE CHART FOR SUPERSET.
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import TableChartPlugin from '@superset-ui/plugin-chart-table';
@@ -35,9 +35,9 @@ import TableChartPlugin from '@superset-ui/plugin-chart-table';
 new TableChartPlugin().configure({ key: 'table' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-table)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-table)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart

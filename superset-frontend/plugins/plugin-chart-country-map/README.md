@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-country-map
+## @SUPERSET-UI/PLUGIN-CHART-COUNTRY-MAP
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-country-map.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-country-map)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-country-map?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-country-map)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-country-map.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-country-map)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-country-map?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-country-map)
 
-This plugin provides Country Map for Superset.
+THIS PLUGIN PROVIDES COUNTRY MAP FOR SUPERSET.
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import CountryMapChartPlugin from '@superset-ui/plugin-chart-country-map';
@@ -35,9 +35,9 @@ import CountryMapChartPlugin from '@superset-ui/plugin-chart-country-map';
 new CountryMapChartPlugin().configure({ key: 'country-map' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-country-map)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-country-map)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart
@@ -51,9 +51,9 @@ for more details.
 />
 ```
 
-### Update Map
+### UPDATE MAP
 
-To update the country maps or add a new country, run scripts in the Jupyter notebook
+TO UPDATE THE COUNTRY MAPS OR ADD A NEW COUNTRY, RUN SCRIPTS IN THE JUPYTER NOTEBOOK
 `scripts/Country Map GeoJSON Generator.ipynb`.
 
 ```bash

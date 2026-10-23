@@ -17,20 +17,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-pivot-table
+## @SUPERSET-UI/PLUGIN-CHART-PIVOT-TABLE
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-pivot-table.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-pivot-table)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-pivot-table?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-pivot-table)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-pivot-table.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-pivot-table)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-pivot-table?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-pivot-table)
 
-This plugin provides Pivot Table for Superset.
+THIS PLUGIN PROVIDES PIVOT TABLE FOR SUPERSET.
 
-If you change the logic of this plugin, please update
+IF YOU CHANGE THE LOGIC OF THIS PLUGIN, PLEASE UPDATE
 [`pivot_table`](https://github.com/apache/superset/blob/master/superset/charts/post_processing.py).
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import PivotTableChartPlugin from '@superset-ui/plugin-chart-pivot-table';
@@ -38,9 +38,9 @@ import PivotTableChartPlugin from '@superset-ui/plugin-chart-pivot-table';
 new PivotTableChartPlugin().configure({ key: 'pivot-table-v2' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui/?selectedKind=plugin-chart-pivot-table)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui/?selectedKind=plugin-chart-pivot-table)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart
@@ -54,7 +54,7 @@ for more details.
 />
 ```
 
-### File structure generated
+### FILE STRUCTURE GENERATED
 
 ```
 ├── package.json

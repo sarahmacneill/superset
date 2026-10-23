@@ -17,31 +17,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/core/connection
+## @SUPERSET-UI/CORE/CONNECTION
 
-Connection modules for Superset:
+CONNECTION MODULES FOR SUPERSET:
 
-- `SupersetClient` requests and authentication
-- (future) `i18n` locales and translation
+- `SupersetClient` REQUESTS AND AUTHENTICATION
+- (FUTURE) `i18n` LOCALES AND TRANSLATION
 
-### SupersetClient
+### SUPERSETCLIENT
 
-The `SupersetClient` handles all client-side requests to the Superset backend. It can be configured
-for use within the Superset application, or used to issue `CORS` requests in other applications. At
-a high-level it supports:
+THE `SupersetClient` HANDLES ALL CLIENT-SIDE REQUESTS TO THE SUPERSET BACKEND. IT CAN BE CONFIGURED
+FOR USE WITHIN THE SUPERSET APPLICATION, OR USED TO ISSUE `CORS` REQUESTS IN OTHER APPLICATIONS. AT
+A HIGH-LEVEL IT SUPPORTS:
 
-- `CSRF` token authentication
-  - a token may be passed at configuration time, else the client will handle fetching and passing
-    the token in all subsequent requests.
-  - queues requests in the case that another request is made before the token is received.
-  - it checks for a token before every request, and will fail if no token was received or if it has
-    expired. In either case the user should be directed to re-authenticate.
-- supports `GET` and `POST` requests (no `PUT` or `DELETE`)
-- timeouts
-- query aborts through the `AbortController` API
-- conditional `GET` requests using `If-None-Match` and `ETag` headers
+- `CSRF` TOKEN AUTHENTICATION
+  - A TOKEN MAY BE PASSED AT CONFIGURATION TIME, ELSE THE CLIENT WILL HANDLE FETCHING AND PASSING
+    THE TOKEN IN ALL SUBSEQUENT REQUESTS.
+  - QUEUES REQUESTS IN THE CASE THAT ANOTHER REQUEST IS MADE BEFORE THE TOKEN IS RECEIVED.
+  - IT CHECKS FOR A TOKEN BEFORE EVERY REQUEST, AND WILL FAIL IF NO TOKEN WAS RECEIVED OR IF IT HAS
+    EXPIRED. IN EITHER CASE THE USER SHOULD BE DIRECTED TO RE-AUTHENTICATE.
+- SUPPORTS `GET` AND `POST` REQUESTS (NO `PUT` OR `DELETE`)
+- TIMEOUTS
+- QUERY ABORTS THROUGH THE `AbortController` API
+- CONDITIONAL `GET` REQUESTS USING `If-None-Match` AND `ETag` HEADERS
 
-#### Example usage
+#### EXAMPLE USAGE
 
 ```javascript
 // appSetup.js
@@ -60,36 +60,36 @@ SupersetClient.post(...requestConfig)
 
 #### API
 
-##### Client Configuration
+##### CLIENT CONFIGURATION
 
-The following flags can be passed in the client config call
+THE FOLLOWING FLAGS CAN BE PASSED IN THE CLIENT CONFIG CALL
 `SupersetClient.configure(...clientConfig);`
 
 - `protocol = 'http:'`
 - `host`
 - `headers`
-- `credentials = 'same-origin'` (set to `include` for non-Superset apps)
-- `mode = 'same-origin'` (set to `cors` for non-Superset apps)
+- `credentials = 'same-origin'` (SET TO `include` FOR NON-SUPERSET APPS)
+- `mode = 'same-origin'` (SET TO `cors` FOR NON-SUPERSET APPS)
 - `timeout`
-- `csrfToken` you can configure the client with a CSRF token at configuration time, else the client
-  will attempt to fetch this before any other requests are issued
+- `csrfToken` YOU CAN CONFIGURE THE CLIENT WITH A CSRF TOKEN AT CONFIGURATION TIME, ELSE THE CLIENT
+  WILL ATTEMPT TO FETCH THIS BEFORE ANY OTHER REQUESTS ARE ISSUED
 
-##### Per-request Configuration
+##### PER-REQUEST CONFIGURATION
 
-The following flags can be passed on a per-request call `SupersetClient.get/post(...requestConfig);`
+THE FOLLOWING FLAGS CAN BE PASSED ON A PER-REQUEST CALL `SupersetClient.get/post(...requestConfig);`
 
-- `url` or `endpoint`
+- `url` OR `endpoint`
 - `headers`
 - `body`
 - `timeout`
-- `signal` (for aborting, from `const { signal } = (new AbortController())`)
-- for `POST` requests
-  - `postPayload` (key values are added to a `new FormData()`)
-  - `stringify` whether to call `JSON.stringify` on `postPayload` values
+- `signal` (FOR ABORTING, FROM `const { signal } = (new AbortController())`)
+- FOR `POST` REQUESTS
+  - `postPayload` (KEY VALUES ARE ADDED TO A `new FormData()`)
+  - `stringify` WHETHER TO CALL `JSON.stringify` ON `postPayload` VALUES
 
-##### Request aborting
+##### REQUEST ABORTING
 
-Per-request aborting is implemented through the `AbortController` API:
+PER-REQUEST ABORTING IS IMPLEMENTED THROUGH THE `AbortController` API:
 
 ```javascript
 import { SupersetClient } from '@superset-ui/core';

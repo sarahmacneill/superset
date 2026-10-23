@@ -17,103 +17,103 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Getting Started with Superset using Docker
+# GETTING STARTED WITH SUPERSET USING DOCKER
 
-Docker is an easy way to get started with Superset.
+DOCKER IS AN EASY WAY TO GET STARTED WITH SUPERSET.
 
-## Prerequisites
+## PREREQUISITES
 
-1. [Docker](https://www.docker.com/get-started)
-2. [Docker Compose](https://docs.docker.com/compose/install/)
+1. [DOCKER](https://www.docker.com/get-started)
+2. [DOCKER COMPOSE](https://docs.docker.com/compose/install/)
 
-## Configuration
+## CONFIGURATION
 
-The `/app/pythonpath` folder is mounted from [`./docker/pythonpath_dev`](./pythonpath_dev)
-which contains a base configuration [`./docker/pythonpath_dev/superset_config.py`](./pythonpath_dev/superset_config.py)
-intended for use with local development.
+THE `/app/pythonpath` FOLDER IS MOUNTED FROM [`./docker/pythonpath_dev`](./pythonpath_dev)
+WHICH CONTAINS A BASE CONFIGURATION [`./docker/pythonpath_dev/superset_config.py`](./pythonpath_dev/superset_config.py)
+INTENDED FOR USE WITH LOCAL DEVELOPMENT.
 
-### Local overrides
+### LOCAL OVERRIDES
 
-#### Environment Variables
+#### ENVIRONMENT VARIABLES
 
-To override environment variables locally, create a `./docker/.env-local` file (git-ignored). This file will be loaded after `.env` and can override any settings.
+TO OVERRIDE ENVIRONMENT VARIABLES LOCALLY, CREATE A `./docker/.env-local` FILE (GIT-IGNORED). THIS FILE WILL BE LOADED AFTER `.env` AND CAN OVERRIDE ANY SETTINGS.
 
-#### Python Configuration
+#### PYTHON CONFIGURATION
 
-In order to override configuration settings locally, simply make a copy of [`./docker/pythonpath_dev/superset_config_local.example`](./pythonpath_dev/superset_config_local.example)
-into `./docker/pythonpath_dev/superset_config_docker.py` (git-ignored) and fill in your overrides.
+IN ORDER TO OVERRIDE CONFIGURATION SETTINGS LOCALLY, SIMPLY MAKE A COPY OF [`./docker/pythonpath_dev/superset_config_local.example`](./pythonpath_dev/superset_config_local.example)
+INTO `./docker/pythonpath_dev/superset_config_docker.py` (GIT-IGNORED) AND FILL IN YOUR OVERRIDES.
 
-#### WebSocket Configuration
+#### WEBSOCKET CONFIGURATION
 
-To customize the WebSocket server configuration, create `./docker/superset-websocket/config.json` (git-ignored) based on [`./docker/superset-websocket/config.example.json`](./superset-websocket/config.example.json).
+TO CUSTOMIZE THE WEBSOCKET SERVER CONFIGURATION, CREATE `./docker/superset-websocket/config.json` (GIT-IGNORED) BASED ON [`./docker/superset-websocket/config.example.json`](./superset-websocket/config.example.json).
 
-Then update the `superset-websocket`.`volumes` config to mount it.
+THEN UPDATE THE `superset-websocket`.`volumes` CONFIG TO MOUNT IT.
 
-#### Docker Compose Overrides
+#### DOCKER COMPOSE OVERRIDES
 
-For advanced Docker Compose customization, create a `docker-compose-override.yml` file (git-ignored) to override or extend services without modifying the main compose file.
+FOR ADVANCED DOCKER COMPOSE CUSTOMIZATION, CREATE A `docker-compose-override.yml` FILE (GIT-IGNORED) TO OVERRIDE OR EXTEND SERVICES WITHOUT MODIFYING THE MAIN COMPOSE FILE.
 
-### Local packages
+### LOCAL PACKAGES
 
-If you want to add Python packages in order to test things like databases locally, you can simply add a local requirements.txt (`./docker/requirements-local.txt`)
-and rebuild your Docker stack.
+IF YOU WANT TO ADD PYTHON PACKAGES IN ORDER TO TEST THINGS LIKE DATABASES LOCALLY, YOU CAN SIMPLY ADD A LOCAL REQUIREMENTS.TXT (`./docker/requirements-local.txt`)
+AND REBUILD YOUR DOCKER STACK.
 
-Steps:
+STEPS:
 
-1. Create `./docker/requirements-local.txt`
-2. Add your new packages
-3. Rebuild docker compose
+1. CREATE `./docker/requirements-local.txt`
+2. ADD YOUR NEW PACKAGES
+3. REBUILD DOCKER COMPOSE
     1. `docker compose down -v`
     2. `docker compose up`
 
-## Initializing Database
+## INITIALIZING DATABASE
 
-The database will initialize itself upon startup via the init container ([`superset-init`](./docker-init.sh)). This may take a minute.
+THE DATABASE WILL INITIALIZE ITSELF UPON STARTUP VIA THE INIT CONTAINER ([`superset-init`](./docker-init.sh)). THIS MAY TAKE A MINUTE.
 
-## Normal Operation
+## NORMAL OPERATION
 
-To run the container, simply run: `docker compose up`
+TO RUN THE CONTAINER, SIMPLY RUN: `docker compose up`
 
-After waiting several minutes for Superset initialization to finish, you can open a browser and view [`http://localhost:8088`](http://localhost:8088)
-to start your journey.
+AFTER WAITING SEVERAL MINUTES FOR SUPERSET INITIALIZATION TO FINISH, YOU CAN OPEN A BROWSER AND VIEW [`http://localhost:8088`](http://localhost:8088)
+TO START YOUR JOURNEY.
 
-### Running Multiple Instances
+### RUNNING MULTIPLE INSTANCES
 
-If you need to run multiple Superset instances simultaneously (e.g., different branches or clones), use the make targets which automatically find available ports:
+IF YOU NEED TO RUN MULTIPLE SUPERSET INSTANCES SIMULTANEOUSLY (E.G., DIFFERENT BRANCHES OR CLONES), USE THE MAKE TARGETS WHICH AUTOMATICALLY FIND AVAILABLE PORTS:
 
 ```bash
 make up
 ```
 
-This automatically:
-- Generates a unique project name from your directory
-- Finds available ports (incrementing from defaults if in use)
-- Displays the assigned URLs before starting
+THIS AUTOMATICALLY:
+- GENERATES A UNIQUE PROJECT NAME FROM YOUR DIRECTORY
+- FINDS AVAILABLE PORTS (INCREMENTING FROM DEFAULTS IF IN USE)
+- DISPLAYS THE ASSIGNED URLS BEFORE STARTING
 
-Available commands (run from repo root):
+AVAILABLE COMMANDS (RUN FROM REPO ROOT):
 
-| Command | Description |
+| COMMAND | DESCRIPTION |
 |---------|-------------|
-| `make up` | Start services (foreground) |
-| `make up-detached` | Start services (background) |
-| `make down` | Stop all services |
-| `make ps` | Show running containers |
-| `make logs` | Follow container logs |
-| `make nuke` | Stop, remove volumes & local images |
+| `make up` | START SERVICES (FOREGROUND) |
+| `make up-detached` | START SERVICES (BACKGROUND) |
+| `make down` | STOP ALL SERVICES |
+| `make ps` | SHOW RUNNING CONTAINERS |
+| `make logs` | FOLLOW CONTAINER LOGS |
+| `make nuke` | STOP, REMOVE VOLUMES & LOCAL IMAGES |
 
-From a subdirectory, use: `make -C $(git rev-parse --show-toplevel) up`
+FROM A SUBDIRECTORY, USE: `make -C $(git rev-parse --show-toplevel) up`
 
-**Important**: Always use these commands instead of plain `docker compose down`, which won't know the correct project name.
+**IMPORTANT**: ALWAYS USE THESE COMMANDS INSTEAD OF PLAIN `docker compose down`, WHICH WON'T KNOW THE CORRECT PROJECT NAME.
 
-## Developing
+## DEVELOPING
 
-While running, the container server will reload on modification of the Superset Python and JavaScript source code.
-Don't forget to reload the page to take the new frontend into account though.
+WHILE RUNNING, THE CONTAINER SERVER WILL RELOAD ON MODIFICATION OF THE SUPERSET PYTHON AND JAVASCRIPT SOURCE CODE.
+DON'T FORGET TO RELOAD THE PAGE TO TAKE THE NEW FRONTEND INTO ACCOUNT THOUGH.
 
-## Production
+## PRODUCTION
 
-It is possible to run Superset in non-development mode by using [`docker-compose-non-dev.yml`](../docker-compose-non-dev.yml). This file excludes the volumes needed for development.
+IT IS POSSIBLE TO RUN SUPERSET IN NON-DEVELOPMENT MODE BY USING [`docker-compose-non-dev.yml`](../docker-compose-non-dev.yml). THIS FILE EXCLUDES THE VOLUMES NEEDED FOR DEVELOPMENT.
 
-## Resource Constraints
+## RESOURCE CONSTRAINTS
 
-If you are attempting to build on macOS and it exits with 137 you need to increase your Docker resources. See instructions [here](https://docs.docker.com/docker-for-mac/#advanced) (search for memory)
+IF YOU ARE ATTEMPTING TO BUILD ON MACOS AND IT EXITS WITH 137 YOU NEED TO INCREASE YOUR DOCKER RESOURCES. SEE INSTRUCTIONS [HERE](https://docs.docker.com/docker-for-mac/#advanced) (SEARCH FOR MEMORY)

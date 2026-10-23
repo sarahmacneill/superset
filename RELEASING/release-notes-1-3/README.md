@@ -17,57 +17,57 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 1.3
+# RELEASE NOTES FOR SUPERSET 1.3
 
-Superset 1.3 focuses on hardening and polishing the superset user experience, with tons of UX improvements and bug fixes focused on charts, dashboards, and the new dashboard-native filters.
+SUPERSET 1.3 FOCUSES ON HARDENING AND POLISHING THE SUPERSET USER EXPERIENCE, WITH TONS OF UX IMPROVEMENTS AND BUG FIXES FOCUSED ON CHARTS, DASHBOARDS, AND THE NEW DASHBOARD-NATIVE FILTERS.
 
-- [**User Experience**](#user-experience)
-- [**PR Highlights**](#pr-highlights)
-- [**Breaking Changes and Full Changelog**](#breaking-changes-and-full-changelog)
+- [**USER EXPERIENCE**](#user-experience)
+- [**PR HIGHLIGHTS**](#pr-highlights)
+- [**BREAKING CHANGES AND FULL CHANGELOG**](#breaking-changes-and-full-changelog)
 
-# User Experience
-One major goal of this release is to improve and harden dashboard-native filters. These filters live at the dashboard level instead of within a chart and affect all charts under their scope within a dashboard. Improvements in this release include clearer visual indicators of what charts are within the scope of a selected filter.
+# USER EXPERIENCE
+ONE MAJOR GOAL OF THIS RELEASE IS TO IMPROVE AND HARDEN DASHBOARD-NATIVE FILTERS. THESE FILTERS LIVE AT THE DASHBOARD LEVEL INSTEAD OF WITHIN A CHART AND AFFECT ALL CHARTS UNDER THEIR SCOPE WITHIN A DASHBOARD. IMPROVEMENTS IN THIS RELEASE INCLUDE CLEARER VISUAL INDICATORS OF WHAT CHARTS ARE WITHIN THE SCOPE OF A SELECTED FILTER.
 
-![dashboard native filter scoping](media/dashboard_native_filters_1.jpg)
+![DASHBOARD NATIVE FILTER SCOPING](media/dashboard_native_filters_1.jpg)
 
-Native-filters can also be set to load collapsed, which also improves connected thumbnail and alerts/reports functionality.
+NATIVE-FILTERS CAN ALSO BE SET TO LOAD COLLAPSED, WHICH ALSO IMPROVES CONNECTED THUMBNAIL AND ALERTS/REPORTS FUNCTIONALITY.
 
-![dashboard native filter collapsed](media/native_filters_collapsed.png)
+![DASHBOARD NATIVE FILTER COLLAPSED](media/native_filters_collapsed.png)
 
-For charts, we've added a new funnel chart.
+FOR CHARTS, WE'VE ADDED A NEW FUNNEL CHART.
 
-![funnel chart](media/funnel_chart.png)
+![FUNNEL CHART](media/funnel_chart.png)
 
-Users can also now use Jinja templating in calculated columns and SQL metrics.
+USERS CAN ALSO NOW USE JINJA TEMPLATING IN CALCULATED COLUMNS AND SQL METRICS.
 
-![jinja templating](media/jinja_templating.png)
+![JINJA TEMPLATING](media/jinja_templating.png)
 
-At the dashboard level, work has been focused on improving available information and UX ergonomics. Users can now download a full .csv of the full dataset behind a table chart from the dashboard.
+AT THE DASHBOARD LEVEL, WORK HAS BEEN FOCUSED ON IMPROVING AVAILABLE INFORMATION AND UX ERGONOMICS. USERS CAN NOW DOWNLOAD A FULL .CSV OF THE FULL DATASET BEHIND A TABLE CHART FROM THE DASHBOARD.
 
-![export full csv](media/export_full_csv.png)
+![EXPORT FULL CSV](media/export_full_csv.png)
 
-Continuing on the theme of making more things accessible directly from the dashboard, users can now view the SQL Query behind any chart directly from the dashboard as well.
+CONTINUING ON THE THEME OF MAKING MORE THINGS ACCESSIBLE DIRECTLY FROM THE DASHBOARD, USERS CAN NOW VIEW THE SQL QUERY BEHIND ANY CHART DIRECTLY FROM THE DASHBOARD AS WELL.
 
-![view query dashboard](media/view_query_dashboard.png)
+![VIEW QUERY DASHBOARD](media/view_query_dashboard.png)
 
-# Developer Experience
-The API has received a new endpoint to allow the developer to pass DB-specific parameters instead of the full SQLAlchemy URI.
+# DEVELOPER EXPERIENCE
+THE API HAS RECEIVED A NEW ENDPOINT TO ALLOW THE DEVELOPER TO PASS DB-SPECIFIC PARAMETERS INSTEAD OF THE FULL SQLALCHEMY URI.
 
-# Database Connectivity
-We have improved support for Ascend.io's engine spec and fixed a long list of bugs.
+# DATABASE CONNECTIVITY
+WE HAVE IMPROVED SUPPORT FOR ASCEND.IO'S ENGINE SPEC AND FIXED A LONG LIST OF BUGS.
 
-Also in the works is a new database connection UI, which should make connecting to a database easier without having to put together a SQLAlchemy URI. It's behind a feature flag for now, but it can be turned on in config.py with `FORCE_DATABASE_CONNECTIONS_SSL = True`.
+ALSO IN THE WORKS IS A NEW DATABASE CONNECTION UI, WHICH SHOULD MAKE CONNECTING TO A DATABASE EASIER WITHOUT HAVING TO PUT TOGETHER A SQLALCHEMY URI. IT'S BEHIND A FEATURE FLAG FOR NOW, BUT IT CAN BE TURNED ON IN CONFIG.PY WITH `FORCE_DATABASE_CONNECTIONS_SSL = True`.
 
-# PR Highlights
+# PR HIGHLIGHTS
 
-- [14682](https://github.com/apache/superset/pull/14682) add ascend engine spec (#14682) (@Daniel Wood)
-- [14420](https://github.com/apache/superset/pull/14420) feat: API endpoint to validate databases using separate parameters (#14420) (@Beto Dealmeida)
-- [14934](https://github.com/apache/superset/pull/14934) feat: Adding FORCE_SSL as feature flag in config.py (#14934) (@AAfghahi)
-- [14480](https://github.com/apache/superset/pull/14480) feat(viz): add funnel chart (#14480) (@Ville Brofeldt)
+- [14682](https://github.com/apache/superset/pull/14682) ADD ASCEND ENGINE SPEC (#14682) (@DANIEL WOOD)
+- [14420](https://github.com/apache/superset/pull/14420) FEAT: API ENDPOINT TO VALIDATE DATABASES USING SEPARATE PARAMETERS (#14420) (@BETO DEALMEIDA)
+- [14934](https://github.com/apache/superset/pull/14934) FEAT: ADDING FORCE_SSL AS FEATURE FLAG IN CONFIG.PY (#14934) (@AAFGHAHI)
+- [14480](https://github.com/apache/superset/pull/14480) FEAT(VIZ): ADD FUNNEL CHART (#14480) (@VILLE BROFELDT)
 
 
 
-## Breaking Changes and Full Changelog
+## BREAKING CHANGES AND FULL CHANGELOG
 
-- To see the complete changelog in this release, head to [CHANGELOG.MD](../../CHANGELOG.md).
-- 1.3.0 does not contain any backwards incompatible changes.
+- TO SEE THE COMPLETE CHANGELOG IN THIS RELEASE, HEAD TO [CHANGELOG.MD](../../CHANGELOG.md).
+- 1.3.0 DOES NOT CONTAIN ANY BACKWARDS INCOMPATIBLE CHANGES.

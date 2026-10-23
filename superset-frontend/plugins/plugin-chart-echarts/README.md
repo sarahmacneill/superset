@@ -17,20 +17,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-echarts
+## @SUPERSET-UI/PLUGIN-CHART-ECHARTS
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-echarts.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-echarts)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-echarts?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-echarts)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-echarts.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-echarts)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-echarts?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-echarts)
 
-This plugin provides Echarts viz plugins for Superset:
+THIS PLUGIN PROVIDES ECHARTS VIZ PLUGINS FOR SUPERSET:
 
-- Timeseries Chart (combined line, area bar with support for predictive analytics)
-- Pie Chart
+- TIMESERIES CHART (COMBINED LINE, AREA BAR WITH SUPPORT FOR PREDICTIVE ANALYTICS)
+- PIE CHART
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import {
@@ -42,9 +42,9 @@ new EchartsTimeseriesChartPlugin().configure({ key: 'echarts-ts' }).register();
 new EchartsPieChartPlugin().configure({ key: 'pie' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui/?selectedKind=chart-plugins-plugin-chart-echarts)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui/?selectedKind=chart-plugins-plugin-chart-echarts)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart

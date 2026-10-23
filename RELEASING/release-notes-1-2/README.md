@@ -17,106 +17,106 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 1.2
+# RELEASE NOTES FOR SUPERSET 1.2
 
-Superset 1.2 continues the Apache ECharts migration by introducing several chart types. It also brings with it tons of user experience improvements, API improvements, bug fixes, and continued development of experimental features included in previous releases. Keep reading for more details on these categories:
+SUPERSET 1.2 CONTINUES THE APACHE ECHARTS MIGRATION BY INTRODUCING SEVERAL CHART TYPES. IT ALSO BRINGS WITH IT TONS OF USER EXPERIENCE IMPROVEMENTS, API IMPROVEMENTS, BUG FIXES, AND CONTINUED DEVELOPMENT OF EXPERIMENTAL FEATURES INCLUDED IN PREVIOUS RELEASES. KEEP READING FOR MORE DETAILS ON THESE CATEGORIES:
 
-- [**User Experience**](#user-experience)
-- [**Dashboard Level Security**](#dashboard-level-security)
-- [**Database Connectivity**](#database-connectivity)
-- [**Developer Experience**](#developer-experience)
-- [**PR Highlights**](#pr-highlights)
-- [**Breaking Changes and Full Changelog**](#breaking-changes-and-full-changelog)
+- [**USER EXPERIENCE**](#user-experience)
+- [**DASHBOARD LEVEL SECURITY**](#dashboard-level-security)
+- [**DATABASE CONNECTIVITY**](#database-connectivity)
+- [**DEVELOPER EXPERIENCE**](#developer-experience)
+- [**PR HIGHLIGHTS**](#pr-highlights)
+- [**BREAKING CHANGES AND FULL CHANGELOG**](#breaking-changes-and-full-changelog)
 
-# User Experience
+# USER EXPERIENCE
 
-The migration to Apache ECharts continues by introducing several new high-quality visualizations in this release.
+THE MIGRATION TO APACHE ECHARTS CONTINUES BY INTRODUCING SEVERAL NEW HIGH-QUALITY VISUALIZATIONS IN THIS RELEASE.
 
-The mixed time-series multi chart allows different kinds of time-series visualization to be overlayed.
+THE MIXED TIME-SERIES MULTI CHART ALLOWS DIFFERENT KINDS OF TIME-SERIES VISUALIZATION TO BE OVERLAYED.
 
-![mixed time series](media/time_series_multichart.png)
+![MIXED TIME SERIES](media/time_series_multichart.png)
 
-The radar chart provides a good way to compare two or more groups over various features of interest.
+THE RADAR CHART PROVIDES A GOOD WAY TO COMPARE TWO OR MORE GROUPS OVER VARIOUS FEATURES OF INTEREST.
 
-![radar chart](media/radar_chart.png)
+![RADAR CHART](media/radar_chart.png)
 
-By popular demand, we have introduced a new and improved version of the pivot table visualization as well.
+BY POPULAR DEMAND, WE HAVE INTRODUCED A NEW AND IMPROVED VERSION OF THE PIVOT TABLE VISUALIZATION AS WELL.
 
-![pivot table](media/pivot_table_v2.png)
+![PIVOT TABLE](media/pivot_table_v2.png)
 
-Several UI tweaks in Explore and SQL Lab made it into this release as well, including new buttons and menu options to make common workflows easier, as well as more communicative error messages, particularly in the database connection menus.
+SEVERAL UI TWEAKS IN EXPLORE AND SQL LAB MADE IT INTO THIS RELEASE AS WELL, INCLUDING NEW BUTTONS AND MENU OPTIONS TO MAKE COMMON WORKFLOWS EASIER, AS WELL AS MORE COMMUNICATIVE ERROR MESSAGES, PARTICULARLY IN THE DATABASE CONNECTION MENUS.
 
-The dashboard native filter feature, [while still behind a feature flag in this release](https://github.com/apache/superset/blob/master/RELEASING/release-notes-1-0/README.md#feature-flags), has received plenty of new functionality and is closer than ever to being ready for prime-time. This feature provides a way to apply and manipulate filters over many charts at the dashboard level. 1.2 adds more controls, more options for aggregations, and better support for temporal filters, among other things.
+THE DASHBOARD NATIVE FILTER FEATURE, [WHILE STILL BEHIND A FEATURE FLAG IN THIS RELEASE](https://github.com/apache/superset/blob/master/RELEASING/release-notes-1-0/README.md#feature-flags), HAS RECEIVED PLENTY OF NEW FUNCTIONALITY AND IS CLOSER THAN EVER TO BEING READY FOR PRIME-TIME. THIS FEATURE PROVIDES A WAY TO APPLY AND MANIPULATE FILTERS OVER MANY CHARTS AT THE DASHBOARD LEVEL. 1.2 ADDS MORE CONTROLS, MORE OPTIONS FOR AGGREGATIONS, AND BETTER SUPPORT FOR TEMPORAL FILTERS, AMONG OTHER THINGS.
 
-![Native Filter](media/native_filters.png)
+![NATIVE FILTER](media/native_filters.png)
 
-![Native Filter](media/native_filters_temporal.png)
+![NATIVE FILTER](media/native_filters_temporal.png)
 
-Last but not least, the alerts and reports feature and its dependencies have been added to the [docker-compose](https://superset.apache.org/docs/installation/installing-superset-using-docker-compose) setup, making it easier to use outside of well-supported enterprise deployments.
-
-
-# Dashboard Level Security
-
-Superset has so far relied on a role-based access system implemented at the dataset level. While this provides granular security options that satisfy many use cases, some organizations need more options. [SIP-51](https://github.com/apache/superset/issues/10408) lays out a vision for dashboard-level role-based access control as a fully backwards compatible extension to Superset's security options.
-
-The 1.1 release saw steps taken in the direction of this vision, and 1.2 builds on that with new permissions for sharing charts and dashboards that can be assigned to roles. **Note that this functionality is still experimental and hidden behind a feature flag as of 1.2.**
-
-![dashboard rbac](media/dashboard_rbac.png)
-
-# Database Connectivity
-The 1.2 release adds support for [Crate DB](https://github.com/apache/superset/pull/13152) and the [Databricks DB](https://github.com/apache/superset/pull/13682) engine spec.
+LAST BUT NOT LEAST, THE ALERTS AND REPORTS FEATURE AND ITS DEPENDENCIES HAVE BEEN ADDED TO THE [DOCKER-COMPOSE](https://superset.apache.org/docs/installation/installing-superset-using-docker-compose) SETUP, MAKING IT EASIER TO USE OUTSIDE OF WELL-SUPPORTED ENTERPRISE DEPLOYMENTS.
 
 
-# Developer Experience
-Expanding the API has been an ongoing effort, and 1.2 introduces several new API routes to allow developers to get available databases, get a given dashboard's charts, and import saved queries, among other things.
+# DASHBOARD LEVEL SECURITY
 
-# PR Highlights
+SUPERSET HAS SO FAR RELIED ON A ROLE-BASED ACCESS SYSTEM IMPLEMENTED AT THE DATASET LEVEL. WHILE THIS PROVIDES GRANULAR SECURITY OPTIONS THAT SATISFY MANY USE CASES, SOME ORGANIZATIONS NEED MORE OPTIONS. [SIP-51](https://github.com/apache/superset/issues/10408) LAYS OUT A VISION FOR DASHBOARD-LEVEL ROLE-BASED ACCESS CONTROL AS A FULLY BACKWARDS COMPATIBLE EXTENSION TO SUPERSET'S SECURITY OPTIONS.
 
-**New Charts and User Experience**
+THE 1.1 RELEASE SAW STEPS TAKEN IN THE DIRECTION OF THIS VISION, AND 1.2 BUILDS ON THAT WITH NEW PERMISSIONS FOR SHARING CHARTS AND DASHBOARDS THAT CAN BE ASSIGNED TO ROLES. **NOTE THAT THIS FUNCTIONALITY IS STILL EXPERIMENTAL AND HIDDEN BEHIND A FEATURE FLAG AS OF 1.2.**
 
-- [14197](https://github.com/apache/superset/pull/14197) feat(viz): add mixed and radar chart (#14197) (@Ville Brofeldt)
-- [14187](https://github.com/apache/superset/pull/14187) Enable the new pivot table (#14187) (@Kamil Gabryjelski)
-- [13210](https://github.com/apache/superset/pull/13210) feat(explore): ColumnSelectControl with drag-and-drop (#13210) (@Yongjie Zhao)
-- [13598](https://github.com/apache/superset/pull/13598) feat(explore): Drag and drop UX improvements (#13598) (@Kamil Gabryjelski)
-- [13294](https://github.com/apache/superset/pull/13294) feat(explore): Postgres datatype conversion (#13294) (@Nikola Gigić)
-- [13758](https://github.com/apache/superset/pull/13758) feat(explore): adhoc column formatting for Table chart (#13758) (@Jesse Yang)
+![DASHBOARD RBAC](media/dashboard_rbac.png)
 
-**Progress On Dashboard Native Filters**
-
-- [13726](https://github.com/apache/superset/pull/13726) feat(native-filters): Add default first value to select filter (#13726) (@simcha90)
-- [14461](https://github.com/apache/superset/pull/14461) feat(native-filters): Auto apply changes in FiltersConfigModal (#14461) (@simcha90)
-- [13507](https://github.com/apache/superset/pull/13507) feat(native-filters): Filter set tabs (#13507) (@simcha90)
-- [14313](https://github.com/apache/superset/pull/14313) feat(native-filters): Implement adhoc filters and time picker in Range and Select native filters (#14313) (@Kamil Gabryjelski)
-- [14261](https://github.com/apache/superset/pull/14261) feat(native-filters): Show/Hide filter bar by metadata ff (#14261) (@simcha90)
-- [13506](https://github.com/apache/superset/pull/13506) feat(native-filters): Update filter bar buttons (#13506) (@simcha90)
-- [14374](https://github.com/apache/superset/pull/14374) feat(native-filters): Use datasets in dashboard as default options for native filters (#14374) (@Kamil Gabryjelski)
-- [14314](https://github.com/apache/superset/pull/14314) feat(native-filters): add option to create value in select filter (#14314) (@Ville Brofeldt)
-- [14346](https://github.com/apache/superset/pull/14346) feat(native-filters): add optional sort metric to select filter (#14346) (@Ville Brofeldt)
-- [14375](https://github.com/apache/superset/pull/14375) feat(native-filters): add refresh button to default value picker (#14375) (@Ville Brofeldt)
-- [13569](https://github.com/apache/superset/pull/13569) feat(native-filters): add sort option to select filter (#13569) (@Ville Brofeldt)
-- [13622](https://github.com/apache/superset/pull/13622) feat(native-filters): add temporal support to select filter (#13622) (@Ville Brofeldt)
-- [13484](https://github.com/apache/superset/pull/13484) feat(native-filters): add timegrain and column filter (#13484) (@Ville Brofeldt)
-- [14312](https://github.com/apache/superset/pull/14312) feat(native-filters): add tooltip to control values (#14312) (@Ville Brofeldt)
-- [14217](https://github.com/apache/superset/pull/14217) feat(native-filters): select group by support (#14217) (@Amit Miran)
-
-**Progress On Dashboard Level Access**
-
-- [13145](https://github.com/apache/superset/pull/13145) feat(dashboard_rbac): manage roles for dashboard (#13145) (@simcha90)
-- [13992](https://github.com/apache/superset/pull/13992) feat(dashboard_rbac): provide data access based on dashboard access (#13992) (@Amit Miran)
-- [#12865](https://github.com/apache/superset/pull/12865) feat(dashboard_rbac): dashboards API support for roles create/update + roles validation (@amitmiran137)
+# DATABASE CONNECTIVITY
+THE 1.2 RELEASE ADDS SUPPORT FOR [CRATE DB](https://github.com/apache/superset/pull/13152) AND THE [DATABRICKS DB](https://github.com/apache/superset/pull/13682) ENGINE SPEC.
 
 
-**Improvements to Developer Experience**
+# DEVELOPER EXPERIENCE
+EXPANDING THE API HAS BEEN AN ONGOING EFFORT, AND 1.2 INTRODUCES SEVERAL NEW API ROUTES TO ALLOW DEVELOPERS TO GET AVAILABLE DATABASES, GET A GIVEN DASHBOARD'S CHARTS, AND IMPORT SAVED QUERIES, AMONG OTHER THINGS.
 
-- [14208](https://github.com/apache/superset/pull/14208) feat: add endpoint to fetch available DBs (#14208) (@Beto Dealmeida)
-- [13331](https://github.com/apache/superset/pull/13331) fix(query-object): extra time-range-endpoints (#13331) (@John Bodley)
-- [13893](https://github.com/apache/superset/pull/13893) feat: create backend routes and API for importing saved queries (#13893) (@AAfghahi)
-- [13960](https://github.com/apache/superset/pull/13960) feat: initial work to make v1 API compatible with SIP-40 and SIP-41 (#13960) (@Beto Dealmeida)
-- [13444](https://github.com/apache/superset/pull/13444) fix: API to allow importing old exports (JSON/YAML) (#13444) (@Beto Dealmeida)
-- [13893](https://github.com/apache/superset/pull/13893) feat: create backend routes and API for importing saved queries (#13893) (@AAfghahi)
+# PR HIGHLIGHTS
+
+**NEW CHARTS AND USER EXPERIENCE**
+
+- [14197](https://github.com/apache/superset/pull/14197) FEAT(VIZ): ADD MIXED AND RADAR CHART (#14197) (@VILLE BROFELDT)
+- [14187](https://github.com/apache/superset/pull/14187) ENABLE THE NEW PIVOT TABLE (#14187) (@KAMIL GABRYJELSKI)
+- [13210](https://github.com/apache/superset/pull/13210) FEAT(EXPLORE): COLUMNSELECTCONTROL WITH DRAG-AND-DROP (#13210) (@YONGJIE ZHAO)
+- [13598](https://github.com/apache/superset/pull/13598) FEAT(EXPLORE): DRAG AND DROP UX IMPROVEMENTS (#13598) (@KAMIL GABRYJELSKI)
+- [13294](https://github.com/apache/superset/pull/13294) FEAT(EXPLORE): POSTGRES DATATYPE CONVERSION (#13294) (@NIKOLA GIGIĆ)
+- [13758](https://github.com/apache/superset/pull/13758) FEAT(EXPLORE): ADHOC COLUMN FORMATTING FOR TABLE CHART (#13758) (@JESSE YANG)
+
+**PROGRESS ON DASHBOARD NATIVE FILTERS**
+
+- [13726](https://github.com/apache/superset/pull/13726) FEAT(NATIVE-FILTERS): ADD DEFAULT FIRST VALUE TO SELECT FILTER (#13726) (@SIMCHA90)
+- [14461](https://github.com/apache/superset/pull/14461) FEAT(NATIVE-FILTERS): AUTO APPLY CHANGES IN FILTERSCONFIGMODAL (#14461) (@SIMCHA90)
+- [13507](https://github.com/apache/superset/pull/13507) FEAT(NATIVE-FILTERS): FILTER SET TABS (#13507) (@SIMCHA90)
+- [14313](https://github.com/apache/superset/pull/14313) FEAT(NATIVE-FILTERS): IMPLEMENT ADHOC FILTERS AND TIME PICKER IN RANGE AND SELECT NATIVE FILTERS (#14313) (@KAMIL GABRYJELSKI)
+- [14261](https://github.com/apache/superset/pull/14261) FEAT(NATIVE-FILTERS): SHOW/HIDE FILTER BAR BY METADATA FF (#14261) (@SIMCHA90)
+- [13506](https://github.com/apache/superset/pull/13506) FEAT(NATIVE-FILTERS): UPDATE FILTER BAR BUTTONS (#13506) (@SIMCHA90)
+- [14374](https://github.com/apache/superset/pull/14374) FEAT(NATIVE-FILTERS): USE DATASETS IN DASHBOARD AS DEFAULT OPTIONS FOR NATIVE FILTERS (#14374) (@KAMIL GABRYJELSKI)
+- [14314](https://github.com/apache/superset/pull/14314) FEAT(NATIVE-FILTERS): ADD OPTION TO CREATE VALUE IN SELECT FILTER (#14314) (@VILLE BROFELDT)
+- [14346](https://github.com/apache/superset/pull/14346) FEAT(NATIVE-FILTERS): ADD OPTIONAL SORT METRIC TO SELECT FILTER (#14346) (@VILLE BROFELDT)
+- [14375](https://github.com/apache/superset/pull/14375) FEAT(NATIVE-FILTERS): ADD REFRESH BUTTON TO DEFAULT VALUE PICKER (#14375) (@VILLE BROFELDT)
+- [13569](https://github.com/apache/superset/pull/13569) FEAT(NATIVE-FILTERS): ADD SORT OPTION TO SELECT FILTER (#13569) (@VILLE BROFELDT)
+- [13622](https://github.com/apache/superset/pull/13622) FEAT(NATIVE-FILTERS): ADD TEMPORAL SUPPORT TO SELECT FILTER (#13622) (@VILLE BROFELDT)
+- [13484](https://github.com/apache/superset/pull/13484) FEAT(NATIVE-FILTERS): ADD TIMEGRAIN AND COLUMN FILTER (#13484) (@VILLE BROFELDT)
+- [14312](https://github.com/apache/superset/pull/14312) FEAT(NATIVE-FILTERS): ADD TOOLTIP TO CONTROL VALUES (#14312) (@VILLE BROFELDT)
+- [14217](https://github.com/apache/superset/pull/14217) FEAT(NATIVE-FILTERS): SELECT GROUP BY SUPPORT (#14217) (@AMIT MIRAN)
+
+**PROGRESS ON DASHBOARD LEVEL ACCESS**
+
+- [13145](https://github.com/apache/superset/pull/13145) FEAT(DASHBOARD_RBAC): MANAGE ROLES FOR DASHBOARD (#13145) (@SIMCHA90)
+- [13992](https://github.com/apache/superset/pull/13992) FEAT(DASHBOARD_RBAC): PROVIDE DATA ACCESS BASED ON DASHBOARD ACCESS (#13992) (@AMIT MIRAN)
+- [#12865](https://github.com/apache/superset/pull/12865) FEAT(DASHBOARD_RBAC): DASHBOARDS API SUPPORT FOR ROLES CREATE/UPDATE + ROLES VALIDATION (@AMITMIRAN137)
 
 
-## Breaking Changes and Full Changelog
+**IMPROVEMENTS TO DEVELOPER EXPERIENCE**
 
-- To see the complete changelog in this release, head to [CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG.md).
-- In line with the semantic versioning scheme adopted by the community, 1.2.0 does not contain any backwards incompatible changes.
+- [14208](https://github.com/apache/superset/pull/14208) FEAT: ADD ENDPOINT TO FETCH AVAILABLE DBS (#14208) (@BETO DEALMEIDA)
+- [13331](https://github.com/apache/superset/pull/13331) FIX(QUERY-OBJECT): EXTRA TIME-RANGE-ENDPOINTS (#13331) (@JOHN BODLEY)
+- [13893](https://github.com/apache/superset/pull/13893) FEAT: CREATE BACKEND ROUTES AND API FOR IMPORTING SAVED QUERIES (#13893) (@AAFGHAHI)
+- [13960](https://github.com/apache/superset/pull/13960) FEAT: INITIAL WORK TO MAKE V1 API COMPATIBLE WITH SIP-40 AND SIP-41 (#13960) (@BETO DEALMEIDA)
+- [13444](https://github.com/apache/superset/pull/13444) FIX: API TO ALLOW IMPORTING OLD EXPORTS (JSON/YAML) (#13444) (@BETO DEALMEIDA)
+- [13893](https://github.com/apache/superset/pull/13893) FEAT: CREATE BACKEND ROUTES AND API FOR IMPORTING SAVED QUERIES (#13893) (@AAFGHAHI)
+
+
+## BREAKING CHANGES AND FULL CHANGELOG
+
+- TO SEE THE COMPLETE CHANGELOG IN THIS RELEASE, HEAD TO [CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG.md).
+- IN LINE WITH THE SEMANTIC VERSIONING SCHEME ADOPTED BY THE COMMUNITY, 1.2.0 DOES NOT CONTAIN ANY BACKWARDS INCOMPATIBLE CHANGES.
