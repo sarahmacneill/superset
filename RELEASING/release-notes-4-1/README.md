@@ -17,50 +17,50 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 4.1.0
+# RELEASE NOTES FOR SUPERSET 4.1.0
 
-Superset 4.1.0 brings a range of new features and quality of life improvements.  This release is a minor version, meaning it doesn't include any breaking changes. However, users of basic Superset docker images like `4.1.0` should see the note at the bottom of this file about [changes to those builds](/RELEASING/release-notes-4-1/README.md#change-to-docker-image-builds).
+SUPERSET 4.1.0 BRINGS A RANGE OF NEW FEATURES AND QUALITY OF LIFE IMPROVEMENTS.  THIS RELEASE IS A MINOR VERSION, MEANING IT DOESN'T INCLUDE ANY BREAKING CHANGES. HOWEVER, USERS OF BASIC SUPERSET DOCKER IMAGES LIKE `4.1.0` SHOULD SEE THE NOTE AT THE BOTTOM OF THIS FILE ABOUT [CHANGES TO THOSE BUILDS](/RELEASING/release-notes-4-1/README.md#change-to-docker-image-builds).
 
-## Highlights
+## HIGHLIGHTS
 
-Here are some of the highlights of this release.
+HERE ARE SOME OF THE HIGHLIGHTS OF THIS RELEASE.
 
-### Big Number With Time Period Updates
+### BIG NUMBER WITH TIME PERIOD UPDATES
 
-We released a [Big Number with Time Period Comparison](https://github.com/apache/superset/pull/26908) chart as part of Superset 4.0. With the latest update, there are now [color options](https://github.com/apache/superset/pull/27524) for comparisons. The chart now also uses [standardize controls](https://github.com/apache/superset/pull/27193) such that when switching charts will maintain the selected metrics. To enable the new chart, you'll need to enable the `CHART_PLUGINS_EXPERIMENTAL` feature flag.
+WE RELEASED A [BIG NUMBER WITH TIME PERIOD COMPARISON](https://github.com/apache/superset/pull/26908) CHART AS PART OF SUPERSET 4.0. WITH THE LATEST UPDATE, THERE ARE NOW [COLOR OPTIONS](https://github.com/apache/superset/pull/27524) FOR COMPARISONS. THE CHART NOW ALSO USES [STANDARDIZE CONTROLS](https://github.com/apache/superset/pull/27193) SUCH THAT WHEN SWITCHING CHARTS WILL MAINTAIN THE SELECTED METRICS. TO ENABLE THE NEW CHART, YOU'LL NEED TO ENABLE THE `CHART_PLUGINS_EXPERIMENTAL` FEATURE FLAG.
 
 <div>
     <image src="media/big_number_chart.png" alt="Image" width="100%">
 </div>
 
-### Table with Time Comparison
-Added functionality to do [table time comparisons](https://github.com/apache/superset/pull/28057). This will help improve and facilitate efficient data analysis.
+### TABLE WITH TIME COMPARISON
+ADDED FUNCTIONALITY TO DO [TABLE TIME COMPARISONS](https://github.com/apache/superset/pull/28057). THIS WILL HELP IMPROVE AND FACILITATE EFFICIENT DATA ANALYSIS.
 
 <div>
     <image src="media/table_with_time.png" alt="Image" width="100%">
 </div>
 
-### New ECharts Versions
+### NEW ECHARTS VERSIONS
 
-The new ECharts [Heatmap](https://github.com/apache/superset/pull/25353) has been added. Compared to the legacy Heatmap, it has more accurate percentage calculations, server side sorting to respect row limits, and a more interactive legend control that allows selecting a subset of values.
+THE NEW ECHARTS [HEATMAP](https://github.com/apache/superset/pull/25353) HAS BEEN ADDED. COMPARED TO THE LEGACY HEATMAP, IT HAS MORE ACCURATE PERCENTAGE CALCULATIONS, SERVER SIDE SORTING TO RESPECT ROW LIMITS, AND A MORE INTERACTIVE LEGEND CONTROL THAT ALLOWS SELECTING A SUBSET OF VALUES.
 
 <div>
     <image src="media/heatmap.png" alt="Image" width="100%">
 </div>
 
-We also added a new ECharts [Histogram](https://github.com/apache/superset/pull/28652) chart. The new chart will help visualize patterns, clusters, and outliers in the data and provides insights into its shape, central tendency, and spread.
+WE ALSO ADDED A NEW ECHARTS [HISTOGRAM](https://github.com/apache/superset/pull/28652) CHART. THE NEW CHART WILL HELP VISUALIZE PATTERNS, CLUSTERS, AND OUTLIERS IN THE DATA AND PROVIDES INSIGHTS INTO ITS SHAPE, CENTRAL TENDENCY, AND SPREAD.
 
 <div>
     <image src="media/histogram.png" alt="Image" width="100%">
 </div>
 
-A new Echarts [Sankey](https://github.com/apache/superset/pull/29329) chart now exists. The chart visually tracks the movement and transformation of values across system stages.
+A NEW ECHARTS [SANKEY](https://github.com/apache/superset/pull/29329) CHART NOW EXISTS. THE CHART VISUALLY TRACKS THE MOVEMENT AND TRANSFORMATION OF VALUES ACROSS SYSTEM STAGES.
 
 <div>
     <image src="media/sankey.png" alt="Image" width="100%">
 </div>
 
-You can use the CLI command to migrate Area, Bubble, Line, Sankey, [Heatmap](https://github.com/apache/superset/pull/27771), and [Histogram](https://github.com/apache/superset/pull/28780) chart types but we'll add more as the ECharts migrations continue. Note that migrations for deprecated charts may be forced in upcoming major versions when the code is removed. Running migrations earlier will allow you to de-risk future upgrades while improving user experience.
+YOU CAN USE THE CLI COMMAND TO MIGRATE AREA, BUBBLE, LINE, SANKEY, [HEATMAP](https://github.com/apache/superset/pull/27771), AND [HISTOGRAM](https://github.com/apache/superset/pull/28780) CHART TYPES BUT WE'LL ADD MORE AS THE ECHARTS MIGRATIONS CONTINUE. NOTE THAT MIGRATIONS FOR DEPRECATED CHARTS MAY BE FORCED IN UPCOMING MAJOR VERSIONS WHEN THE CODE IS REMOVED. RUNNING MIGRATIONS EARLIER WILL ALLOW YOU TO DE-RISK FUTURE UPGRADES WHILE IMPROVING USER EXPERIENCE.
 
 ```bash
 Usage: superset viz-migrations [OPTIONS] COMMAND [ARGS]...
@@ -72,16 +72,16 @@ Commands:
   upgrade    Upgrade a viz to the latest version.
 ```
 
-Note: When migrating dashboards from one Superset instance to another (using import/export features or the Superset CLI), or restoring a backup of prior charts and dashboards, Superset will apply the existing migrations that are used during version upgrades. This will ensure that your charts and dashboards are using the latest and greatest charts that Superset officially supports. For any migration issues, feel free to [open a new issue](https://github.com/apache/superset/issues/new?assignees=&labels=bug&projects=&template=bug-report.yml) in the repo.
+NOTE: WHEN MIGRATING DASHBOARDS FROM ONE SUPERSET INSTANCE TO ANOTHER (USING IMPORT/EXPORT FEATURES OR THE SUPERSET CLI), OR RESTORING A BACKUP OF PRIOR CHARTS AND DASHBOARDS, SUPERSET WILL APPLY THE EXISTING MIGRATIONS THAT ARE USED DURING VERSION UPGRADES. THIS WILL ENSURE THAT YOUR CHARTS AND DASHBOARDS ARE USING THE LATEST AND GREATEST CHARTS THAT SUPERSET OFFICIALLY SUPPORTS. FOR ANY MIGRATION ISSUES, FEEL FREE TO [OPEN A NEW ISSUE](https://github.com/apache/superset/issues/new?assignees=&labels=bug&projects=&template=bug-report.yml) IN THE REPO.
 
-### Improved Upload Forms
+### IMPROVED UPLOAD FORMS
 
-We've made design changes to the [CSV](https://github.com/apache/superset/pull/27840), [Excel](https://github.com/apache/superset/pull/28105), and [Columnar](https://github.com/apache/superset/pull/28192
-) upload modals to improve user experience and to be more performant. The new designs has the following goals:
+WE'VE MADE DESIGN CHANGES TO THE [CSV](https://github.com/apache/superset/pull/27840), [EXCEL](https://github.com/apache/superset/pull/28105), AND [COLUMNAR](https://github.com/apache/superset/pull/28192
+) UPLOAD MODALS TO IMPROVE USER EXPERIENCE AND TO BE MORE PERFORMANT. THE NEW DESIGNS HAS THE FOLLOWING GOALS:
 
-- Improved error handling.
-- Better backend parameter validation.
-- More aligned with our other modal dialogs
+- IMPROVED ERROR HANDLING.
+- BETTER BACKEND PARAMETER VALIDATION.
+- MORE ALIGNED WITH OUR OTHER MODAL DIALOGS
 
 #### CSV
 <div>
@@ -91,7 +91,7 @@ We've made design changes to the [CSV](https://github.com/apache/superset/pull/2
     <img src="media/csv_modal_4.png" alt="Image" width="25%">
 </div>
 
-#### Excel
+#### EXCEL
 <div>
     <img src="media/excel_modal_1.png" alt="Image" width="25%">
     <img src="media/excel_modal_2.png" alt="Image" width="25%">
@@ -99,7 +99,7 @@ We've made design changes to the [CSV](https://github.com/apache/superset/pull/2
     <img src="media/excel_modal_4.png" alt="Image" width="25%">
 </div>
 
-#### Columnar
+#### COLUMNAR
 <div>
     <img src="media/columnar_modal_1.png" alt="Image" width="33%">
     <img src="media/columnar_modal_2.png" alt="Image" width="33%">
@@ -107,34 +107,34 @@ We've made design changes to the [CSV](https://github.com/apache/superset/pull/2
 </div>
 
 
-### OAuth2 For Databases
+### OAUTH2 FOR DATABASES
 
-You now have the ability to enable [OAuth2](https://github.com/apache/superset/pull/27631) for databases like BigQuery, Snowflake, Dremio, Databricks, Google Sheets, etc. When enabled, it will allow users to connect to Oauth2 enabled databases with their own credentials.
+YOU NOW HAVE THE ABILITY TO ENABLE [OAUTH2](https://github.com/apache/superset/pull/27631) FOR DATABASES LIKE BIGQUERY, SNOWFLAKE, DREMIO, DATABRICKS, GOOGLE SHEETS, ETC. WHEN ENABLED, IT WILL ALLOW USERS TO CONNECT TO OAUTH2 ENABLED DATABASES WITH THEIR OWN CREDENTIALS.
 
-### Catalog Support For Databases
+### CATALOG SUPPORT FOR DATABASES
 
-Added support for the [catalog heirachy](https://github.com/apache/superset/pull/28317) for databases that support it, such as [BigQuery (projects), Databricks, Presto, Snowflake, and Trino](https://github.com/apache/superset/pull/28416). Once enabled, users will see catalogs when selecting tables in [SQL Lab, datasets](https://github.com/apache/superset/pull/28376), and when setting up Data Access Roles
+ADDED SUPPORT FOR THE [CATALOG HEIRACHY](https://github.com/apache/superset/pull/28317) FOR DATABASES THAT SUPPORT IT, SUCH AS [BIGQUERY (PROJECTS), DATABRICKS, PRESTO, SNOWFLAKE, AND TRINO](https://github.com/apache/superset/pull/28416). ONCE ENABLED, USERS WILL SEE CATALOGS WHEN SELECTING TABLES IN [SQL LAB, DATASETS](https://github.com/apache/superset/pull/28376), AND WHEN SETTING UP DATA ACCESS ROLES
 
-### Slack Upload Files V2 API Updates
-As part of [[SIP-138] Proposal for Slack file upload V2 integration for Alerts and Reports](https://github.com/apache/superset/issues/29263) we now have support for Slack file upload files v2 API call. This feature is behind the feature flag `ALERT_REPORT_SLACK_V2` and also changes the Slack channel to a selector. You may also need to add the following scopes (`channels:read`, `group:read`) to your Slack bot to work.
+### SLACK UPLOAD FILES V2 API UPDATES
+AS PART OF [[SIP-138] PROPOSAL FOR SLACK FILE UPLOAD V2 INTEGRATION FOR ALERTS AND REPORTS](https://github.com/apache/superset/issues/29263) WE NOW HAVE SUPPORT FOR SLACK FILE UPLOAD FILES V2 API CALL. THIS FEATURE IS BEHIND THE FEATURE FLAG `ALERT_REPORT_SLACK_V2` AND ALSO CHANGES THE SLACK CHANNEL TO A SELECTOR. YOU MAY ALSO NEED TO ADD THE FOLLOWING SCOPES (`channels:read`, `group:read`) TO YOUR SLACK BOT TO WORK.
 
 <div>
     <image src="media/slack_modal.png" alt="Image" width="100%">
 </div>
 
-### Total and Percentages In Tooltips For ECharts
+### TOTAL AND PERCENTAGES IN TOOLTIPS FOR ECHARTS
 
-Users can now see both the [total and percentage in tooltips](https://github.com/apache/superset/pull/27950) for ECharts.
+USERS CAN NOW SEE BOTH THE [TOTAL AND PERCENTAGE IN TOOLTIPS](https://github.com/apache/superset/pull/27950) FOR ECHARTS.
 
 <div>
     <image src="media/tooltips.png" alt="Image" width="100%">
 </div>
 
-### Additional Metadata Bar To Dashboards
+### ADDITIONAL METADATA BAR TO DASHBOARDS
 
-There is now a [metadata bar](https://github.com/apache/superset/pull/27857) added to the header of dashboards. This will now show viewers of the dashboard both the owners and last modified time of the dashboard.
+THERE IS NOW A [METADATA BAR](https://github.com/apache/superset/pull/27857) ADDED TO THE HEADER OF DASHBOARDS. THIS WILL NOW SHOW VIEWERS OF THE DASHBOARD BOTH THE OWNERS AND LAST MODIFIED TIME OF THE DASHBOARD.
 
 
-## Change to Docker image builds
+## CHANGE TO DOCKER IMAGE BUILDS
 
-Starting in 4.1.0, the release's docker image does not ship with drivers needed to operate Superset. Users may need to install a driver for their metadata database (MySQL or Postgres) as well as the driver for their data warehouse. This is a result of changes to the `lean` docker image that official releases come from; see [Docker Build Presets](/docs/docs/installation/docker-builds.mdx#build-presets) for more details.
+STARTING IN 4.1.0, THE RELEASE'S DOCKER IMAGE DOES NOT SHIP WITH DRIVERS NEEDED TO OPERATE SUPERSET. USERS MAY NEED TO INSTALL A DRIVER FOR THEIR METADATA DATABASE (MYSQL OR POSTGRES) AS WELL AS THE DRIVER FOR THEIR DATA WAREHOUSE. THIS IS A RESULT OF CHANGES TO THE `lean` DOCKER IMAGE THAT OFFICIAL RELEASES COME FROM; SEE [DOCKER BUILD PRESETS](/docs/docs/installation/docker-builds.mdx#build-presets) FOR MORE DETAILS.

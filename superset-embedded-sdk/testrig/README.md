@@ -7,20 +7,20 @@
  You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 -->
 
-# Embedded SDK test rig
+# EMBEDDED SDK TEST RIG
 
-A host app and a stand-in for Superset's embedded page, on two origins, so the
-parts of the SDK that only exist between two documents can be exercised for
-real: the MessageChannel handshake, what survives a navigation the dashboard
-makes on its own, and how many times the host's guest-token endpoint is asked
-for a token.
+A HOST APP AND A STAND-IN FOR SUPERSET'S EMBEDDED PAGE, ON TWO ORIGINS, SO THE
+PARTS OF THE SDK THAT ONLY EXIST BETWEEN TWO DOCUMENTS CAN BE EXERCISED FOR
+REAL: THE MESSAGECHANNEL HANDSHAKE, WHAT SURVIVES A NAVIGATION THE DASHBOARD
+MAKES ON ITS OWN, AND HOW MANY TIMES THE HOST'S GUEST-TOKEN ENDPOINT IS ASKED
+FOR A TOKEN.
 
-The unit tests mock `MessageChannel` and `Switchboard`. This rig mocks
-neither — it loads the built UMD bundle in Chromium and talks to a page that
-speaks the same handshake as `superset-frontend/src/embedded/index.tsx`, over
-the real `@superset-ui/switchboard`.
+THE UNIT TESTS MOCK `MessageChannel` AND `Switchboard`. THIS RIG MOCKS
+NEITHER — IT LOADS THE BUILT UMD BUNDLE IN CHROMIUM AND TALKS TO A PAGE THAT
+SPEAKS THE SAME HANDSHAKE AS `superset-frontend/src/embedded/index.tsx`, OVER
+THE REAL `@superset-ui/switchboard`.
 
-## Run it
+## RUN IT
 
 ```bash
 cd superset-embedded-sdk
@@ -29,61 +29,61 @@ node testrig/drive.mjs --headed   # watch it happen
 node testrig/drive.mjs --verbose  # + the pages' console output
 ```
 
-Needs a `chromium`, `chromium-browser` or `google-chrome` on `PATH`, or
-`CHROMIUM_PATH` pointing at one. No npm dependencies: the driver speaks the
-DevTools protocol over Node's built-in WebSocket.
+NEEDS A `chromium`, `chromium-browser` OR `google-chrome` ON `PATH`, OR
+`CHROMIUM_PATH` POINTING AT ONE. NO NPM DEPENDENCIES: THE DRIVER SPEAKS THE
+DEVTOOLS PROTOCOL OVER NODE'S BUILT-IN WEBSOCKET.
 
-Exit code is 0 only if every check passed.
+EXIT CODE IS 0 ONLY IF EVERY CHECK PASSED.
 
-## Poke at it by hand
+## POKE AT IT BY HAND
 
 ```bash
 node testrig/server.mjs   # then open http://localhost:8100
 ```
 
-The host app has buttons for embedding, pushing a theme, calling
-`getActiveTabs()` and unmounting; the dashboard page has links that navigate it
-the way a tab or a link in a Markdown chart would. The right-hand pane logs
-what the host saw, and the counter under the frame is how many guest tokens the
-host's endpoint has minted.
+THE HOST APP HAS BUTTONS FOR EMBEDDING, PUSHING A THEME, CALLING
+`getActiveTabs()` AND UNMOUNTING; THE DASHBOARD PAGE HAS LINKS THAT NAVIGATE IT
+THE WAY A TAB OR A LINK IN A MARKDOWN CHART WOULD. THE RIGHT-HAND PANE LOGS
+WHAT THE HOST SAW, AND THE COUNTER UNDER THE FRAME IS HOW MANY GUEST TOKENS THE
+HOST'S ENDPOINT HAS MINTED.
 
-`?ttl=15` on the host app shortens the guest token's life to 15 seconds, so the
-refresh timer fires while you are watching. `?hang=1` makes the dashboard page
-answer no `get` at all, which is how the rig produces a call that is still in
-flight when the user clicks a link. `?slowfirst=1` holds the very first
-`fetchGuestToken()` open until you settle it yourself with
-`rigReleaseFirstToken()` or `rigFailFirstToken()` from the console, and
-`?failnth=N` makes call N reject — together they are how the rig reaches the
-race between the initial fetch and a navigation that happens during it.
+`?ttl=15` ON THE HOST APP SHORTENS THE GUEST TOKEN'S LIFE TO 15 SECONDS, SO THE
+REFRESH TIMER FIRES WHILE YOU ARE WATCHING. `?hang=1` MAKES THE DASHBOARD PAGE
+ANSWER NO `get` AT ALL, WHICH IS HOW THE RIG PRODUCES A CALL THAT IS STILL IN
+FLIGHT WHEN THE USER CLICKS A LINK. `?slowfirst=1` HOLDS THE VERY FIRST
+`fetchGuestToken()` OPEN UNTIL YOU SETTLE IT YOURSELF WITH
+`rigReleaseFirstToken()` OR `rigFailFirstToken()` FROM THE CONSOLE, AND
+`?failnth=N` MAKES CALL N REJECT — TOGETHER THEY ARE HOW THE RIG REACHES THE
+RACE BETWEEN THE INITIAL FETCH AND A NAVIGATION THAT HAPPENS DURING IT.
 
-## What the pieces are
+## WHAT THE PIECES ARE
 
-| file | what it stands for |
+| FILE | WHAT IT STANDS FOR |
 | --- | --- |
-| `server.mjs` | the host app's backend (`/guest-token`, which counts what it mints) on `:8100`, and the Superset instance on `:8200` |
-| `host.html` | the host app: calls `embedDashboard`, drives the public API, records everything into `window.rig` |
-| `embedded.html` | Superset's embedded page: the same port-transfer handshake, the same method names, plus links that navigate itself |
-| `drive.mjs` | headless Chromium driver and the checks |
+| `server.mjs` | THE HOST APP'S BACKEND (`/guest-token`, WHICH COUNTS WHAT IT MINTS) ON `:8100`, AND THE SUPERSET INSTANCE ON `:8200` |
+| `host.html` | THE HOST APP: CALLS `embedDashboard`, DRIVES THE PUBLIC API, RECORDS EVERYTHING INTO `window.rig` |
+| `embedded.html` | SUPERSET'S EMBEDDED PAGE: THE SAME PORT-TRANSFER HANDSHAKE, THE SAME METHOD NAMES, PLUS LINKS THAT NAVIGATE ITSELF |
+| `drive.mjs` | HEADLESS CHROMIUM DRIVER AND THE CHECKS |
 
-`embedded.html` reports what it experienced to the host through an ordinary
-`postMessage` to `parent`. That side channel is the rig's own and has nothing
-to do with the SDK's MessageChannel — it is how the driver can see what
-happened inside a cross-origin frame.
+`embedded.html` REPORTS WHAT IT EXPERIENCED TO THE HOST THROUGH AN ORDINARY
+`postMessage` TO `parent`. THAT SIDE CHANNEL IS THE RIG'S OWN AND HAS NOTHING
+TO DO WITH THE SDK'S MESSAGECHANNEL — IT IS HOW THE DRIVER CAN SEE WHAT
+HAPPENED INSIDE A CROSS-ORIGIN FRAME.
 
-## What it checks
+## WHAT IT CHECKS
 
-- a first embed renders, on exactly one minted token
-- a navigation internal to the dashboard re-authenticates the new document
-- the host's theme is re-applied to that document, after its token
-- a `get` still in flight when the user navigates is rejected as a
-  `PortClosedError` rather than left hanging, and so is one caught by `unmount()`
-- a navigation that does not land on the embedded page mints no token at all,
-  and coming back to the dashboard afterwards works
-- the refresh timer follows the current document, fires once, and leaves the
-  document that is gone alone
-- an initial token fetch that fails *after* a navigation already recovered the
-  embed leaves that working dashboard alone, and `embedDashboard` resolves
-- a token from a superseded cycle is handed straight to the document in front of
-  the user when that document has none, rather than waiting out a retry
+- A FIRST EMBED RENDERS, ON EXACTLY ONE MINTED TOKEN
+- A NAVIGATION INTERNAL TO THE DASHBOARD RE-AUTHENTICATES THE NEW DOCUMENT
+- THE HOST'S THEME IS RE-APPLIED TO THAT DOCUMENT, AFTER ITS TOKEN
+- A `get` STILL IN FLIGHT WHEN THE USER NAVIGATES IS REJECTED AS A
+  `PortClosedError` RATHER THAN LEFT HANGING, AND SO IS ONE CAUGHT BY `unmount()`
+- A NAVIGATION THAT DOES NOT LAND ON THE EMBEDDED PAGE MINTS NO TOKEN AT ALL,
+  AND COMING BACK TO THE DASHBOARD AFTERWARDS WORKS
+- THE REFRESH TIMER FOLLOWS THE CURRENT DOCUMENT, FIRES ONCE, AND LEAVES THE
+  DOCUMENT THAT IS GONE ALONE
+- AN INITIAL TOKEN FETCH THAT FAILS *AFTER* A NAVIGATION ALREADY RECOVERED THE
+  EMBED LEAVES THAT WORKING DASHBOARD ALONE, AND `embedDashboard` RESOLVES
+- A TOKEN FROM A SUPERSEDED CYCLE IS HANDED STRAIGHT TO THE DOCUMENT IN FRONT OF
+  THE USER WHEN THAT DOCUMENT HAS NONE, RATHER THAN WAITING OUT A RETRY
 
-Run it against `git show HEAD~1:...` of `src/index.ts` to watch the checks fail.
+RUN IT AGAINST `git show HEAD~1:...` OF `src/index.ts` TO WATCH THE CHECKS FAIL.

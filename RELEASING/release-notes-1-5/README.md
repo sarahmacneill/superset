@@ -17,126 +17,126 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 1.5
+# RELEASE NOTES FOR SUPERSET 1.5
 
-Superset 1.5 focuses on polishing the dashboard native filters experience, while
-improving performance and stability. Superset 1.5 is likely the last minor release of
-version 1 of Superset, and will be succeeded by Superset 2.0. The 1.5 branch
-introduces the notion of a Long Term Support (LTS) version of Superset, and will
-receive security and other critical fixes even after Superset 2.x is released.
-Therefore, users will have the choice of staying on the 1.5 branch or upgrading to 2.x
-when available.
+SUPERSET 1.5 FOCUSES ON POLISHING THE DASHBOARD NATIVE FILTERS EXPERIENCE, WHILE
+IMPROVING PERFORMANCE AND STABILITY. SUPERSET 1.5 IS LIKELY THE LAST MINOR RELEASE OF
+VERSION 1 OF SUPERSET, AND WILL BE SUCCEEDED BY SUPERSET 2.0. THE 1.5 BRANCH
+INTRODUCES THE NOTION OF A LONG TERM SUPPORT (LTS) VERSION OF SUPERSET, AND WILL
+RECEIVE SECURITY AND OTHER CRITICAL FIXES EVEN AFTER SUPERSET 2.X IS RELEASED.
+THEREFORE, USERS WILL HAVE THE CHOICE OF STAYING ON THE 1.5 BRANCH OR UPGRADING TO 2.X
+WHEN AVAILABLE.
 
-- [**User Experience**](#user-facing-features)
-- [**Feature flags**](#feature-flags)
-- [**Database Experience**](#database-experience)
-- [**Breaking Changes and Full Changelog**](#breaking-changes-and-full-changelog)
+- [**USER EXPERIENCE**](#user-facing-features)
+- [**FEATURE FLAGS**](#feature-flags)
+- [**DATABASE EXPERIENCE**](#database-experience)
+- [**BREAKING CHANGES AND FULL CHANGELOG**](#breaking-changes-and-full-changelog)
 
-## User Facing Features
+## USER FACING FEATURES
 
-- Complex dashboards with lots of native filters and charts will render considerably
-  faster. See the videos that shows the rendering time of a complex dashboard go from
-  11 to 3 seconds: [#19064](https://github.com/apache/superset/pull/19064). In
-  addition, applying filters and switching tabs is also much smoother.
-- The Native Filter Bar has been redesigned, along with moving the "Apply" and
-  "Clear all" buttons to the bottom:
+- COMPLEX DASHBOARDS WITH LOTS OF NATIVE FILTERS AND CHARTS WILL RENDER CONSIDERABLY
+  FASTER. SEE THE VIDEOS THAT SHOWS THE RENDERING TIME OF A COMPLEX DASHBOARD GO FROM
+  11 TO 3 SECONDS: [#19064](https://github.com/apache/superset/pull/19064). IN
+  ADDITION, APPLYING FILTERS AND SWITCHING TABS IS ALSO MUCH SMOOTHER.
+- THE NATIVE FILTER BAR HAS BEEN REDESIGNED, ALONG WITH MOVING THE "APPLY" AND
+  "CLEAR ALL" BUTTONS TO THE BOTTOM:
 
-![Filter bar](media/filter_bar.png)
+![FILTER BAR](media/filter_bar.png)
 
-- Native filters can now be made dependent on multiple filters. This makes it possible
-  to restrict the available values in a filter based on the selection of other filters.
+- NATIVE FILTERS CAN NOW BE MADE DEPENDENT ON MULTIPLE FILTERS. THIS MAKES IT POSSIBLE
+  TO RESTRICT THE AVAILABLE VALUES IN A FILTER BASED ON THE SELECTION OF OTHER FILTERS.
 
-![Dependent filters](media/dependent_filters.png)
+![DEPENDENT FILTERS](media/dependent_filters.png)
 
-- In addition to being able to write Custom SQL for adhoc metrics and filters, the
-  column control now also features a Custom SQL tab. This makes it possible to write
-  custom expressions directly in charts without adding them to the dataset as saved
-  expressions.
+- IN ADDITION TO BEING ABLE TO WRITE CUSTOM SQL FOR ADHOC METRICS AND FILTERS, THE
+  COLUMN CONTROL NOW ALSO FEATURES A CUSTOM SQL TAB. THIS MAKES IT POSSIBLE TO WRITE
+  CUSTOM EXPRESSIONS DIRECTLY IN CHARTS WITHOUT ADDING THEM TO THE DATASET AS SAVED
+  EXPRESSIONS.
 
-![Adhoc columns](media/adhoc_columns.png)
+![ADHOC COLUMNS](media/adhoc_columns.png)
 
-- A new `SupersetMetastoreCache` has been added which makes it possible to cache data
-  in the Superset Metastore without the need for running a dedicated cache like Redis
-  or Memcached. The new cache will be used by default for required caches, but can also
-  be used for caching chart or other data. See the
-  [documentation](https://superset.apache.org/docs/installation/cache#caching) for
-  details on using the new cache.
-- Previously it was possible for Dashboards with lots of filters to cause an error.
-  A similar issue existed on Explore. Now Superset stores Dashboard and Explore state
-  in the cache (as opposed to the URL), eliminating the infamous
-  [Long URL Problem](https://github.com/apache/superset/issues/17086).
-- Previously permanent links to Dashboard and Explore pages were in fact shortened URLS
-  that relied on state being stored in the URL (see Long URL Problem above). In
-  addition, the links used numerical ids and didn't check user permissions making it
-  easy to iterate through links that were stored in the metastore. Now permanent links
-  state is stored as JSON objects in the metastore, making it possible to store
-  arbitrarily large Dashboard and Explore state in permalinks. In addition, the ids
-  are encoded using [`hashids`](https://hashids.org/) and check permissions, making
-  permalink state more secure.
+- A NEW `SupersetMetastoreCache` HAS BEEN ADDED WHICH MAKES IT POSSIBLE TO CACHE DATA
+  IN THE SUPERSET METASTORE WITHOUT THE NEED FOR RUNNING A DEDICATED CACHE LIKE REDIS
+  OR MEMCACHED. THE NEW CACHE WILL BE USED BY DEFAULT FOR REQUIRED CACHES, BUT CAN ALSO
+  BE USED FOR CACHING CHART OR OTHER DATA. SEE THE
+  [DOCUMENTATION](https://superset.apache.org/docs/installation/cache#caching) FOR
+  DETAILS ON USING THE NEW CACHE.
+- PREVIOUSLY IT WAS POSSIBLE FOR DASHBOARDS WITH LOTS OF FILTERS TO CAUSE AN ERROR.
+  A SIMILAR ISSUE EXISTED ON EXPLORE. NOW SUPERSET STORES DASHBOARD AND EXPLORE STATE
+  IN THE CACHE (AS OPPOSED TO THE URL), ELIMINATING THE INFAMOUS
+  [LONG URL PROBLEM](https://github.com/apache/superset/issues/17086).
+- PREVIOUSLY PERMANENT LINKS TO DASHBOARD AND EXPLORE PAGES WERE IN FACT SHORTENED URLS
+  THAT RELIED ON STATE BEING STORED IN THE URL (SEE LONG URL PROBLEM ABOVE). IN
+  ADDITION, THE LINKS USED NUMERICAL IDS AND DIDN'T CHECK USER PERMISSIONS MAKING IT
+  EASY TO ITERATE THROUGH LINKS THAT WERE STORED IN THE METASTORE. NOW PERMANENT LINKS
+  STATE IS STORED AS JSON OBJECTS IN THE METASTORE, MAKING IT POSSIBLE TO STORE
+  ARBITRARILY LARGE DASHBOARD AND EXPLORE STATE IN PERMALINKS. IN ADDITION, THE IDS
+  ARE ENCODED USING [`hashids`](https://hashids.org/) AND CHECK PERMISSIONS, MAKING
+  PERMALINK STATE MORE SECURE.
 
-![Dashboard permalink](media/permalink.png)
+![DASHBOARD PERMALINK](media/permalink.png)
 
-## Feature flags
+## FEATURE FLAGS
 
-- A new feature flag `GENERIC_CHART_AXES` has been added that makes it possible to
-  use a non-temporal x-axis on the ECharts Timeseries chart
-  ([#17917](https://github.com/apache/superset/pull/17917)). When enabled, a new
-  control "X Axis" is added to the control panel of ECharts line, area, bar, step and
-  scatter charts, which makes it possible to use categorical or numerical x-axes on
-  those charts.
+- A NEW FEATURE FLAG `GENERIC_CHART_AXES` HAS BEEN ADDED THAT MAKES IT POSSIBLE TO
+  USE A NON-TEMPORAL X-AXIS ON THE ECHARTS TIMESERIES CHART
+  ([#17917](https://github.com/apache/superset/pull/17917)). WHEN ENABLED, A NEW
+  CONTROL "X AXIS" IS ADDED TO THE CONTROL PANEL OF ECHARTS LINE, AREA, BAR, STEP AND
+  SCATTER CHARTS, WHICH MAKES IT POSSIBLE TO USE CATEGORICAL OR NUMERICAL X-AXES ON
+  THOSE CHARTS.
 
-![Categorical line chart](media/categorical_line.png)
+![CATEGORICAL LINE CHART](media/categorical_line.png)
 
-## Database Experience
+## DATABASE EXPERIENCE
 
-- DuckDB: Add support for database:
+- DUCKDB: ADD SUPPORT FOR DATABASE:
   [#19317](https://github.com/apache/superset/pull/19317)
 
-- Kusto: Add support for Azure Data Explorer (Kusto):
+- KUSTO: ADD SUPPORT FOR AZURE DATA EXPLORER (KUSTO):
   [#17898](https://github.com/apache/superset/pull/17898)
 
-- Trino: Add server cert support and new auth methods:
-  [#17593](https://github.com/apache/superset/pull/17593) and
+- TRINO: ADD SERVER CERT SUPPORT AND NEW AUTH METHODS:
+  [#17593](https://github.com/apache/superset/pull/17593) AND
   [#16346](https://github.com/apache/superset/pull/16346)
 
-- Microsoft SQL Server (MSSQL): support using CTEs in virtual tables:
+- MICROSOFT SQL SERVER (MSSQL): SUPPORT USING CTES IN VIRTUAL TABLES:
   [#18567](https://github.com/apache/superset/pull/18567)
 
-- Teradata and MSSQL: add support for TOP limit syntax:
-  [#18746](https://github.com/apache/superset/pull/18746) and
+- TERADATA AND MSSQL: ADD SUPPORT FOR TOP LIMIT SYNTAX:
+  [#18746](https://github.com/apache/superset/pull/18746) AND
   [#18240](https://github.com/apache/superset/pull/18240)
 
-- Apache Drill: User impersonation using `drill+sadrill`:
+- APACHE DRILL: USER IMPERSONATION USING `drill+sadrill`:
   [#19252](https://github.com/apache/superset/pull/19252)
 
-## Developer Experience
+## DEVELOPER EXPERIENCE
 
-- `superset-ui` has now been integrated into the Superset codebase as per
-  [SIP-58](https://github.com/apache/superset/issues/13013) dubbed "Monorepo". This
-  makes development of plugins that ship with Superset considerably simpler. In
-  addition, it makes it possible to align `superset-ui` releases with official Superset
-  releases.
+- `superset-ui` HAS NOW BEEN INTEGRATED INTO THE SUPERSET CODEBASE AS PER
+  [SIP-58](https://github.com/apache/superset/issues/13013) DUBBED "MONOREPO". THIS
+  MAKES DEVELOPMENT OF PLUGINS THAT SHIP WITH SUPERSET CONSIDERABLY SIMPLER. IN
+  ADDITION, IT MAKES IT POSSIBLE TO ALIGN `superset-ui` RELEASES WITH OFFICIAL SUPERSET
+  RELEASES.
 
-## Breaking Changes and Full Changelog
+## BREAKING CHANGES AND FULL CHANGELOG
 
-**Breaking Changes**
+**BREAKING CHANGES**
 
-- Bump `mysqlclient` from v1 to v2:
+- BUMP `mysqlclient` FROM V1 TO V2:
   [#17556](https://github.com/apache/superset/pull/17556)
-- Single and double quotes will no longer be removed from filter values:
+- SINGLE AND DOUBLE QUOTES WILL NO LONGER BE REMOVED FROM FILTER VALUES:
   [#17881](https://github.com/apache/superset/pull/17881)
-- Previously `QUERY_COST_FORMATTERS_BY_ENGINE`, `SQL_VALIDATORS_BY_ENGINE` and
-  `SCHEDULED_QUERIES` were expected to be defined in the feature flag dictionary in
-  the `config.py` file. These should now be defined as a top-level config, with the
-  feature flag dictionary being reserved for boolean only values:
+- PREVIOUSLY `QUERY_COST_FORMATTERS_BY_ENGINE`, `SQL_VALIDATORS_BY_ENGINE` AND
+  `SCHEDULED_QUERIES` WERE EXPECTED TO BE DEFINED IN THE FEATURE FLAG DICTIONARY IN
+  THE `config.py` FILE. THESE SHOULD NOW BE DEFINED AS A TOP-LEVEL CONFIG, WITH THE
+  FEATURE FLAG DICTIONARY BEING RESERVED FOR BOOLEAN ONLY VALUES:
   [#15254](https://github.com/apache/superset/pull/15254)
-- All Superset CLI commands (init, load_examples and etc) require setting the
-  `FLASK_APP` environment variable (which is set by default when `.flaskenv` is loaded):
+- ALL SUPERSET CLI COMMANDS (INIT, LOAD_EXAMPLES AND ETC) REQUIRE SETTING THE
+  `FLASK_APP` ENVIRONMENT VARIABLE (WHICH IS SET BY DEFAULT WHEN `.flaskenv` IS LOADED):
   [#17539](https://github.com/apache/superset/pull/17539)
 
-**Changelog**
+**CHANGELOG**
 
-To see the complete changelog in this release, head to
+TO SEE THE COMPLETE CHANGELOG IN THIS RELEASE, HEAD TO
 [CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG/1.5.0.md).
-As mentioned earlier, this release has a MASSIVE amount of bug fixes. The full
-changelog lists all of them!
+AS MENTIONED EARLIER, THIS RELEASE HAS A MASSIVE AMOUNT OF BUG FIXES. THE FULL
+CHANGELOG LISTS ALL OF THEM!

@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-world-map
+## @SUPERSET-UI/PLUGIN-CHART-WORLD-MAP
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-world-map.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-world-map)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-world-map?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-world-map)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-world-map.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-world-map)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-world-map?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-world-map)
 
-This plugin provides World Map for Superset.
+THIS PLUGIN PROVIDES WORLD MAP FOR SUPERSET.
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import WorldmapChartPlugin from '@superset-ui/plugin-chart-world-map';
@@ -35,9 +35,9 @@ import WorldmapChartPlugin from '@superset-ui/plugin-chart-world-map';
 new WorldmapChartPlugin().configure({ key: 'world-map' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-world-map)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-world-map)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart

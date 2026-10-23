@@ -17,28 +17,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/core
+## @SUPERSET-UI/CORE
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/core.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/core)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fcore?style=flat)](https://libraries.io/npm/@superset-ui%2Fcore)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/core.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/core)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fcore?style=flat)](https://libraries.io/npm/@superset-ui%2Fcore)
 
-The core package for Apache Superset's frontend. It provides shared utilities,
-types, and abstractions used across all Superset chart plugins and UI components.
+THE CORE PACKAGE FOR APACHE SUPERSET'S FRONTEND. IT PROVIDES SHARED UTILITIES,
+TYPES, AND ABSTRACTIONS USED ACROSS ALL SUPERSET CHART PLUGINS AND UI COMPONENTS.
 
-Key modules include:
+KEY MODULES INCLUDE:
 
-- **query** — Utilities for building queries and calling the Superset API
-  (including `makeApi`)
-- **number-format** — Number formatting helpers powered by d3-format
-- **time-format** — Time/date formatting helpers powered by d3-time-format
-- **connection** — `SupersetClient`, the HTTP client for the Superset REST API
-- **chart** — Base classes and types for building chart plugins
+- **QUERY** — UTILITIES FOR BUILDING QUERIES AND CALLING THE SUPERSET API
+  (INCLUDING `makeApi`)
+- **NUMBER-FORMAT** — NUMBER FORMATTING HELPERS POWERED BY D3-FORMAT
+- **TIME-FORMAT** — TIME/DATE FORMATTING HELPERS POWERED BY D3-TIME-FORMAT
+- **CONNECTION** — `SupersetClient`, THE HTTP CLIENT FOR THE SUPERSET REST API
+- **CHART** — BASE CLASSES AND TYPES FOR BUILDING CHART PLUGINS
 
-> **Note:** i18n utilities (`t`, `tn`, etc.) are no longer part of this package.
-> They now live in `@apache-superset/core`, imported from
+> **NOTE:** I18N UTILITIES (`t`, `tn`, ETC.) ARE NO LONGER PART OF THIS PACKAGE.
+> THEY NOW LIVE IN `@apache-superset/core`, IMPORTED FROM
 > `@apache-superset/core/translation`.
 
-#### Example usage
+#### EXAMPLE USAGE
 
 ```js
 import { getNumberFormatter, makeApi } from '@superset-ui/core';
@@ -58,12 +58,12 @@ const fetchDashboards = makeApi({
 });
 ```
 
-### Development
+### DEVELOPMENT
 
-`@data-ui/build-config` is used to manage the build configuration for this package
-including babel builds, jest testing, eslint, and prettier.
+`@data-ui/build-config` IS USED TO MANAGE THE BUILD CONFIGURATION FOR THIS PACKAGE
+INCLUDING BABEL BUILDS, JEST TESTING, ESLINT, AND PRETTIER.
 
-Run tests:
+RUN TESTS:
 
 ```bash
 cd superset-frontend

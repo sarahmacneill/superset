@@ -17,19 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Licensed to the Apache Software Foundation (ASF) under one
+# LICENSED TO THE APACHE SOFTWARE FOUNDATION (ASF) UNDER ONE
 
-# or more contributor license agreements. See the NOTICE file
+# OR MORE CONTRIBUTOR LICENSE AGREEMENTS. SEE THE NOTICE FILE
 
-# distributed with this work for additional information
+# DISTRIBUTED WITH THIS WORK FOR ADDITIONAL INFORMATION
 
-# regarding copyright ownership. The ASF licenses this file
+# REGARDING COPYRIGHT OWNERSHIP. THE ASF LICENSES THIS FILE
 
-# to you under the Apache License, Version 2.0 (the
+# TO YOU UNDER THE APACHE LICENSE, VERSION 2.0 (THE
 
-# "License"); you may not use this file except in compliance
+# "LICENSE"); YOU MAY NOT USE THIS FILE EXCEPT IN COMPLIANCE
 
-# with the License. You may obtain a copy of the License at
+# WITH THE LICENSE. YOU MAY OBTAIN A COPY OF THE LICENSE AT
 
 #
 
@@ -37,55 +37,55 @@ under the License.
 
 #
 
-# Unless required by applicable law or agreed to in writing,
+# UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING,
 
-# software distributed under the License is distributed on an
+# SOFTWARE DISTRIBUTED UNDER THE LICENSE IS DISTRIBUTED ON AN
 
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 
-# KIND, either express or implied. See the License for the
+# KIND, EITHER EXPRESS OR IMPLIED. SEE THE LICENSE FOR THE
 
-# specific language governing permissions and limitations
+# SPECIFIC LANGUAGE GOVERNING PERMISSIONS AND LIMITATIONS
 
-# under the License.
+# UNDER THE LICENSE.
 
-# Superset CLI Tests
+# SUPERSET CLI TESTS
 
-This directory contains tests for the superset-extensions-cli package, focusing on the `init` command and other CLI functionality.
+THIS DIRECTORY CONTAINS TESTS FOR THE SUPERSET-EXTENSIONS-CLI PACKAGE, FOCUSING ON THE `init` COMMAND AND OTHER CLI FUNCTIONALITY.
 
-## Test Structure
+## TEST STRUCTURE
 
-### Core Test Files
+### CORE TEST FILES
 
-- **`test_cli_init.py`**: Comprehensive tests for the `init` command scaffolder
-- **`test_templates.py`**: Unit tests for Jinja2 template rendering
-- **`conftest.py`**: Pytest fixtures and configuration
-- **`utils.py`**: Reusable testing utilities and helpers
+- **`test_cli_init.py`**: COMPREHENSIVE TESTS FOR THE `init` COMMAND SCAFFOLDER
+- **`test_templates.py`**: UNIT TESTS FOR JINJA2 TEMPLATE RENDERING
+- **`conftest.py`**: PYTEST FIXTURES AND CONFIGURATION
+- **`utils.py`**: REUSABLE TESTING UTILITIES AND HELPERS
 
-### Test Categories
+### TEST CATEGORIES
 
-#### Unit Tests (`@pytest.mark.unit`)
+#### UNIT TESTS (`@pytest.mark.unit`)
 
-- Template rendering functionality
-- Individual function testing
-- Input validation logic
+- TEMPLATE RENDERING FUNCTIONALITY
+- INDIVIDUAL FUNCTION TESTING
+- INPUT VALIDATION LOGIC
 
-#### Integration Tests (`@pytest.mark.integration`)
+#### INTEGRATION TESTS (`@pytest.mark.integration`)
 
-- Complete CLI command workflows
-- End-to-end scaffolding processes
+- COMPLETE CLI COMMAND WORKFLOWS
+- END-TO-END SCAFFOLDING PROCESSES
 
-#### CLI Tests (`@pytest.mark.cli`)
+#### CLI TESTS (`@pytest.mark.cli`)
 
-- Click command interface testing
-- User input simulation
-- Command output verification
+- CLICK COMMAND INTERFACE TESTING
+- USER INPUT SIMULATION
+- COMMAND OUTPUT VERIFICATION
 
-## Testing Approach for Scaffolders/Generators
+## TESTING APPROACH FOR SCAFFOLDERS/GENERATORS
 
-The tests use these patterns for testing code generators:
+THE TESTS USE THESE PATTERNS FOR TESTING CODE GENERATORS:
 
-### 1. Isolated Environment Testing
+### 1. ISOLATED ENVIRONMENT TESTING
 
 ```python
 @pytest.fixture
@@ -93,7 +93,7 @@ def isolated_filesystem(tmp_path):
     """Provide isolated temporary directory for each test."""
 ```
 
-### 2. Click CLI Testing Framework
+### 2. CLICK CLI TESTING FRAMEWORK
 
 ```python
 from click.testing import CliRunner
@@ -101,21 +101,21 @@ runner = CliRunner()
 result = runner.invoke(app, ["init"], input="...")
 ```
 
-### 3. File Structure Validation
+### 3. FILE STRUCTURE VALIDATION
 
 ```python
 from tests.utils import assert_file_structure, assert_directory_structure
 assert_file_structure(extension_path, expected_files)
 ```
 
-### 4. Template Content Verification
+### 4. TEMPLATE CONTENT VERIFICATION
 
 ```python
 from tests.utils import assert_json_content
 assert_json_content(json_path, {"name": "expected_value"})
 ```
 
-### 5. Parametrized Testing
+### 5. PARAMETRIZED TESTING
 
 ```python
 @pytest.mark.parametrize("include_frontend,include_backend", [
@@ -123,37 +123,37 @@ assert_json_content(json_path, {"name": "expected_value"})
 ])
 ```
 
-## Key Test Cases
+## KEY TEST CASES
 
-### Init Command Tests
+### INIT COMMAND TESTS
 
-- ✅ Creates extension with both frontend and backend
-- ✅ Creates frontend-only extensions
-- ✅ Creates backend-only extensions
-- ✅ Validates extension naming (alphanumeric + underscore only)
-- ✅ Handles existing directory conflicts
-- ✅ Verifies generated file content accuracy
-- ✅ Tests custom version and license inputs
-- ✅ Integration test for complete workflow
+- ✅ CREATES EXTENSION WITH BOTH FRONTEND AND BACKEND
+- ✅ CREATES FRONTEND-ONLY EXTENSIONS
+- ✅ CREATES BACKEND-ONLY EXTENSIONS
+- ✅ VALIDATES EXTENSION NAMING (ALPHANUMERIC + UNDERSCORE ONLY)
+- ✅ HANDLES EXISTING DIRECTORY CONFLICTS
+- ✅ VERIFIES GENERATED FILE CONTENT ACCURACY
+- ✅ TESTS CUSTOM VERSION AND LICENSE INPUTS
+- ✅ INTEGRATION TEST FOR COMPLETE WORKFLOW
 
-### Template Rendering Tests
+### TEMPLATE RENDERING TESTS
 
-- ✅ Extension.json template with various configurations
-- ✅ Package.json template rendering
-- ✅ Pyproject.toml template rendering
-- ✅ Template validation with different names/versions/licenses
-- ✅ JSON validity verification
-- ✅ Whitespace and formatting checks
+- ✅ EXTENSION.JSON TEMPLATE WITH VARIOUS CONFIGURATIONS
+- ✅ PACKAGE.JSON TEMPLATE RENDERING
+- ✅ PYPROJECT.TOML TEMPLATE RENDERING
+- ✅ TEMPLATE VALIDATION WITH DIFFERENT NAMES/VERSIONS/LICENSES
+- ✅ JSON VALIDITY VERIFICATION
+- ✅ WHITESPACE AND FORMATTING CHECKS
 
-## Running Tests
+## RUNNING TESTS
 
-### All tests
+### ALL TESTS
 
 ```bash
 pytest
 ```
 
-### Specific test categories
+### SPECIFIC TEST CATEGORIES
 
 ```bash
 pytest -m unit          # Unit tests only
@@ -161,46 +161,46 @@ pytest -m integration   # Integration tests only
 pytest -m cli           # CLI tests only
 ```
 
-### With coverage
+### WITH COVERAGE
 
 ```bash
 pytest --cov=superset_extensions_cli --cov-report=html
 ```
 
-### Specific test files
+### SPECIFIC TEST FILES
 
 ```bash
 pytest tests/test_cli_init.py
 pytest tests/test_templates.py
 ```
 
-## Reusable Testing Infrastructure
+## REUSABLE TESTING INFRASTRUCTURE
 
-The testing infrastructure is designed for reusability:
+THE TESTING INFRASTRUCTURE IS DESIGNED FOR REUSABILITY:
 
-### Test Utilities (`tests/utils.py`)
+### TEST UTILITIES (`tests/utils.py`)
 
 - `assert_file_exists()` / `assert_directory_exists()`
 - `assert_file_structure()` / `assert_directory_structure()`
 - `assert_json_content()` / `load_json_file()`
-- `create_test_extension_structure()` - Helper for expected structures
+- `create_test_extension_structure()` - HELPER FOR EXPECTED STRUCTURES
 
-### Fixtures (`tests/conftest.py`)
+### FIXTURES (`tests/conftest.py`)
 
-- `cli_runner` - Click CLI runner
-- `isolated_filesystem` - Temporary directory with cleanup
-- `extension_params` - Default extension parameters
-- `cli_input_*` - Pre-configured user inputs
+- `cli_runner` - CLICK CLI RUNNER
+- `isolated_filesystem` - TEMPORARY DIRECTORY WITH CLEANUP
+- `extension_params` - DEFAULT EXTENSION PARAMETERS
+- `cli_input_*` - PRE-CONFIGURED USER INPUTS
 
-This infrastructure can be easily extended for testing additional CLI commands like `build`, `bundle`, `dev`, and `validate`.
+THIS INFRASTRUCTURE CAN BE EASILY EXTENDED FOR TESTING ADDITIONAL CLI COMMANDS LIKE `build`, `bundle`, `dev`, AND `validate`.
 
-## Best Practices Implemented
+## BEST PRACTICES IMPLEMENTED
 
-1. **Isolation**: Each test runs in its own temporary directory
-2. **Comprehensive Coverage**: Tests cover happy paths, edge cases, and error conditions
-3. **Realistic Testing**: Uses actual Click CLI runner with realistic user input
-4. **Content Verification**: Validates both file existence and content accuracy
-5. **Template Testing**: Separates template rendering logic from CLI integration
-6. **Reusable Components**: Utilities and fixtures designed for extension
-7. **Clear Documentation**: Well-documented test cases and helper functions
-8. **Type Safety**: Uses modern Python type annotations with `from __future__ import annotations`
+1. **ISOLATION**: EACH TEST RUNS IN ITS OWN TEMPORARY DIRECTORY
+2. **COMPREHENSIVE COVERAGE**: TESTS COVER HAPPY PATHS, EDGE CASES, AND ERROR CONDITIONS
+3. **REALISTIC TESTING**: USES ACTUAL CLICK CLI RUNNER WITH REALISTIC USER INPUT
+4. **CONTENT VERIFICATION**: VALIDATES BOTH FILE EXISTENCE AND CONTENT ACCURACY
+5. **TEMPLATE TESTING**: SEPARATES TEMPLATE RENDERING LOGIC FROM CLI INTEGRATION
+6. **REUSABLE COMPONENTS**: UTILITIES AND FIXTURES DESIGNED FOR EXTENSION
+7. **CLEAR DOCUMENTATION**: WELL-DOCUMENTED TEST CASES AND HELPER FUNCTIONS
+8. **TYPE SAFETY**: USES MODERN PYTHON TYPE ANNOTATIONS WITH `from __future__ import annotations`

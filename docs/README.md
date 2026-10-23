@@ -17,39 +17,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This is the public documentation site for Superset, built using
-[Docusaurus 3](https://docusaurus.io/). See the
-[Developer Docs](https://superset.apache.org/developer-docs/contributing/development-setup#documentation)
-for documentation on contributing to documentation.
+THIS IS THE PUBLIC DOCUMENTATION SITE FOR SUPERSET, BUILT USING
+[DOCUSAURUS 3](https://docusaurus.io/). SEE THE
+[DEVELOPER DOCS](https://superset.apache.org/developer-docs/contributing/development-setup#documentation)
+FOR DOCUMENTATION ON CONTRIBUTING TO DOCUMENTATION.
 
-## Version Management
+## VERSION MANAGEMENT
 
-The Superset documentation site uses Docusaurus versioning with four independent sections:
+THE SUPERSET DOCUMENTATION SITE USES DOCUSAURUS VERSIONING WITH FOUR INDEPENDENT SECTIONS:
 
-- **User Documentation** (`/user-docs/`) - End-user guides and tutorials
-- **Admin Documentation** (`/admin-docs/`) - Installation, configuration, and security
-- **Developer Docs** (`/developer-docs/`) - Developer guides, contributing, and extensions
-- **Component Playground** (`/components/`) - Interactive component examples (currently disabled)
+- **USER DOCUMENTATION** (`/user-docs/`) - END-USER GUIDES AND TUTORIALS
+- **ADMIN DOCUMENTATION** (`/admin-docs/`) - INSTALLATION, CONFIGURATION, AND SECURITY
+- **DEVELOPER DOCS** (`/developer-docs/`) - DEVELOPER GUIDES, CONTRIBUTING, AND EXTENSIONS
+- **COMPONENT PLAYGROUND** (`/components/`) - INTERACTIVE COMPONENT EXAMPLES (CURRENTLY DISABLED)
 
-Each section maintains its own version history and can be versioned independently.
+EACH SECTION MAINTAINS ITS OWN VERSION HISTORY AND CAN BE VERSIONED INDEPENDENTLY.
 
-### Creating a New Version
+### CREATING A NEW VERSION
 
-To create a new version for any section, use the Docusaurus version command with the appropriate plugin ID or use our automated scripts:
+TO CREATE A NEW VERSION FOR ANY SECTION, USE THE DOCUSAURUS VERSION COMMAND WITH THE APPROPRIATE PLUGIN ID OR USE OUR AUTOMATED SCRIPTS:
 
-#### Before You Cut
+#### BEFORE YOU CUT
 
-The cut snapshots whatever's on disk into a frozen historical version, including auto-generated content (database pages from `superset/db_engine_specs/`, API reference from `static/resources/openapi.json`, component pages from Storybook stories). The cut script refreshes these via `generate:smart` before snapshotting, but the **`databases.json` diagnostics file** needs special care to capture full detail:
+THE CUT SNAPSHOTS WHATEVER'S ON DISK INTO A FROZEN HISTORICAL VERSION, INCLUDING AUTO-GENERATED CONTENT (DATABASE PAGES FROM `superset/db_engine_specs/`, API REFERENCE FROM `static/resources/openapi.json`, COMPONENT PAGES FROM STORYBOOK STORIES). THE CUT SCRIPT REFRESHES THESE VIA `generate:smart` BEFORE SNAPSHOTTING, BUT THE **`databases.json` DIAGNOSTICS FILE** NEEDS SPECIAL CARE TO CAPTURE FULL DETAIL:
 
-1. **Canonical release cut**: download the `database-diagnostics` artifact from a green `Python-Integration` run on master, place it at `docs/src/data/databases.json`, then run the cut script with `--skip-generate` to preserve it. This is what the production deploy uses and includes full Flask-context diagnostics (driver versions, feature support matrix, etc.).
-2. **Local dev cut**: just run the script normally. `generate:smart` will regenerate `databases.json` using your local Flask environment — accurate to whatever drivers/extras you have installed, but typically less complete than the CI artifact.
-3. **No Flask available**: also fine — the database generator falls back to AST parsing of engine spec files. The MDX pages are still correct; only the diagnostics JSON is leaner.
+1. **CANONICAL RELEASE CUT**: DOWNLOAD THE `database-diagnostics` ARTIFACT FROM A GREEN `Python-Integration` RUN ON MASTER, PLACE IT AT `docs/src/data/databases.json`, THEN RUN THE CUT SCRIPT WITH `--skip-generate` TO PRESERVE IT. THIS IS WHAT THE PRODUCTION DEPLOY USES AND INCLUDES FULL FLASK-CONTEXT DIAGNOSTICS (DRIVER VERSIONS, FEATURE SUPPORT MATRIX, ETC.).
+2. **LOCAL DEV CUT**: JUST RUN THE SCRIPT NORMALLY. `generate:smart` WILL REGENERATE `databases.json` USING YOUR LOCAL FLASK ENVIRONMENT — ACCURATE TO WHATEVER DRIVERS/EXTRAS YOU HAVE INSTALLED, BUT TYPICALLY LESS COMPLETE THAN THE CI ARTIFACT.
+3. **NO FLASK AVAILABLE**: ALSO FINE — THE DATABASE GENERATOR FALLS BACK TO AST PARSING OF ENGINE SPEC FILES. THE MDX PAGES ARE STILL CORRECT; ONLY THE DIAGNOSTICS JSON IS LEANER.
 
-Also: confirm `master` CI is green, and that your local checkout matches the SHA you intend to cut from.
+ALSO: CONFIRM `master` CI IS GREEN, AND THAT YOUR LOCAL CHECKOUT MATCHES THE SHA YOU INTEND TO CUT FROM.
 
-#### Using Automated Scripts (Required)
+#### USING AUTOMATED SCRIPTS (REQUIRED)
 
-**⚠️ Important:** Always use these custom commands instead of the native Docusaurus commands. These scripts ensure that both the Docusaurus versioning system AND the `versions-config.json` file are updated correctly, AND that auto-generated content is refreshed before snapshotting.
+**⚠️ IMPORTANT:** ALWAYS USE THESE CUSTOM COMMANDS INSTEAD OF THE NATIVE DOCUSAURUS COMMANDS. THESE SCRIPTS ENSURE THAT BOTH THE DOCUSAURUS VERSIONING SYSTEM AND THE `versions-config.json` FILE ARE UPDATED CORRECTLY, AND THAT AUTO-GENERATED CONTENT IS REFRESHED BEFORE SNAPSHOTTING.
 
 ```bash
 # Main Documentation
@@ -65,54 +65,54 @@ yarn version:add:developer_docs 1.2.0
 yarn version:add:components 1.2.0
 ```
 
-What the script does:
+WHAT THE SCRIPT DOES:
 
-1. Refreshes auto-generated content via `generate:smart` (database pages, API reference, component pages).
-2. Calls `yarn docusaurus docs:version` (or the per-section equivalent) to snapshot the section.
-3. Freezes any data-file imports (`@site/static/*.json`, `../../data/*.json`) into a snapshot-local `_versioned_data/` dir so the historical version doesn't silently mutate when the source files change.
-4. Adjusts relative import paths (`../../src/...` → `../../../src/...`) for files now one directory deeper.
-5. Updates `versions-config.json` and `<section>_versions.json`.
+1. REFRESHES AUTO-GENERATED CONTENT VIA `generate:smart` (DATABASE PAGES, API REFERENCE, COMPONENT PAGES).
+2. CALLS `yarn docusaurus docs:version` (OR THE PER-SECTION EQUIVALENT) TO SNAPSHOT THE SECTION.
+3. FREEZES ANY DATA-FILE IMPORTS (`@site/static/*.json`, `../../data/*.json`) INTO A SNAPSHOT-LOCAL `_versioned_data/` DIR SO THE HISTORICAL VERSION DOESN'T SILENTLY MUTATE WHEN THE SOURCE FILES CHANGE.
+4. ADJUSTS RELATIVE IMPORT PATHS (`../../src/...` → `../../../src/...`) FOR FILES NOW ONE DIRECTORY DEEPER.
+5. UPDATES `versions-config.json` AND `<section>_versions.json`.
 
-**Do NOT use** the native Docusaurus commands directly (`yarn docusaurus docs:version`), as they will:
+**DO NOT USE** THE NATIVE DOCUSAURUS COMMANDS DIRECTLY (`yarn docusaurus docs:version`), AS THEY WILL:
 
-- ❌ Create version files but NOT update `versions-config.json`
-- ❌ Skip auto-gen refresh, freezing whatever was on disk
-- ❌ Skip data-import freezing, leaving the snapshot pointed at live data
-- ❌ Cause versions to not appear in dropdown menus
-- ❌ Require manual fixes to synchronize the configuration
+- ❌ CREATE VERSION FILES BUT NOT UPDATE `versions-config.json`
+- ❌ SKIP AUTO-GEN REFRESH, FREEZING WHATEVER WAS ON DISK
+- ❌ SKIP DATA-IMPORT FREEZING, LEAVING THE SNAPSHOT POINTED AT LIVE DATA
+- ❌ CAUSE VERSIONS TO NOT APPEAR IN DROPDOWN MENUS
+- ❌ REQUIRE MANUAL FIXES TO SYNCHRONIZE THE CONFIGURATION
 
-### Managing Versions
+### MANAGING VERSIONS
 
-#### With Automated Scripts
+#### WITH AUTOMATED SCRIPTS
 
-The automated scripts handle all configuration updates automatically. No manual editing required!
+THE AUTOMATED SCRIPTS HANDLE ALL CONFIGURATION UPDATES AUTOMATICALLY. NO MANUAL EDITING REQUIRED!
 
-#### Manual Configuration
+#### MANUAL CONFIGURATION
 
-If creating versions manually, you'll need to:
+IF CREATING VERSIONS MANUALLY, YOU'LL NEED TO:
 
-1. **Update `versions-config.json`** (or `docusaurus.config.ts` if not using dynamic config):
-   - Add version to `onlyIncludeVersions` array
-   - Add version metadata to `versions` object
-   - Update `lastVersion` if needed
+1. **UPDATE `versions-config.json`** (OR `docusaurus.config.ts` IF NOT USING DYNAMIC CONFIG):
+   - ADD VERSION TO `onlyIncludeVersions` ARRAY
+   - ADD VERSION METADATA TO `versions` OBJECT
+   - UPDATE `lastVersion` IF NEEDED
 
-2. **Files Created by Versioning**:
-   When a new version is created, Docusaurus generates:
-   - **Versioned docs folder**: `[section]_versioned_docs/version-X.X.X/`
-   - **Versioned sidebars**: `[section]_versioned_sidebars/version-X.X.X-sidebars.json`
-   - **Versions list**: `[section]_versions.json`
+2. **FILES CREATED BY VERSIONING**:
+   WHEN A NEW VERSION IS CREATED, DOCUSAURUS GENERATES:
+   - **VERSIONED DOCS FOLDER**: `[section]_versioned_docs/version-X.X.X/`
+   - **VERSIONED SIDEBARS**: `[section]_versioned_sidebars/version-X.X.X-sidebars.json`
+   - **VERSIONS LIST**: `[section]_versions.json`
 
-   All four sections (`user_docs`, `admin_docs`, `developer_docs`, `components`) follow this naming pattern uniformly.
+   ALL FOUR SECTIONS (`user_docs`, `admin_docs`, `developer_docs`, `components`) FOLLOW THIS NAMING PATTERN UNIFORMLY.
 
-3. **Important**: After adding a version, restart the development server to see changes:
+3. **IMPORTANT**: AFTER ADDING A VERSION, RESTART THE DEVELOPMENT SERVER TO SEE CHANGES:
    ```bash
    yarn stop
    yarn start
    ```
 
-### Removing a Version
+### REMOVING A VERSION
 
-#### Using Automated Scripts (Recommended)
+#### USING AUTOMATED SCRIPTS (RECOMMENDED)
 
 ```bash
 # Main Documentation
@@ -128,37 +128,37 @@ yarn version:remove:developer_docs 1.0.0
 yarn version:remove:components 1.0.0
 ```
 
-#### Manual Removal
+#### MANUAL REMOVAL
 
-To manually remove a version:
+TO MANUALLY REMOVE A VERSION:
 
-1. **Delete the version folder** from the appropriate location:
-   - User Docs: `user_docs_versioned_docs/version-X.X.X/`
-   - Admin Docs: `admin_docs_versioned_docs/version-X.X.X/`
-   - Developer Docs: `developer_docs_versioned_docs/version-X.X.X/`
-   - Components: `components_versioned_docs/version-X.X.X/`
+1. **DELETE THE VERSION FOLDER** FROM THE APPROPRIATE LOCATION:
+   - USER DOCS: `user_docs_versioned_docs/version-X.X.X/`
+   - ADMIN DOCS: `admin_docs_versioned_docs/version-X.X.X/`
+   - DEVELOPER DOCS: `developer_docs_versioned_docs/version-X.X.X/`
+   - COMPONENTS: `components_versioned_docs/version-X.X.X/`
 
-2. **Delete the version metadata file**:
-   - User Docs: `user_docs_versioned_sidebars/version-X.X.X-sidebars.json`
-   - Admin Docs: `admin_docs_versioned_sidebars/version-X.X.X-sidebars.json`
-   - Developer Docs: `developer_docs_versioned_sidebars/version-X.X.X-sidebars.json`
-   - Components: `components_versioned_sidebars/version-X.X.X-sidebars.json`
+2. **DELETE THE VERSION METADATA FILE**:
+   - USER DOCS: `user_docs_versioned_sidebars/version-X.X.X-sidebars.json`
+   - ADMIN DOCS: `admin_docs_versioned_sidebars/version-X.X.X-sidebars.json`
+   - DEVELOPER DOCS: `developer_docs_versioned_sidebars/version-X.X.X-sidebars.json`
+   - COMPONENTS: `components_versioned_sidebars/version-X.X.X-sidebars.json`
 
-3. **Update the versions list file**:
-   - User Docs: `user_docs_versions.json`
-   - Admin Docs: `admin_docs_versions.json`
-   - Developer Docs: `developer_docs_versions.json`
-   - Components: `components_versions.json`
+3. **UPDATE THE VERSIONS LIST FILE**:
+   - USER DOCS: `user_docs_versions.json`
+   - ADMIN DOCS: `admin_docs_versions.json`
+   - DEVELOPER DOCS: `developer_docs_versions.json`
+   - COMPONENTS: `components_versions.json`
 
-4. **Update configuration**:
-   - If using dynamic config: Update `versions-config.json`
-   - If using static config: Update `docusaurus.config.ts`
+4. **UPDATE CONFIGURATION**:
+   - IF USING DYNAMIC CONFIG: UPDATE `versions-config.json`
+   - IF USING STATIC CONFIG: UPDATE `docusaurus.config.ts`
 
-5. **Restart the server** to see changes
+5. **RESTART THE SERVER** TO SEE CHANGES
 
-### Version Configuration Examples
+### VERSION CONFIGURATION EXAMPLES
 
-#### Main Documentation (default plugin)
+#### MAIN DOCUMENTATION (DEFAULT PLUGIN)
 
 ```typescript
 docs: {
@@ -180,7 +180,7 @@ docs: {
 }
 ```
 
-#### Developer Docs & Components (custom plugins)
+#### DEVELOPER DOCS & COMPONENTS (CUSTOM PLUGINS)
 
 ```typescript
 {
@@ -205,41 +205,41 @@ docs: {
 }
 ```
 
-### Best Practices
+### BEST PRACTICES
 
-1. **Version naming**: Use semantic versioning (e.g., 1.0.0, 1.1.0, 2.0.0)
-2. **Version banners**: Use `'unreleased'` for development versions, `'none'` for stable releases
-3. **Limit displayed versions**: Use `onlyIncludeVersions` to show only relevant versions
-4. **Test locally**: Always test version changes locally before deploying
-5. **Independent versioning**: Each section can have different version numbers and release cycles
+1. **VERSION NAMING**: USE SEMANTIC VERSIONING (E.G., 1.0.0, 1.1.0, 2.0.0)
+2. **VERSION BANNERS**: USE `'unreleased'` FOR DEVELOPMENT VERSIONS, `'none'` FOR STABLE RELEASES
+3. **LIMIT DISPLAYED VERSIONS**: USE `onlyIncludeVersions` TO SHOW ONLY RELEVANT VERSIONS
+4. **TEST LOCALLY**: ALWAYS TEST VERSION CHANGES LOCALLY BEFORE DEPLOYING
+5. **INDEPENDENT VERSIONING**: EACH SECTION CAN HAVE DIFFERENT VERSION NUMBERS AND RELEASE CYCLES
 
-### Troubleshooting
+### TROUBLESHOOTING
 
-#### Version Not Showing After Creation
+#### VERSION NOT SHOWING AFTER CREATION
 
-If you accidentally used `yarn docusaurus docs:version` instead of `yarn version:add`:
+IF YOU ACCIDENTALLY USED `yarn docusaurus docs:version` INSTEAD OF `yarn version:add`:
 
-1. **Problem**: The version files were created but `versions-config.json` wasn't updated
-2. **Solution**: Either:
-   - Revert the changes: `git restore user_docs_versions.json && rm -rf user_docs_versioned_docs/ user_docs_versioned_sidebars/`
-   - Then use the correct command: `yarn version:add:user_docs <version>`
+1. **PROBLEM**: THE VERSION FILES WERE CREATED BUT `versions-config.json` WASN'T UPDATED
+2. **SOLUTION**: EITHER:
+   - REVERT THE CHANGES: `git restore user_docs_versions.json && rm -rf user_docs_versioned_docs/ user_docs_versioned_sidebars/`
+   - THEN USE THE CORRECT COMMAND: `yarn version:add:user_docs <version>`
 
-For other issues:
+FOR OTHER ISSUES:
 
-- **Restart the server**: Changes to version configuration require a server restart
-- **Check config file**: Ensure `versions-config.json` includes the new version
-- **Verify files exist**: Check that versioned docs folder was created
+- **RESTART THE SERVER**: CHANGES TO VERSION CONFIGURATION REQUIRE A SERVER RESTART
+- **CHECK CONFIG FILE**: ENSURE `versions-config.json` INCLUDES THE NEW VERSION
+- **VERIFY FILES EXIST**: CHECK THAT VERSIONED DOCS FOLDER WAS CREATED
 
-#### Broken Links in Versioned Documentation
+#### BROKEN LINKS IN VERSIONED DOCUMENTATION
 
-When creating a new version, links in the documentation are preserved as-is. Common issues:
+WHEN CREATING A NEW VERSION, LINKS IN THE DOCUMENTATION ARE PRESERVED AS-IS. COMMON ISSUES:
 
-- **Cross-section links**: Links between sections (e.g., from developer_docs to docs) need to be version-aware
-- **Absolute vs relative paths**: Use relative paths within the same section
-- **Version-specific URLs**: Update hardcoded URLs to use version variables
+- **CROSS-SECTION LINKS**: LINKS BETWEEN SECTIONS (E.G., FROM DEVELOPER_DOCS TO DOCS) NEED TO BE VERSION-AWARE
+- **ABSOLUTE VS RELATIVE PATHS**: USE RELATIVE PATHS WITHIN THE SAME SECTION
+- **VERSION-SPECIFIC URLS**: UPDATE HARDCODED URLS TO USE VERSION VARIABLES
 
-To fix broken links:
+TO FIX BROKEN LINKS:
 
-1. Use `type: 'doc'` with `docId` for version-aware navigation in navbar
-2. Use relative paths within the same documentation section
-3. Test all versions after creation to identify broken links
+1. USE `type: 'doc'` WITH `docId` FOR VERSION-AWARE NAVIGATION IN NAVBAR
+2. USE RELATIVE PATHS WITHIN THE SAME DOCUMENTATION SECTION
+3. TEST ALL VERSIONS AFTER CREATION TO IDENTIFY BROKEN LINKS

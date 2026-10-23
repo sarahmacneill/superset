@@ -17,31 +17,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# apache-superset-extensions-cli
+# APACHE-SUPERSET-EXTENSIONS-CLI
 
-[![PyPI version](https://badge.fury.io/py/apache-superset-extensions-cli.svg)](https://badge.fury.io/py/apache-superset-extensions-cli)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![PYPI VERSION](https://badge.fury.io/py/apache-superset-extensions-cli.svg)](https://badge.fury.io/py/apache-superset-extensions-cli)
+[![LICENSE](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PYTHON 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
-Official command-line interface for building, bundling, and managing Apache Superset extensions. This CLI tool provides developers with everything needed to create, develop, and package extensions for the Superset ecosystem.
+OFFICIAL COMMAND-LINE INTERFACE FOR BUILDING, BUNDLING, AND MANAGING APACHE SUPERSET EXTENSIONS. THIS CLI TOOL PROVIDES DEVELOPERS WITH EVERYTHING NEEDED TO CREATE, DEVELOP, AND PACKAGE EXTENSIONS FOR THE SUPERSET ECOSYSTEM.
 
-## 🚀 Features
+## 🚀 FEATURES
 
-- **Extension Scaffolding** - Generate initial folder structure and scaffold new extension projects
-- **Validation** - Validate extension structure and configuration before building
-- **Development Server** - Automatically rebuild extensions as files change during development
-- **Build System** - Build extension assets for production deployment
-- **Bundle Packaging** - Package extensions into distributable .supx files
+- **EXTENSION SCAFFOLDING** - GENERATE INITIAL FOLDER STRUCTURE AND SCAFFOLD NEW EXTENSION PROJECTS
+- **VALIDATION** - VALIDATE EXTENSION STRUCTURE AND CONFIGURATION BEFORE BUILDING
+- **DEVELOPMENT SERVER** - AUTOMATICALLY REBUILD EXTENSIONS AS FILES CHANGE DURING DEVELOPMENT
+- **BUILD SYSTEM** - BUILD EXTENSION ASSETS FOR PRODUCTION DEPLOYMENT
+- **BUNDLE PACKAGING** - PACKAGE EXTENSIONS INTO DISTRIBUTABLE .SUPX FILES
 
-## 📦 Installation
+## 📦 INSTALLATION
 
 ```bash
 pip install apache-superset-extensions-cli
 ```
 
-## 🛠️ Quick Start
+## 🛠️ QUICK START
 
-### Available Commands
+### AVAILABLE COMMANDS
 
 ```bash
 # Scaffold a new extension project (interactive prompts, or pass options directly)
@@ -62,14 +62,14 @@ superset-extensions bundle [--output/-o <path>]
 superset-extensions dev
 ```
 
-If a frontend build fails, `build` and `bundle` exit non-zero without writing
-a new manifest or bundle. An existing bundle is not removed; callers must check
-the exit status before using it. In `dev` mode, failed frontend rebuilds are
-reported and the watcher remains available for subsequent changes.
+IF A FRONTEND BUILD FAILS, `build` AND `bundle` EXIT NON-ZERO WITHOUT WRITING
+A NEW MANIFEST OR BUNDLE. AN EXISTING BUNDLE IS NOT REMOVED; CALLERS MUST CHECK
+THE EXIT STATUS BEFORE USING IT. IN `dev` MODE, FAILED FRONTEND REBUILDS ARE
+REPORTED AND THE WATCHER REMAINS AVAILABLE FOR SUBSEQUENT CHANGES.
 
-## 📋 Extension Structure
+## 📋 EXTENSION STRUCTURE
 
-The CLI scaffolds extensions with the following structure:
+THE CLI SCAFFOLDS EXTENSIONS WITH THE FOLLOWING STRUCTURE:
 
 ```
 {publisher}.{name}/             # e.g., my-org.dashboard-widgets/
@@ -89,12 +89,12 @@ The CLI scaffolds extensions with the following structure:
     └── pyproject.toml
 ```
 
-## 📄 License
+## 📄 LICENSE
 
-Licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) for details.
+LICENSED UNDER THE APACHE LICENSE, VERSION 2.0. SEE [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) FOR DETAILS.
 
-## 🔗 Links
+## 🔗 LINKS
 
-- [Community](https://superset.apache.org/community/)
-- [GitHub Repository](https://github.com/apache/superset)
-- [Extensions Documentation](https://superset.apache.org/developer-docs/extensions/overview)
+- [COMMUNITY](https://superset.apache.org/community/)
+- [GITHUB REPOSITORY](https://github.com/apache/superset)
+- [EXTENSIONS DOCUMENTATION](https://superset.apache.org/developer-docs/extensions/overview)

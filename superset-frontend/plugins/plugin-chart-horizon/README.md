@@ -17,17 +17,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/plugin-chart-horizon
+## @SUPERSET-UI/PLUGIN-CHART-HORIZON
 
-[![Version](https://img.shields.io/npm/v/@superset-ui/plugin-chart-horizon.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-horizon)
-[![Libraries.io](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-horizon?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-horizon)
+[![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-horizon.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-horizon)
+[![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-horizon?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-horizon)
 
-This plugin provides Horizon for Superset.
+THIS PLUGIN PROVIDES HORIZON FOR SUPERSET.
 
-### Usage
+### USAGE
 
-Configure `key`, which can be any `string`, and register the plugin. This `key` will be used to
-lookup this chart throughout the app.
+CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
+LOOKUP THIS CHART THROUGHOUT THE APP.
 
 ```js
 import HorizonChartPlugin from '@superset-ui/plugin-chart-horizon';
@@ -35,9 +35,9 @@ import HorizonChartPlugin from '@superset-ui/plugin-chart-horizon';
 new HorizonChartPlugin().configure({ key: 'horizon' }).register();
 ```
 
-Then use it via `SuperChart`. See
-[storybook](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-horizon)
-for more details.
+THEN USE IT VIA `SuperChart`. SEE
+[STORYBOOK](https://apache-superset.github.io/superset-ui-plugins/?selectedKind=plugin-chart-horizon)
+FOR MORE DETAILS.
 
 ```js
 <SuperChart

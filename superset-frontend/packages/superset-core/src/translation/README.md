@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @superset-ui/core/translation
+## @SUPERSET-UI/CORE/TRANSLATION
 
-`i18n` locales and translation for Superset.
+`i18n` LOCALES AND TRANSLATION FOR SUPERSET.
 
-### SupersetTranslation
+### SUPERSETTRANSLATION
 
-#### Example usage
+#### EXAMPLE USAGE
 
 ```js
 import { configure, t, tn } from '@superset-ui/core';
@@ -40,31 +40,31 @@ console.log(tn('singular text', 'plural text', value));
 
 `configure({ [languagePack] })`
 
-- Initialize the translator
-- Initialize with the default language if no `languagePack` is specified.
+- INITIALIZE THE TRANSLATOR
+- INITIALIZE WITH THE DEFAULT LANGUAGE IF NO `languagePack` IS SPECIFIED.
 
 `t(text[, args])`
 
-- Translate `text`.
-- If `args` is provided, substitute `args` into the `sprintf` placeholders specified within `text`
-  translation.
+- TRANSLATE `text`.
+- IF `args` IS PROVIDED, SUBSTITUTE `args` INTO THE `sprintf` PLACEHOLDERS SPECIFIED WITHIN `text`
+  TRANSLATION.
 
-For example
+FOR EXAMPLE
 
 ```js
 t('Hello %(name)s', user);
 ```
 
-See [sprintf-js](https://github.com/alexei/sprintf.js) for more details on how to define
-placeholders.
+SEE [SPRINTF-JS](https://github.com/alexei/sprintf.js) FOR MORE DETAILS ON HOW TO DEFINE
+PLACEHOLDERS.
 
 `tn(singular, plural, num, [, args])`
 
-- Translate and choose between `singular` and `plural` based on `num`.
-- If `args` is provided, substitute `args` into the `sprintf` placeholders specified within
-  `singular` or `plural` translations.
+- TRANSLATE AND CHOOSE BETWEEN `singular` AND `plural` BASED ON `num`.
+- IF `args` IS PROVIDED, SUBSTITUTE `args` INTO THE `sprintf` PLACEHOLDERS SPECIFIED WITHIN
+  `singular` OR `plural` TRANSLATIONS.
 
-For example
+FOR EXAMPLE
 
 ```js
 tn('%d duck', '%d ducks', 2, 2);

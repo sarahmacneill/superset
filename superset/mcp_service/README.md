@@ -17,24 +17,24 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Superset MCP Service
+# SUPERSET MCP SERVICE
 
-> **What is this?** The MCP service allows an AI Agent to directly interact with Apache Superset, enabling natural language queries and commands for data visualization.
+> **WHAT IS THIS?** THE MCP SERVICE ALLOWS AN AI AGENT TO DIRECTLY INTERACT WITH APACHE SUPERSET, ENABLING NATURAL LANGUAGE QUERIES AND COMMANDS FOR DATA VISUALIZATION.
 
-> **How does it work?** This service is part of the Apache Superset codebase. You need to:
-> 1. Have Apache Superset installed and running
-> 2. Connect an agent such as Claude Desktop to your Superset instance using this MCP service
-> 3. Then Claude can create charts, query data, and manage dashboards
+> **HOW DOES IT WORK?** THIS SERVICE IS PART OF THE APACHE SUPERSET CODEBASE. YOU NEED TO:
+> 1. HAVE APACHE SUPERSET INSTALLED AND RUNNING
+> 2. CONNECT AN AGENT SUCH AS CLAUDE DESKTOP TO YOUR SUPERSET INSTANCE USING THIS MCP SERVICE
+> 3. THEN CLAUDE CAN CREATE CHARTS, QUERY DATA, AND MANAGE DASHBOARDS
 
-The Superset Model Context Protocol (MCP) service provides a modular, schema-driven interface for programmatic access to Superset dashboards, charts, datasets, and instance metadata. It is designed for LLM agents and automation tools, and is built on the FastMCP protocol.
+THE SUPERSET MODEL CONTEXT PROTOCOL (MCP) SERVICE PROVIDES A MODULAR, SCHEMA-DRIVEN INTERFACE FOR PROGRAMMATIC ACCESS TO SUPERSET DASHBOARDS, CHARTS, DATASETS, AND INSTANCE METADATA. IT IS DESIGNED FOR LLM AGENTS AND AUTOMATION TOOLS, AND IS BUILT ON THE FASTMCP PROTOCOL.
 
-## 🚀 Quickstart
+## 🚀 QUICKSTART
 
-### Option 1: Docker Setup (Recommended) 🎯
+### OPTION 1: DOCKER SETUP (RECOMMENDED) 🎯
 
-The fastest way to get everything running with Docker:
+THE FASTEST WAY TO GET EVERYTHING RUNNING WITH DOCKER:
 
-**Prerequisites:** Docker and Docker Compose installed
+**PREREQUISITES:** DOCKER AND DOCKER COMPOSE INSTALLED
 
 ```bash
 # 1. Clone the repository
@@ -57,27 +57,27 @@ docker exec -it superset-superset-light-1 superset db upgrade
 docker exec -it superset-superset-light-1 superset init
 ```
 
-**That's it!** ✨
-- Superset frontend is running at http://localhost:9001 (login: admin/admin)
-- MCP service is running on port 5008
-- Now configure Claude Desktop (see Step 2 below)
+**THAT'S IT!** ✨
+- SUPERSET FRONTEND IS RUNNING AT http://localhost:9001 (LOGIN: ADMIN/ADMIN)
+- MCP SERVICE IS RUNNING ON PORT 5008
+- NOW CONFIGURE CLAUDE DESKTOP (SEE STEP 2 BELOW)
 
-#### What Docker Compose does:
-- Sets up PostgreSQL database
-- Builds and runs Superset containers
-- Starts the MCP service (with `--profile mcp`)
-- Handles all networking and dependencies
-- Provides hot-reload for development
+#### WHAT DOCKER COMPOSE DOES:
+- SETS UP POSTGRESQL DATABASE
+- BUILDS AND RUNS SUPERSET CONTAINERS
+- STARTS THE MCP SERVICE (WITH `--profile mcp`)
+- HANDLES ALL NETWORKING AND DEPENDENCIES
+- PROVIDES HOT-RELOAD FOR DEVELOPMENT
 
-#### Customizing ports:
+#### CUSTOMIZING PORTS:
 ```bash
 # Use different ports if defaults are in use
 NODE_PORT=9002 MCP_PORT=5009 docker-compose -f docker-compose-light.yml --profile mcp up -d
 ```
 
-### Option 2: Manual Setup
+### OPTION 2: MANUAL SETUP
 
-If Docker is not available, you can set up manually:
+IF DOCKER IS NOT AVAILABLE, YOU CAN SET UP MANUALLY:
 
 ```bash
 # 1. Clone the repository
@@ -145,19 +145,19 @@ source venv/bin/activate
 superset mcp run --port 5008 --debug
 ```
 
-Access Superset at http://localhost:9001 (login: admin/admin)
+ACCESS SUPERSET AT http://localhost:9001 (LOGIN: ADMIN/ADMIN)
 
-## 🔌 Step 2: Connect Claude Desktop
+## 🔌 STEP 2: CONNECT CLAUDE DESKTOP
 
-### For Docker Setup
+### FOR DOCKER SETUP
 
-Since the MCP service runs inside Docker on port 5008, you need to connect Claude Desktop to the HTTP endpoint:
+SINCE THE MCP SERVICE RUNS INSIDE DOCKER ON PORT 5008, YOU NEED TO CONNECT CLAUDE DESKTOP TO THE HTTP ENDPOINT:
 
-Add this to your Claude Desktop config file:
+ADD THIS TO YOUR CLAUDE DESKTOP CONFIG FILE:
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**MACOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
-Since claude desktop doesn't like non https mcp servers you can use this proxy:
+SINCE CLAUDE DESKTOP DOESN'T LIKE NON HTTPS MCP SERVERS YOU CAN USE THIS PROXY:
 ```json
 {
   "mcpServers": {
@@ -170,9 +170,9 @@ Since claude desktop doesn't like non https mcp servers you can use this proxy:
 }
 ```
 
-### For Local Setup (Make/Manual)
+### FOR LOCAL SETUP (MAKE/MANUAL)
 
-If running MCP locally (not in Docker), use the direct connection:
+IF RUNNING MCP LOCALLY (NOT IN DOCKER), USE THE DIRECT CONNECTION:
 
 ```json
 {
@@ -188,10 +188,10 @@ If running MCP locally (not in Docker), use the direct connection:
 }
 ```
 
-Then restart Claude Desktop. That's it! ✨
+THEN RESTART CLAUDE DESKTOP. THAT'S IT! ✨
 
 
-### Alternative Connection Methods
+### ALTERNATIVE CONNECTION METHODS
 
 <details>
 <summary>Direct STDIO with npx</summary>
@@ -210,7 +210,7 @@ Then restart Claude Desktop. That's it! ✨
   }
 }
 ```
-Note: Replace "admin" with your actual Superset username. These environment variables override the values in superset_config.py.
+NOTE: REPLACE "ADMIN" WITH YOUR ACTUAL SUPERSET USERNAME. THESE ENVIRONMENT VARIABLES OVERRIDE THE VALUES IN SUPERSET_CONFIG.PY.
 </details>
 
 <details>
@@ -231,17 +231,17 @@ Note: Replace "admin" with your actual Superset username. These environment vari
 ```
 </details>
 
-### 📍 Claude Desktop Config Location
+### 📍 CLAUDE DESKTOP CONFIG LOCATION
 
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **MACOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
 ---
 
-## ☸️ Kubernetes Deployment
+## ☸️ KUBERNETES DEPLOYMENT
 
-This section covers deploying the MCP service on Kubernetes for production environments. The MCP service runs as a separate deployment alongside Superset, connected via an API gateway or ingress controller.
+THIS SECTION COVERS DEPLOYING THE MCP SERVICE ON KUBERNETES FOR PRODUCTION ENVIRONMENTS. THE MCP SERVICE RUNS AS A SEPARATE DEPLOYMENT ALONGSIDE SUPERSET, CONNECTED VIA AN API GATEWAY OR INGRESS CONTROLLER.
 
-### Architecture Overview
+### ARCHITECTURE OVERVIEW
 
 ```mermaid
 graph TB
@@ -287,7 +287,7 @@ graph TB
     style Redis fill:#ef5350
 ```
 
-### Request Flow
+### REQUEST FLOW
 
 ```mermaid
 sequenceDiagram
@@ -320,28 +320,28 @@ sequenceDiagram
     Note over Tools: Tool Execution Layer
 ```
 
-### Prerequisites
+### PREREQUISITES
 
-- Kubernetes cluster (1.19+)
-- Helm 3.x installed
-- kubectl configured with cluster access
-- PostgreSQL database (can use the bundled chart or external)
-- Redis (optional, for caching and Celery)
+- KUBERNETES CLUSTER (1.19+)
+- HELM 3.X INSTALLED
+- KUBECTL CONFIGURED WITH CLUSTER ACCESS
+- POSTGRESQL DATABASE (CAN USE THE BUNDLED CHART OR EXTERNAL)
+- REDIS (OPTIONAL, FOR CACHING AND CELERY)
 
-### Option 1: Using the Official Superset Helm Chart
+### OPTION 1: USING THE OFFICIAL SUPERSET HELM CHART
 
-The simplest approach is to extend the existing Superset Helm chart to include the MCP service as a sidecar or separate deployment.
+THE SIMPLEST APPROACH IS TO EXTEND THE EXISTING SUPERSET HELM CHART TO INCLUDE THE MCP SERVICE AS A SIDECAR OR SEPARATE DEPLOYMENT.
 
-#### Step 1: Add the Superset Helm Repository
+#### STEP 1: ADD THE SUPERSET HELM REPOSITORY
 
 ```bash
 helm repo add superset http://apache.github.io/superset/
 helm repo update
 ```
 
-#### Step 2: Create a Custom Values File
+#### STEP 2: CREATE A CUSTOM VALUES FILE
 
-Create `mcp-values.yaml` with MCP-specific configuration:
+CREATE `mcp-values.yaml` WITH MCP-SPECIFIC CONFIGURATION:
 
 ```yaml
 # mcp-values.yaml
@@ -433,7 +433,7 @@ redis:
   architecture: standalone
 ```
 
-#### Step 3: Deploy with Helm
+#### STEP 3: DEPLOY WITH HELM
 
 ```bash
 # Create namespace
@@ -450,13 +450,13 @@ kubectl get pods -n superset
 kubectl get svc -n superset
 ```
 
-### Option 2: Dedicated MCP Service Deployment
+### OPTION 2: DEDICATED MCP SERVICE DEPLOYMENT
 
-For production environments requiring independent scaling and isolation, deploy the MCP service as a separate Kubernetes deployment.
+FOR PRODUCTION ENVIRONMENTS REQUIRING INDEPENDENT SCALING AND ISOLATION, DEPLOY THE MCP SERVICE AS A SEPARATE KUBERNETES DEPLOYMENT.
 
-#### Step 1: Create MCP Deployment Manifest
+#### STEP 1: CREATE MCP DEPLOYMENT MANIFEST
 
-Create `mcp-deployment.yaml`:
+CREATE `mcp-deployment.yaml`:
 
 ```yaml
 # mcp-deployment.yaml
@@ -604,9 +604,9 @@ spec:
       app: superset-mcp
 ```
 
-#### Step 2: Create Ingress for Routing
+#### STEP 2: CREATE INGRESS FOR ROUTING
 
-Create `mcp-ingress.yaml` to route `/mcp/*` requests to the MCP service:
+CREATE `mcp-ingress.yaml` TO ROUTE `/mcp/*` REQUESTS TO THE MCP SERVICE:
 
 ```yaml
 # mcp-ingress.yaml
@@ -651,7 +651,7 @@ spec:
       secretName: superset-tls
 ```
 
-#### Step 3: Apply the Manifests
+#### STEP 3: APPLY THE MANIFESTS
 
 ```bash
 # Apply the deployment
@@ -666,23 +666,23 @@ kubectl get svc -n superset
 kubectl get ingress -n superset
 ```
 
-### Configuration Reference
+### CONFIGURATION REFERENCE
 
-#### Environment Variables
+#### ENVIRONMENT VARIABLES
 
-| Variable | Description | Default |
+| VARIABLE | DESCRIPTION | DEFAULT |
 |----------|-------------|---------|
-| `MCP_DEV_USERNAME` | Superset username for MCP authentication in dev mode. Mutually exclusive with `MCP_AUTH_ENABLED = True`: the server refuses to start if both are set. | - |
-| `MCP_AUTH_ENABLED` | Enable/disable authentication | `false` |
-| `MCP_JWT_PUBLIC_KEY` | JWT public key for token validation | - |
-| `SUPERSET_WEBSERVER_ADDRESS` | Internal Superset URL | `http://localhost:8088` |
-| `WEBDRIVER_BASEURL` | URL for screenshot generation | Same as webserver |
+| `MCP_DEV_USERNAME` | SUPERSET USERNAME FOR MCP AUTHENTICATION IN DEV MODE. MUTUALLY EXCLUSIVE WITH `MCP_AUTH_ENABLED = True`: THE SERVER REFUSES TO START IF BOTH ARE SET. | - |
+| `MCP_AUTH_ENABLED` | ENABLE/DISABLE AUTHENTICATION | `false` |
+| `MCP_JWT_PUBLIC_KEY` | JWT PUBLIC KEY FOR TOKEN VALIDATION | - |
+| `SUPERSET_WEBSERVER_ADDRESS` | INTERNAL SUPERSET URL | `http://localhost:8088` |
+| `WEBDRIVER_BASEURL` | URL FOR SCREENSHOT GENERATION | SAME AS WEBSERVER |
 
-#### superset_config.py Options
+#### SUPERSET_CONFIG.PY OPTIONS
 
-Dev mode (`MCP_DEV_USERNAME`) and JWT authentication (`MCP_AUTH_ENABLED`) are
-mutually exclusive -- the server raises at startup if both are set, since a
-fixed dev-mode identity would defeat the point of requiring real auth. Pick one:
+DEV MODE (`MCP_DEV_USERNAME`) AND JWT AUTHENTICATION (`MCP_AUTH_ENABLED`) ARE
+MUTUALLY EXCLUSIVE -- THE SERVER RAISES AT STARTUP IF BOTH ARE SET, SINCE A
+FIXED DEV-MODE IDENTITY WOULD DEFEAT THE POINT OF REQUIRING REAL AUTH. PICK ONE:
 
 ```python
 # MCP Service Configuration -- development/testing (no auth)
@@ -707,11 +707,11 @@ WEBDRIVER_BASEURL = 'http://superset:8088/'
 WEBDRIVER_OPTION_ARGS = ['--headless', '--no-sandbox']
 ```
 
-### Production Considerations
+### PRODUCTION CONSIDERATIONS
 
-#### Security
+#### SECURITY
 
-1. **Authentication**: Configure proper JWT authentication for production:
+1. **AUTHENTICATION**: CONFIGURE PROPER JWT AUTHENTICATION FOR PRODUCTION:
    ```python
    # superset_config.py
    MCP_AUTH_ENABLED = True
@@ -720,7 +720,7 @@ WEBDRIVER_OPTION_ARGS = ['--headless', '--no-sandbox']
    -----END PUBLIC KEY-----"""
    ```
 
-2. **Network Policies**: Restrict MCP service network access:
+2. **NETWORK POLICIES**: RESTRICT MCP SERVICE NETWORK ACCESS:
    ```yaml
    apiVersion: networking.k8s.io/v1
    kind: NetworkPolicy
@@ -752,11 +752,11 @@ WEBDRIVER_OPTION_ARGS = ['--headless', '--no-sandbox']
              port: 5432
    ```
 
-3. **TLS**: Always use TLS in production via ingress or service mesh.
+3. **TLS**: ALWAYS USE TLS IN PRODUCTION VIA INGRESS OR SERVICE MESH.
 
-#### Resource Allocation
+#### RESOURCE ALLOCATION
 
-Recommended resources for production:
+RECOMMENDED RESOURCES FOR PRODUCTION:
 
 ```yaml
 resources:
@@ -768,9 +768,9 @@ resources:
     memory: 2Gi
 ```
 
-#### Monitoring
+#### MONITORING
 
-Add Prometheus annotations for metrics scraping:
+ADD PROMETHEUS ANNOTATIONS FOR METRICS SCRAPING:
 
 ```yaml
 metadata:
@@ -780,15 +780,15 @@ metadata:
     prometheus.io/path: "/metrics"
 ```
 
-### Troubleshooting
+### TROUBLESHOOTING
 
-#### Check MCP Service Logs
+#### CHECK MCP SERVICE LOGS
 
 ```bash
 kubectl logs -n superset -l app=superset-mcp -f
 ```
 
-#### Verify Service Connectivity
+#### VERIFY SERVICE CONNECTIVITY
 
 ```bash
 # Port-forward to test locally
@@ -798,8 +798,8 @@ kubectl port-forward -n superset svc/superset-mcp 5008:5008
 curl http://localhost:5008/health
 ```
 
-#### Common Issues
+#### COMMON ISSUES
 
-1. **Database Connection Errors**: Ensure the MCP service has the same database credentials as Superset
-2. **Authentication Failures**: Verify `MCP_DEV_USERNAME` matches an existing Superset user
-3. **Screenshot Generation Fails**: Check WebDriver configuration and ensure Chrome/Firefox is available in the container
+1. **DATABASE CONNECTION ERRORS**: ENSURE THE MCP SERVICE HAS THE SAME DATABASE CREDENTIALS AS SUPERSET
+2. **AUTHENTICATION FAILURES**: VERIFY `MCP_DEV_USERNAME` MATCHES AN EXISTING SUPERSET USER
+3. **SCREENSHOT GENERATION FAILS**: CHECK WEBDRIVER CONFIGURATION AND ENSURE CHROME/FIREFOX IS AVAILABLE IN THE CONTAINER

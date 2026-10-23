@@ -17,61 +17,61 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Notes for Superset 1.4
+# RELEASE NOTES FOR SUPERSET 1.4
 
-Superset 1.4 focuses heavily on continuing to polish the core Superset experience. This release has a very long list of fixes from across the community.
+SUPERSET 1.4 FOCUSES HEAVILY ON CONTINUING TO POLISH THE CORE SUPERSET EXPERIENCE. THIS RELEASE HAS A VERY LONG LIST OF FIXES FROM ACROSS THE COMMUNITY.
 
-- [**User Experience**](#user-facing-features)
-- [**Database Experience**](#database-experience)
-- [**Breaking Changes and Full Changelog**](#breaking-changes-and-full-changelog)
+- [**USER EXPERIENCE**](#user-facing-features)
+- [**DATABASE EXPERIENCE**](#database-experience)
+- [**BREAKING CHANGES AND FULL CHANGELOG**](#breaking-changes-and-full-changelog)
 
-## User Facing Features
+## USER FACING FEATURES
 
-- Charts and dashboards in Superset can now be certified! In addition, the Edit Dataset modal more accurately reflects state of Certification (especially for Calculated Columns). ([#17335](https://github.com/apache/superset/pull/17335), [#16454](https://github.com/apache/superset/pull/16454))
+- CHARTS AND DASHBOARDS IN SUPERSET CAN NOW BE CERTIFIED! IN ADDITION, THE EDIT DATASET MODAL MORE ACCURATELY REFLECTS STATE OF CERTIFICATION (ESPECIALLY FOR CALCULATED COLUMNS). ([#17335](https://github.com/apache/superset/pull/17335), [#16454](https://github.com/apache/superset/pull/16454))
 
-![Tab Column](media/calc.png)
+![TAB COLUMN](media/calc.png)
 
-- Parquet files can now be uploaded into an existing connected database that has Data Upload enabled. Eventually, the contributor hopes that this foundation can be used to accommodate `feather` and `orc` files. ([#14449](https://github.com/apache/superset/pull/14449))
+- PARQUET FILES CAN NOW BE UPLOADED INTO AN EXISTING CONNECTED DATABASE THAT HAS DATA UPLOAD ENABLED. EVENTUALLY, THE CONTRIBUTOR HOPES THAT THIS FOUNDATION CAN BE USED TO ACCOMMODATE `feather` AND `orc` FILES. ([#14449](https://github.com/apache/superset/pull/14449))
 
-- Tabs can now be added to Column elements in dashboards. ([#16593](https://github.com/apache/superset/pull/16593))
+- TABS CAN NOW BE ADDED TO COLUMN ELEMENTS IN DASHBOARDS. ([#16593](https://github.com/apache/superset/pull/16593))
 
-![Tab Column](media/tab_column.jpg)
+![TAB COLUMN](media/tab_column.jpg)
 
-- The experience of using alerts and reports have improved in a few minor ways. ([#16335](https://github.com/apache/superset/pull/16335),[#16281](https://github.com/apache/superset/pull/16281))
+- THE EXPERIENCE OF USING ALERTS AND REPORTS HAVE IMPROVED IN A FEW MINOR WAYS. ([#16335](https://github.com/apache/superset/pull/16335),[#16281](https://github.com/apache/superset/pull/16281))
 
-- Drag and drop now has a clickable ghost button for an improved user experience. ([#16119](https://github.com/apache/superset/pull/16119))
+- DRAG AND DROP NOW HAS A CLICKABLE GHOST BUTTON FOR AN IMPROVED USER EXPERIENCE. ([#16119](https://github.com/apache/superset/pull/16119))
 
-## Database Experience
+## DATABASE EXPERIENCE
 
-- Apache Drill: Superset can now connect to Apache Drill (thru ODBC / JDBC) and impersonate the currently logged in user. ([#17353](https://github.com/apache/superset/pull/17353/files)).
+- APACHE DRILL: SUPERSET CAN NOW CONNECT TO APACHE DRILL (THRU ODBC / JDBC) AND IMPERSONATE THE CURRENTLY LOGGED IN USER. ([#17353](https://github.com/apache/superset/pull/17353/files)).
 
-- Firebolt: Superset now supports the cloud data warehouse Firebolt! ([#16903](https://github.com/apache/superset/pull/16903)).
+- FIREBOLT: SUPERSET NOW SUPPORTS THE CLOUD DATA WAREHOUSE FIREBOLT! ([#16903](https://github.com/apache/superset/pull/16903)).
 
-- Databricks: Superset now supports the new [SQL Endpoints in Databricks](https://docs.databricks.com/sql/admin/sql-endpoints.html). ([#16862](https://github.com/apache/superset/pull/16862))
+- DATABRICKS: SUPERSET NOW SUPPORTS THE NEW [SQL ENDPOINTS IN DATABRICKS](https://docs.databricks.com/sql/admin/sql-endpoints.html). ([#16862](https://github.com/apache/superset/pull/16862))
 
-- Apache Druid: Superset Explore now can take advantage of support for JOIN's in Druid (note: the `DRUID_JOINS` feature flag needs to be enabled). ([#16770](https://github.com/apache/superset/pull/16770))
+- APACHE DRUID: SUPERSET EXPLORE NOW CAN TAKE ADVANTAGE OF SUPPORT FOR JOIN'S IN DRUID (NOTE: THE `DRUID_JOINS` FEATURE FLAG NEEDS TO BE ENABLED). ([#16770](https://github.com/apache/superset/pull/16770))
 
-- AWS Aurora: Superset now has a separate db_engine_spec for Amazon Aurora. ([#16535](https://github.com/apache/superset/pull/16535))
+- AWS AURORA: SUPERSET NOW HAS A SEPARATE DB_ENGINE_SPEC FOR AMAZON AURORA. ([#16535](https://github.com/apache/superset/pull/16535))
 
-- Clickhouse: Superset now includes function names in the auto-complete for SQL Lab. ([#16234](https://github.com/apache/superset/pull/16234))
+- CLICKHOUSE: SUPERSET NOW INCLUDES FUNCTION NAMES IN THE AUTO-COMPLETE FOR SQL LAB. ([#16234](https://github.com/apache/superset/pull/16234))
 
-- Google Sheets: Better support for private Google Sheets was added. ([#16228](https://github.com/apache/superset/pull/16628))
+- GOOGLE SHEETS: BETTER SUPPORT FOR PRIVATE GOOGLE SHEETS WAS ADDED. ([#16228](https://github.com/apache/superset/pull/16628))
 
-## Developer Experience
+## DEVELOPER EXPERIENCE
 
-- The `Makefile` for Superset has gone through a number of improvements. ([#16327](https://github.com/apache/superset/pull/16327), [#16533](https://github.com/apache/superset/pull/16533))
+- THE `Makefile` FOR SUPERSET HAS GONE THROUGH A NUMBER OF IMPROVEMENTS. ([#16327](https://github.com/apache/superset/pull/16327), [#16533](https://github.com/apache/superset/pull/16533))
 
-- Add Python instrumentation to pages, showing method calls used to build the page & how long each one took. This requires a configuration flag (see PR for more info). ([#16136](https://github.com/apache/superset/pull/16136))
+- ADD PYTHON INSTRUMENTATION TO PAGES, SHOWING METHOD CALLS USED TO BUILD THE PAGE & HOW LONG EACH ONE TOOK. THIS REQUIRES A CONFIGURATION FLAG (SEE PR FOR MORE INFO). ([#16136](https://github.com/apache/superset/pull/16136))
 
-![Pyinstrument](media/pyinstrument.png)
+![PYINSTRUMENT](media/pyinstrument.png)
 
-## Breaking Changes and Full Changelog
+## BREAKING CHANGES AND FULL CHANGELOG
 
-**Breaking Changes**
+**BREAKING CHANGES**
 
-- [16660](https://github.com/apache/superset/pull/16660): The `columns` Jinja parameter has been renamed `table_columns` to make the columns query object parameter available in the Jinja context.
-- [16711](https://github.com/apache/superset/pull/16711): The url_param Jinja function will now by default escape the result. For instance, the value `O'Brien` will now be changed to `O''Brien`. To disable this behavior, call `url_param` with `escape_result` set to `False: url_param("my_key", "my default", escape_result=False)`.
+- [16660](https://github.com/apache/superset/pull/16660): THE `columns` JINJA PARAMETER HAS BEEN RENAMED `table_columns` TO MAKE THE COLUMNS QUERY OBJECT PARAMETER AVAILABLE IN THE JINJA CONTEXT.
+- [16711](https://github.com/apache/superset/pull/16711): THE URL_PARAM JINJA FUNCTION WILL NOW BY DEFAULT ESCAPE THE RESULT. FOR INSTANCE, THE VALUE `O'Brien` WILL NOW BE CHANGED TO `O''Brien`. TO DISABLE THIS BEHAVIOR, CALL `url_param` WITH `escape_result` SET TO `False: url_param("my_key", "my default", escape_result=False)`.
 
-**Changelog**
+**CHANGELOG**
 
-To see the complete changelog in this release, head to [CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG/1.4.1.md). As mentioned earlier, this release has a MASSIVE amount of bug fixes. The full changelog lists all of them!
+TO SEE THE COMPLETE CHANGELOG IN THIS RELEASE, HEAD TO [CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG/1.4.1.md). AS MENTIONED EARLIER, THIS RELEASE HAS A MASSIVE AMOUNT OF BUG FIXES. THE FULL CHANGELOG LISTS ALL OF THEM!

@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Superset UI Data Table
+# SUPERSET UI DATA TABLE
 
-Reusable data table based on [react-table](https://github.com/tannerlinsley/react-table), with
-built-in support for sorting, filtering, and pagination.
+REUSABLE DATA TABLE BASED ON [REACT-TABLE](https://github.com/tannerlinsley/react-table), WITH
+BUILT-IN SUPPORT FOR SORTING, FILTERING, AND PAGINATION.
 
-Intended to be used as a standalone UI component in the future.
+INTENDED TO BE USED AS A STANDALONE UI COMPONENT IN THE FUTURE.

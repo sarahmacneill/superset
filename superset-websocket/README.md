@@ -17,169 +17,169 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Superset WebSocket Server
+# SUPERSET WEBSOCKET SERVER
 
-A Node.js WebSocket server that pushes realtime events from the Superset backend
-to the web frontend. It is a shared transport for authenticated realtime
-sockets: it broadcasts opaque entity-change nudges and fans targeted task-status
-events out to JWT-bound socket routing keys.
+A NODE.JS WEBSOCKET SERVER THAT PUSHES REALTIME EVENTS FROM THE SUPERSET BACKEND
+TO THE WEB FRONTEND. IT IS A SHARED TRANSPORT FOR AUTHENTICATED REALTIME
+SOCKETS: IT BROADCASTS OPAQUE ENTITY-CHANGE NUDGES AND FANS TARGETED TASK-STATUS
+EVENTS OUT TO JWT-BOUND SOCKET ROUTING KEYS.
 
-## Requirements
+## REQUIREMENTS
 
-- Node.js 20.11+ to run the built bundle (the build targets `node20`, and
-  `import.meta.dirname` requires 20.11). Building and developing this package
-  follow the stricter `engines` range in `package.json`.
-- Redis or Valkey, reachable for Pub/Sub
+- NODE.JS 20.11+ TO RUN THE BUILT BUNDLE (THE BUILD TARGETS `node20`, AND
+  `import.meta.dirname` REQUIRES 20.11). BUILDING AND DEVELOPING THIS PACKAGE
+  FOLLOW THE STRICTER `engines` RANGE IN `package.json`.
+- REDIS OR VALKEY, REACHABLE FOR PUB/SUB
 
-To use realtime push, enable it in the Superset backend (`WEBSOCKET_ENABLE`,
-`WEBSOCKET_URL`, `WEBSOCKET_JWT_SECRET`; see below) and run this server on the
-same browser-visible host.
+TO USE REALTIME PUSH, ENABLE IT IN THE SUPERSET BACKEND (`WEBSOCKET_ENABLE`,
+`WEBSOCKET_URL`, `WEBSOCKET_JWT_SECRET`; SEE BELOW) AND RUN THIS SERVER ON THE
+SAME BROWSER-VISIBLE HOST.
 
-## Architecture
+## ARCHITECTURE
 
-### The `realtime` Pub/Sub channel and the message envelope
+### THE `realtime` PUB/SUB CHANNEL AND THE MESSAGE ENVELOPE
 
-Realtime events are published to a single Redis **Pub/Sub** channel,
-`<REALTIME_CHANNEL_PREFIX>realtime` (just `realtime` with the default empty
-prefix), by the Superset Flask app (`superset/tasks/manager.py`). Pub/Sub is
-intentionally best-effort (fire-and-forget, at-most-once — no replay): it
-accelerates each feature's authoritative REST/poll path rather than guaranteeing
-delivery, so a message missed during a disconnect is reconciled by a frontend
-catch-up / REST refetch. See [Superset Configuration](#superset-configuration)
-for the prefix and its Redis ACL implications.
+REALTIME EVENTS ARE PUBLISHED TO A SINGLE REDIS **PUB/SUB** CHANNEL,
+`<REALTIME_CHANNEL_PREFIX>realtime` (JUST `realtime` WITH THE DEFAULT EMPTY
+PREFIX), BY THE SUPERSET FLASK APP (`superset/tasks/manager.py`). PUB/SUB IS
+INTENTIONALLY BEST-EFFORT (FIRE-AND-FORGET, AT-MOST-ONCE — NO REPLAY): IT
+ACCELERATES EACH FEATURE'S AUTHORITATIVE REST/POLL PATH RATHER THAN GUARANTEEING
+DELIVERY, SO A MESSAGE MISSED DURING A DISCONNECT IS RECONCILED BY A FRONTEND
+CATCH-UP / REST REFETCH. SEE [SUPERSET CONFIGURATION](#superset-configuration)
+FOR THE PREFIX AND ITS REDIS ACL IMPLICATIONS.
 
-Each Redis message is a self-describing envelope that separates **what** a message
-is from **who** receives it:
+EACH REDIS MESSAGE IS A SELF-DESCRIBING ENVELOPE THAT SEPARATES **WHAT** A MESSAGE
+IS FROM **WHO** RECEIVES IT:
 
 ```
 { topic, scope, routes?, payload }
 ```
 
-- **`topic`** — the semantic stream the browser dispatches on: `task.status`,
-  `entity.changed`, and future topics (`notification.*`, `report.progress`, …). A
-  new surface adds a topic without inventing channel names or overloading payload
-  shapes.
-- **`scope`** — the delivery breadth the server routes by:
-  - `authenticated_global` — broadcast to **every authenticated** realtime socket.
-    This is authenticated-global, **not** public: anonymous users get no realtime
-    principal, no JWT cookie, and therefore no socket, so they never receive these
-    messages. (True anonymous/Public-role realtime would need a separate,
-    restricted model and is out of scope.)
-  - `principal` / `tab` — targeted to the routing keys in `routes`. The server
-    treats the two the same way (deliver to `routes`); the distinction is only
-    descriptive.
-- **`routes`** — server-computed routing keys for a targeted scope: principal-grain
-  `user:<id>` / `guest:<hmac>` (all of a principal's tabs), or per-tab
-  `user:<id>:<tabId>` (one tab). Omitted for a broadcast. **Never forwarded to the
-  browser.**
-- **`payload`** — the feature-defined body forwarded verbatim to the browser.
+- **`topic`** — THE SEMANTIC STREAM THE BROWSER DISPATCHES ON: `task.status`,
+  `entity.changed`, AND FUTURE TOPICS (`notification.*`, `report.progress`, …). A
+  NEW SURFACE ADDS A TOPIC WITHOUT INVENTING CHANNEL NAMES OR OVERLOADING PAYLOAD
+  SHAPES.
+- **`scope`** — THE DELIVERY BREADTH THE SERVER ROUTES BY:
+  - `authenticated_global` — BROADCAST TO **EVERY AUTHENTICATED** REALTIME SOCKET.
+    THIS IS AUTHENTICATED-GLOBAL, **NOT** PUBLIC: ANONYMOUS USERS GET NO REALTIME
+    PRINCIPAL, NO JWT COOKIE, AND THEREFORE NO SOCKET, SO THEY NEVER RECEIVE THESE
+    MESSAGES. (TRUE ANONYMOUS/PUBLIC-ROLE REALTIME WOULD NEED A SEPARATE,
+    RESTRICTED MODEL AND IS OUT OF SCOPE.)
+  - `principal` / `tab` — TARGETED TO THE ROUTING KEYS IN `routes`. THE SERVER
+    TREATS THE TWO THE SAME WAY (DELIVER TO `routes`); THE DISTINCTION IS ONLY
+    DESCRIPTIVE.
+- **`routes`** — SERVER-COMPUTED ROUTING KEYS FOR A TARGETED SCOPE: PRINCIPAL-GRAIN
+  `user:<id>` / `guest:<hmac>` (ALL OF A PRINCIPAL'S TABS), OR PER-TAB
+  `user:<id>:<tabId>` (ONE TAB). OMITTED FOR A BROADCAST. **NEVER FORWARDED TO THE
+  BROWSER.**
+- **`payload`** — THE FEATURE-DEFINED BODY FORWARDED VERBATIM TO THE BROWSER.
 
-The two topics in use:
+THE TWO TOPICS IN USE:
 
-1. **`entity.changed`** (`scope: authenticated_global`). An "an entity
-   changed" broadcast whose payload carries only opaque ids
-   (`{entity_type, id}`) — no status or sensitive data — so a list view can learn
-   that an entity of a type it renders changed and re-fetch just the affected rows
-   through the authorized API. Each client filters by `entity_type` and id.
-2. **`task.status`** (`scope: principal` or `tab`). A targeted `{task_id, status}`
-   message. It is published on a task's **terminal** completion (SUCCESS, FAILURE,
-   ABORTED, TIMED_OUT), not on every intermediate transition — the chart-data
-   client only needs to learn a task finished; intermediate progress for list
-   views rides the `entity.changed` broadcast instead. Keys are principal-grain by
-   default (reaching all of a principal's tabs) but a task type may narrow them to
-   a per-tab channel (async chart-data does this), so only the tab watching a task
-   is notified. A socket is bound to its per-tab channel only when the browser
-   advertises a `tab_id` on the connect URL (see Connection); it is always also
-   reachable on its principal channel.
+1. **`entity.changed`** (`scope: authenticated_global`). AN "AN ENTITY
+   CHANGED" BROADCAST WHOSE PAYLOAD CARRIES ONLY OPAQUE IDS
+   (`{entity_type, id}`) — NO STATUS OR SENSITIVE DATA — SO A LIST VIEW CAN LEARN
+   THAT AN ENTITY OF A TYPE IT RENDERS CHANGED AND RE-FETCH JUST THE AFFECTED ROWS
+   THROUGH THE AUTHORIZED API. EACH CLIENT FILTERS BY `entity_type` AND ID.
+2. **`task.status`** (`scope: principal` OR `tab`). A TARGETED `{task_id, status}`
+   MESSAGE. IT IS PUBLISHED ON A TASK'S **TERMINAL** COMPLETION (SUCCESS, FAILURE,
+   ABORTED, TIMED_OUT), NOT ON EVERY INTERMEDIATE TRANSITION — THE CHART-DATA
+   CLIENT ONLY NEEDS TO LEARN A TASK FINISHED; INTERMEDIATE PROGRESS FOR LIST
+   VIEWS RIDES THE `entity.changed` BROADCAST INSTEAD. KEYS ARE PRINCIPAL-GRAIN BY
+   DEFAULT (REACHING ALL OF A PRINCIPAL'S TABS) BUT A TASK TYPE MAY NARROW THEM TO
+   A PER-TAB CHANNEL (ASYNC CHART-DATA DOES THIS), SO ONLY THE TAB WATCHING A TASK
+   IS NOTIFIED. A SOCKET IS BOUND TO ITS PER-TAB CHANNEL ONLY WHEN THE BROWSER
+   ADVERTISES A `tab_id` ON THE CONNECT URL (SEE CONNECTION); IT IS ALWAYS ALSO
+   REACHABLE ON ITS PRINCIPAL CHANNEL.
 
-The server forwards each browser message as `{topic, payload}` — the browser
-dispatches on `topic` and never sees the route it arrived by. The server treats
-each routing key as opaque; the producer is responsible for their correctness and
-validates every policy-supplied key against the task's own subscriber principals
-before publishing, so a key can never target another principal.
+THE SERVER FORWARDS EACH BROWSER MESSAGE AS `{topic, payload}` — THE BROWSER
+DISPATCHES ON `topic` AND NEVER SEES THE ROUTE IT ARRIVED BY. THE SERVER TREATS
+EACH ROUTING KEY AS OPAQUE; THE PRODUCER IS RESPONSIBLE FOR THEIR CORRECTNESS AND
+VALIDATES EVERY POLICY-SUPPLIED KEY AGAINST THE TASK'S OWN SUBSCRIBER PRINCIPALS
+BEFORE PUBLISHING, SO A KEY CAN NEVER TARGET ANOTHER PRINCIPAL.
 
-### Connection
+### CONNECTION
 
-When a user's browser connects, it does so over HTTP, including the JWT
-authentication cookie set by the Flask app (`WEBSOCKET_JWT_COOKIE_NAME`, default
-`superset-ws-token`). _Because authentication is cookie-based, the WebSocket
-server must be served from the same browser-visible host as the web
-application._ In Kubernetes this is expected to run cleanly as a separate
-Deployment/Service behind an ingress that supports WebSocket upgrades. The
-server verifies the JWT with the shared secret (`jwtSecret` / `JWT_SECRET`).
-Superset mints the token only after the request principal has `can_read` on the
-`Realtime` resource. The token carries `aud`, `iss`, `sub`, `principal_type`,
-`channel`, and `exp`; the server rejects tokens whose channel does not match the
-principal identity. The permission itself is not serialized into the token: a
-valid token signed with the websocket secret is the proof that Superset already
-authorized the transport.
-The socket is bound to the `channel` claim (its principal channel), which is how
-principal-grain task-status fanout selects recipient sockets. A principal may
-have multiple sockets (e.g. several browser tabs); a message to the principal
-channel is sent to all of them. When a browser also advertises a `tab_id` on the
-connect URL (`wss://…/?tab_id=<id>`), its socket is additionally bound to a
-per-tab channel (`<channel>:<tab_id>`, derived from the authorized principal
-channel so it can never cross principals), letting the producer target one tab.
-Because permission is checked when Superset mints the JWT and when the websocket
-server accepts the upgrade, revocation after minting is bounded by the token
-lifetime; the Superset default is 15 minutes. To keep a long-lived surface
-connected without waiting for a hard disconnect at expiry, Superset re-mints the
-cookie inside a sliding window (any request in the second half of the token's
-life gets a fresh cookie), and the browser client proactively refreshes the
-cookie and reconnects before expiry — so an active or idle-but-open realtime
-surface stays connected while revocation remains bounded by the same lifetime.
+WHEN A USER'S BROWSER CONNECTS, IT DOES SO OVER HTTP, INCLUDING THE JWT
+AUTHENTICATION COOKIE SET BY THE FLASK APP (`WEBSOCKET_JWT_COOKIE_NAME`, DEFAULT
+`superset-ws-token`). _BECAUSE AUTHENTICATION IS COOKIE-BASED, THE WEBSOCKET
+SERVER MUST BE SERVED FROM THE SAME BROWSER-VISIBLE HOST AS THE WEB
+APPLICATION._ IN KUBERNETES THIS IS EXPECTED TO RUN CLEANLY AS A SEPARATE
+DEPLOYMENT/SERVICE BEHIND AN INGRESS THAT SUPPORTS WEBSOCKET UPGRADES. THE
+SERVER VERIFIES THE JWT WITH THE SHARED SECRET (`jwtSecret` / `JWT_SECRET`).
+SUPERSET MINTS THE TOKEN ONLY AFTER THE REQUEST PRINCIPAL HAS `can_read` ON THE
+`Realtime` RESOURCE. THE TOKEN CARRIES `aud`, `iss`, `sub`, `principal_type`,
+`channel`, AND `exp`; THE SERVER REJECTS TOKENS WHOSE CHANNEL DOES NOT MATCH THE
+PRINCIPAL IDENTITY. THE PERMISSION ITSELF IS NOT SERIALIZED INTO THE TOKEN: A
+VALID TOKEN SIGNED WITH THE WEBSOCKET SECRET IS THE PROOF THAT SUPERSET ALREADY
+AUTHORIZED THE TRANSPORT.
+THE SOCKET IS BOUND TO THE `channel` CLAIM (ITS PRINCIPAL CHANNEL), WHICH IS HOW
+PRINCIPAL-GRAIN TASK-STATUS FANOUT SELECTS RECIPIENT SOCKETS. A PRINCIPAL MAY
+HAVE MULTIPLE SOCKETS (E.G. SEVERAL BROWSER TABS); A MESSAGE TO THE PRINCIPAL
+CHANNEL IS SENT TO ALL OF THEM. WHEN A BROWSER ALSO ADVERTISES A `tab_id` ON THE
+CONNECT URL (`wss://…/?tab_id=<id>`), ITS SOCKET IS ADDITIONALLY BOUND TO A
+PER-TAB CHANNEL (`<channel>:<tab_id>`, DERIVED FROM THE AUTHORIZED PRINCIPAL
+CHANNEL SO IT CAN NEVER CROSS PRINCIPALS), LETTING THE PRODUCER TARGET ONE TAB.
+BECAUSE PERMISSION IS CHECKED WHEN SUPERSET MINTS THE JWT AND WHEN THE WEBSOCKET
+SERVER ACCEPTS THE UPGRADE, REVOCATION AFTER MINTING IS BOUNDED BY THE TOKEN
+LIFETIME; THE SUPERSET DEFAULT IS 15 MINUTES. TO KEEP A LONG-LIVED SURFACE
+CONNECTED WITHOUT WAITING FOR A HARD DISCONNECT AT EXPIRY, SUPERSET RE-MINTS THE
+COOKIE INSIDE A SLIDING WINDOW (ANY REQUEST IN THE SECOND HALF OF THE TOKEN'S
+LIFE GETS A FRESH COOKIE), AND THE BROWSER CLIENT PROACTIVELY REFRESHES THE
+COOKIE AND RECONNECTS BEFORE EXPIRY — SO AN ACTIVE OR IDLE-BUT-OPEN REALTIME
+SURFACE STAYS CONNECTED WHILE REVOCATION REMAINS BOUNDED BY THE SAME LIFETIME.
 
-During websocket JWT secret rotation, the websocket service can accept both the
-current key (`jwtSecret` / `JWT_SECRET`) and one previous verify-only key
-(`previousJwtSecret` / `PREVIOUS_JWT_SECRET`). The Flask app does not need the
-previous key: it keeps minting new cookies with `WEBSOCKET_JWT_SECRET`, and any
-cookie signed by the old key is replaced on the next HTTP response. Keep the
-previous key configured on the websocket service until old cookies and open
-sockets have aged out, then remove it.
+DURING WEBSOCKET JWT SECRET ROTATION, THE WEBSOCKET SERVICE CAN ACCEPT BOTH THE
+CURRENT KEY (`jwtSecret` / `JWT_SECRET`) AND ONE PREVIOUS VERIFY-ONLY KEY
+(`previousJwtSecret` / `PREVIOUS_JWT_SECRET`). THE FLASK APP DOES NOT NEED THE
+PREVIOUS KEY: IT KEEPS MINTING NEW COOKIES WITH `WEBSOCKET_JWT_SECRET`, AND ANY
+COOKIE SIGNED BY THE OLD KEY IS REPLACED ON THE NEXT HTTP RESPONSE. KEEP THE
+PREVIOUS KEY CONFIGURED ON THE WEBSOCKET SERVICE UNTIL OLD COOKIES AND OPEN
+SOCKETS HAVE AGED OUT, THEN REMOVE IT.
 
-The service is stateless apart from process-local live socket handles. Each
-replica subscribes to the same Redis Pub/Sub channel, receives the same
-events, and forwards only to matching sockets connected to that replica. Sticky
-sessions are not required; reconnecting to another replica reuses the JWT cookie
-and binds the socket to the same principal channel. Short websocket JWT
-lifetimes keep connection lifetime bounded for pod recycling; if a pod is
-terminated before expiry, connected browsers reconnect and a one-shot catch-up
-fetch on reconnect reconciles any events missed while disconnected (chart-data
-waiters re-check `/task/status_changes` from their retained cursor; list views
-refetch their displayed rows). There is no recurring poll while the socket is
-connected.
+THE SERVICE IS STATELESS APART FROM PROCESS-LOCAL LIVE SOCKET HANDLES. EACH
+REPLICA SUBSCRIBES TO THE SAME REDIS PUB/SUB CHANNEL, RECEIVES THE SAME
+EVENTS, AND FORWARDS ONLY TO MATCHING SOCKETS CONNECTED TO THAT REPLICA. STICKY
+SESSIONS ARE NOT REQUIRED; RECONNECTING TO ANOTHER REPLICA REUSES THE JWT COOKIE
+AND BINDS THE SOCKET TO THE SAME PRINCIPAL CHANNEL. SHORT WEBSOCKET JWT
+LIFETIMES KEEP CONNECTION LIFETIME BOUNDED FOR POD RECYCLING; IF A POD IS
+TERMINATED BEFORE EXPIRY, CONNECTED BROWSERS RECONNECT AND A ONE-SHOT CATCH-UP
+FETCH ON RECONNECT RECONCILES ANY EVENTS MISSED WHILE DISCONNECTED (CHART-DATA
+WAITERS RE-CHECK `/task/status_changes` FROM THEIR RETAINED CURSOR; LIST VIEWS
+REFETCH THEIR DISPLAYED ROWS). THERE IS NO RECURRING POLL WHILE THE SOCKET IS
+CONNECTED.
 
-### Connection Management
+### CONNECTION MANAGEMENT
 
-The server uses standard WebSocket
-[ping/pong](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#pings_and_pongs_the_heartbeat_of_websockets)
-to detect dead connections. Active sockets are pinged regularly (config:
-`pingSocketsIntervalMs`) and the internal registry records the last _pong_
-timestamp; a socket that has not responded within `socketResponseTimeoutMs` is
-terminated. Sockets are also terminated after the JWT `exp` time passes. The
-channel registry is periodically cleaned
-(`gcChannelsIntervalMs`) to release stale references.
+THE SERVER USES STANDARD WEBSOCKET
+[PING/PONG](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#pings_and_pongs_the_heartbeat_of_websockets)
+TO DETECT DEAD CONNECTIONS. ACTIVE SOCKETS ARE PINGED REGULARLY (CONFIG:
+`pingSocketsIntervalMs`) AND THE INTERNAL REGISTRY RECORDS THE LAST _PONG_
+TIMESTAMP; A SOCKET THAT HAS NOT RESPONDED WITHIN `socketResponseTimeoutMs` IS
+TERMINATED. SOCKETS ARE ALSO TERMINATED AFTER THE JWT `exp` TIME PASSES. THE
+CHANNEL REGISTRY IS PERIODICALLY CLEANED
+(`gcChannelsIntervalMs`) TO RELEASE STALE REFERENCES.
 
-## Install
+## INSTALL
 
-Install dependencies:
+INSTALL DEPENDENCIES:
 
 ```bash
 npm ci
 ```
 
-## WebSocket Server Configuration
+## WEBSOCKET SERVER CONFIGURATION
 
-Copy `config.example.json` to `config.json` and adjust the values for your environment.
+COPY `config.example.json` TO `config.json` AND ADJUST THE VALUES FOR YOUR ENVIRONMENT.
 
-Configuration via environment variables is also supported which can be helpful in certain contexts, e.g., deployment. `src/config.ts` can be consulted to see the full list of supported values.
+CONFIGURATION VIA ENVIRONMENT VARIABLES IS ALSO SUPPORTED WHICH CAN BE HELPFUL IN CERTAIN CONTEXTS, E.G., DEPLOYMENT. `src/config.ts` CAN BE CONSULTED TO SEE THE FULL LIST OF SUPPORTED VALUES.
 
-### Restricting WebSocket origins
+### RESTRICTING WEBSOCKET ORIGINS
 
-To mitigate Cross-Site WebSocket Hijacking, set `allowedOrigins` (or the
-`ALLOWED_ORIGINS` environment variable, comma-separated) to the list of origins
-permitted to open WebSocket connections, e.g. the origin Superset is served
-from:
+TO MITIGATE CROSS-SITE WEBSOCKET HIJACKING, SET `allowedOrigins` (OR THE
+`ALLOWED_ORIGINS` ENVIRONMENT VARIABLE, COMMA-SEPARATED) TO THE LIST OF ORIGINS
+PERMITTED TO OPEN WEBSOCKET CONNECTIONS, E.G. THE ORIGIN SUPERSET IS SERVED
+FROM:
 
 ```json
 {
@@ -187,35 +187,35 @@ from:
 }
 ```
 
-The `Origin` header of each upgrade request must exactly match one of the
-configured values. When `allowedOrigins` is empty (the default) the check is
-skipped and any origin is accepted; a single `"*"` entry explicitly allows any
-origin. Setting this is recommended for production deployments, especially when
-the JWT cookie uses `SameSite=None`.
+THE `Origin` HEADER OF EACH UPGRADE REQUEST MUST EXACTLY MATCH ONE OF THE
+CONFIGURED VALUES. WHEN `allowedOrigins` IS EMPTY (THE DEFAULT) THE CHECK IS
+SKIPPED AND ANY ORIGIN IS ACCEPTED; A SINGLE `"*"` ENTRY EXPLICITLY ALLOWS ANY
+ORIGIN. SETTING THIS IS RECOMMENDED FOR PRODUCTION DEPLOYMENTS, ESPECIALLY WHEN
+THE JWT COOKIE USES `SameSite=None`.
 
-### Production hardening checklist
+### PRODUCTION HARDENING CHECKLIST
 
-Because the websocket is now a shared realtime transport and ships in the main
-image, review these before exposing it publicly:
+BECAUSE THE WEBSOCKET IS NOW A SHARED REALTIME TRANSPORT AND SHIPS IN THE MAIN
+IMAGE, REVIEW THESE BEFORE EXPOSING IT PUBLICLY:
 
-- **`ALLOWED_ORIGINS`** — set it to your Superset origin(s) (see above). The
-  default (empty) accepts any origin.
-- **Secure, scoped JWT cookie** — on the Flask side set
-  `WEBSOCKET_JWT_COOKIE_SECURE = True` (HTTPS only) and choose an explicit
-  `WEBSOCKET_JWT_COOKIE_SAMESITE` (`"Lax"` when the app and websocket share a
-  site; `"None"` only for cross-site, which then *requires* `Secure` and an
-  `ALLOWED_ORIGINS` allowlist). Scope with `WEBSOCKET_JWT_COOKIE_DOMAIN` if
-  needed. Cookies are short-lived and JWT-bound, but these flags close the
-  cross-site surface.
-- **Connection caps** — the server accepts unlimited connections by default
-  (`0`). Set `maxTotalConnections` and `maxConnectionsPerChannel` (and
-  optionally `maxSocketBufferBytes`) to bound resource use and blunt abuse.
-- **Keepalive/timeouts** — `pingSocketsIntervalMs` / `socketResponseTimeoutMs`
-  govern dead-connection reaping; the defaults are sane, tune per environment.
+- **`ALLOWED_ORIGINS`** — SET IT TO YOUR SUPERSET ORIGIN(S) (SEE ABOVE). THE
+  DEFAULT (EMPTY) ACCEPTS ANY ORIGIN.
+- **SECURE, SCOPED JWT COOKIE** — ON THE FLASK SIDE SET
+  `WEBSOCKET_JWT_COOKIE_SECURE = True` (HTTPS ONLY) AND CHOOSE AN EXPLICIT
+  `WEBSOCKET_JWT_COOKIE_SAMESITE` (`"Lax"` WHEN THE APP AND WEBSOCKET SHARE A
+  SITE; `"None"` ONLY FOR CROSS-SITE, WHICH THEN *REQUIRES* `Secure` AND AN
+  `ALLOWED_ORIGINS` ALLOWLIST). SCOPE WITH `WEBSOCKET_JWT_COOKIE_DOMAIN` IF
+  NEEDED. COOKIES ARE SHORT-LIVED AND JWT-BOUND, BUT THESE FLAGS CLOSE THE
+  CROSS-SITE SURFACE.
+- **CONNECTION CAPS** — THE SERVER ACCEPTS UNLIMITED CONNECTIONS BY DEFAULT
+  (`0`). SET `maxTotalConnections` AND `maxConnectionsPerChannel` (AND
+  OPTIONALLY `maxSocketBufferBytes`) TO BOUND RESOURCE USE AND BLUNT ABUSE.
+- **KEEPALIVE/TIMEOUTS** — `pingSocketsIntervalMs` / `socketResponseTimeoutMs`
+  GOVERN DEAD-CONNECTION REAPING; THE DEFAULTS ARE SANE, TUNE PER ENVIRONMENT.
 
-## Superset Configuration
+## SUPERSET CONFIGURATION
 
-Enable realtime push in the Superset Flask app (in `superset_config.py`):
+ENABLE REALTIME PUSH IN THE SUPERSET FLASK APP (IN `superset_config.py`):
 
 ```python
 WEBSOCKET_ENABLE = True
@@ -223,46 +223,46 @@ WEBSOCKET_URL = "ws://<host>:<port>/"
 WEBSOCKET_JWT_SECRET = "<a strong random secret, >= 32 bytes>"
 ```
 
-The built-in `Gamma` role receives `can_read` on `Realtime`; grant that
-permission to any additional roles that should receive websocket notifications.
-Without that permission, Superset masks `WEBSOCKET_ENABLE` to `False` for the
-request and does not mint the websocket JWT cookie.
+THE BUILT-IN `Gamma` ROLE RECEIVES `can_read` ON `Realtime`; GRANT THAT
+PERMISSION TO ANY ADDITIONAL ROLES THAT SHOULD RECEIVE WEBSOCKET NOTIFICATIONS.
+WITHOUT THAT PERMISSION, SUPERSET MASKS `WEBSOCKET_ENABLE` TO `False` FOR THE
+REQUEST AND DOES NOT MINT THE WEBSOCKET JWT COOKIE.
 
-Note that the WebSocket server must be run on the same hostname (different port)
-for the JWT cookie to be shared between the Flask app and the WebSocket server.
+NOTE THAT THE WEBSOCKET SERVER MUST BE RUN ON THE SAME HOSTNAME (DIFFERENT PORT)
+FOR THE JWT COOKIE TO BE SHARED BETWEEN THE FLASK APP AND THE WEBSOCKET SERVER.
 
-Note also that `localhost` and `127.0.0.1` are not considered the same host. For
-example, if you're pointing your browser to `localhost:<port>` for Superset,
-then the WebSocket url will need to be configured as `localhost:<port>`.
+NOTE ALSO THAT `localhost` AND `127.0.0.1` ARE NOT CONSIDERED THE SAME HOST. FOR
+EXAMPLE, IF YOU'RE POINTING YOUR BROWSER TO `localhost:<port>` FOR SUPERSET,
+THEN THE WEBSOCKET URL WILL NEED TO BE CONFIGURED AS `localhost:<port>`.
 
-The following values must be coordinated between the Flask app config and
-this server's `config.json` (or its environment-variable overrides):
+THE FOLLOWING VALUES MUST BE COORDINATED BETWEEN THE FLASK APP CONFIG AND
+THIS SERVER'S `config.json` (OR ITS ENVIRONMENT-VARIABLE OVERRIDES):
 
-| Purpose                     | Flask app config            | WebSocket server config                     |
+| PURPOSE                     | FLASK APP CONFIG            | WEBSOCKET SERVER CONFIG                     |
 | --------------------------- | --------------------------- | ------------------------------------------- |
-| Current signing/verify key  | `WEBSOCKET_JWT_SECRET`      | `jwtSecret` / `JWT_SECRET`                  |
-| Previous verify-only key    | not needed                  | `previousJwtSecret` / `PREVIOUS_JWT_SECRET` |
-| Cookie name                 | `WEBSOCKET_JWT_COOKIE_NAME` | `jwtCookieName` / `JWT_COOKIE_NAME`         |
-| Realtime channel prefix     | `REALTIME_CHANNEL_PREFIX`   | `realtimeChannelPrefix` / `REALTIME_CHANNEL_PREFIX` |
+| CURRENT SIGNING/VERIFY KEY  | `WEBSOCKET_JWT_SECRET`      | `jwtSecret` / `JWT_SECRET`                  |
+| PREVIOUS VERIFY-ONLY KEY    | NOT NEEDED                  | `previousJwtSecret` / `PREVIOUS_JWT_SECRET` |
+| COOKIE NAME                 | `WEBSOCKET_JWT_COOKIE_NAME` | `jwtCookieName` / `JWT_COOKIE_NAME`         |
+| REALTIME CHANNEL PREFIX     | `REALTIME_CHANNEL_PREFIX`   | `realtimeChannelPrefix` / `REALTIME_CHANNEL_PREFIX` |
 
-The Redis connection (`redis` / `REDIS_*`) must point at the same Redis instance
-Superset publishes to (`DISTRIBUTED_COORDINATION_CONFIG`). The channel the server
-**subscribes** to is `<REALTIME_CHANNEL_PREFIX>realtime` — the prefix is empty by
-default (channel `realtime`), and the resulting name is a wire-protocol contract
-with the backend producer, so the prefix **must be set identically** on both
-sides (`REALTIME_CHANNEL_PREFIX` in Superset and `REALTIME_CHANNEL_PREFIX` /
-`realtimeChannelPrefix` here). The server forwards each envelope to browsers as
-`{topic, payload}`. A Redis ACL for this server must therefore allow subscribing
-to the **resulting** channel — `realtime` by default, or e.g. `tenant-a:realtime`
-when `REALTIME_CHANNEL_PREFIX=tenant-a:`. Set a per-deployment prefix to keep
-deployments that share one Redis/Valkey from cross-delivering realtime nudges
-(Redis pub/sub is not scoped by DB number).
+THE REDIS CONNECTION (`redis` / `REDIS_*`) MUST POINT AT THE SAME REDIS INSTANCE
+SUPERSET PUBLISHES TO (`DISTRIBUTED_COORDINATION_CONFIG`). THE CHANNEL THE SERVER
+**SUBSCRIBES** TO IS `<REALTIME_CHANNEL_PREFIX>realtime` — THE PREFIX IS EMPTY BY
+DEFAULT (CHANNEL `realtime`), AND THE RESULTING NAME IS A WIRE-PROTOCOL CONTRACT
+WITH THE BACKEND PRODUCER, SO THE PREFIX **MUST BE SET IDENTICALLY** ON BOTH
+SIDES (`REALTIME_CHANNEL_PREFIX` IN SUPERSET AND `REALTIME_CHANNEL_PREFIX` /
+`realtimeChannelPrefix` HERE). THE SERVER FORWARDS EACH ENVELOPE TO BROWSERS AS
+`{topic, payload}`. A REDIS ACL FOR THIS SERVER MUST THEREFORE ALLOW SUBSCRIBING
+TO THE **RESULTING** CHANNEL — `realtime` BY DEFAULT, OR E.G. `tenant-a:realtime`
+WHEN `REALTIME_CHANNEL_PREFIX=tenant-a:`. SET A PER-DEPLOYMENT PREFIX TO KEEP
+DEPLOYMENTS THAT SHARE ONE REDIS/VALKEY FROM CROSS-DELIVERING REALTIME NUDGES
+(REDIS PUB/SUB IS NOT SCOPED BY DB NUMBER).
 
-## StatsD monitoring
+## STATSD MONITORING
 
-The application is tracking a couple of metrics with `statsd` using the [hot-shots](https://www.npmjs.com/package/hot-shots) library, such as the number of connected clients and the number of failed attempts to send a message to a client.
+THE APPLICATION IS TRACKING A COUPLE OF METRICS WITH `statsd` USING THE [HOT-SHOTS](https://www.npmjs.com/package/hot-shots) LIBRARY, SUCH AS THE NUMBER OF CONNECTED CLIENTS AND THE NUMBER OF FAILED ATTEMPTS TO SEND A MESSAGE TO A CLIENT.
 
-`statsd` can be configured with the `statsd` object in the configuration file. See the [hot-shots](https://www.npmjs.com/package/hot-shots) readme for more info. The default configuration is:
+`statsd` CAN BE CONFIGURED WITH THE `statsd` OBJECT IN THE CONFIGURATION FILE. SEE THE [HOT-SHOTS](https://www.npmjs.com/package/hot-shots) README FOR MORE INFO. THE DEFAULT CONFIGURATION IS:
 
 ```json
 {
@@ -274,24 +274,24 @@ The application is tracking a couple of metrics with `statsd` using the [hot-sho
 }
 ```
 
-## Running
+## RUNNING
 
-Running locally via dev server:
+RUNNING LOCALLY VIA DEV SERVER:
 
 ```bash
 npm run dev-server
 ```
 
-Running in production:
+RUNNING IN PRODUCTION:
 
 ```bash
 npm run build && npm start
 ```
 
-### From the official Superset image (recommended)
+### FROM THE OFFICIAL SUPERSET IMAGE (RECOMMENDED)
 
-The WebSocket server is bundled in the official Superset image and launched via
-an alternate entrypoint, so no separate image is required:
+THE WEBSOCKET SERVER IS BUNDLED IN THE OFFICIAL SUPERSET IMAGE AND LAUNCHED VIA
+AN ALTERNATE ENTRYPOINT, SO NO SEPARATE IMAGE IS REQUIRED:
 
 ```bash
 docker run --rm -p 8080:8080 \
@@ -301,22 +301,22 @@ docker run --rm -p 8080:8080 \
   apache/superset:<tag> /app/docker/entrypoints/run-websocket.sh
 ```
 
-Configure it with the same environment variables as the standalone server (see
-`src/config.ts`); `JWT_SECRET` / `JWT_COOKIE_NAME` must match the Flask app's
+CONFIGURE IT WITH THE SAME ENVIRONMENT VARIABLES AS THE STANDALONE SERVER (SEE
+`src/config.ts`); `JWT_SECRET` / `JWT_COOKIE_NAME` MUST MATCH THE FLASK APP'S
 `WEBSOCKET_JWT_SECRET` / `WEBSOCKET_JWT_COOKIE_NAME`,
-`PREVIOUS_JWT_SECRET` can hold the prior websocket JWT secret during rotation,
-and the Redis connection must point at the same instance as
+`PREVIOUS_JWT_SECRET` CAN HOLD THE PRIOR WEBSOCKET JWT SECRET DURING ROTATION,
+AND THE REDIS CONNECTION MUST POINT AT THE SAME INSTANCE AS
 `DISTRIBUTED_COORDINATION_CONFIG`.
 
-With `docker compose`, start it via the opt-in `websocket` profile:
+WITH `docker compose`, START IT VIA THE OPT-IN `websocket` PROFILE:
 
 ```bash
 docker compose --profile websocket up superset-websocket
 ```
 
-## Health check
+## HEALTH CHECK
 
-The WebSocket server supports liveness checks via one of:
+THE WEBSOCKET SERVER SUPPORTS LIVENESS CHECKS VIA ONE OF:
 
 ```text
 GET /health
@@ -328,23 +328,23 @@ OR
 HEAD /health
 ```
 
-`/health` is a pure liveness probe: it returns `200` whenever the process is up,
-so a transient Redis blip does not churn pods.
+`/health` IS A PURE LIVENESS PROBE: IT RETURNS `200` WHENEVER THE PROCESS IS UP,
+SO A TRANSIENT REDIS BLIP DOES NOT CHURN PODS.
 
-For load-balancer draining, use the **readiness** endpoint instead:
+FOR LOAD-BALANCER DRAINING, USE THE **READINESS** ENDPOINT INSTEAD:
 
 ```text
 GET /ready
 ```
 
-`/ready` returns `200` only while the server's Redis Pub/Sub subscriber is
-connected and subscribed, and `503` when that subscriber has dropped (the server
-can't deliver messages until it reconnects). Wire connection draining to `/ready`,
-not `/health`, so a degraded pod stops receiving new connections while it recovers.
+`/ready` RETURNS `200` ONLY WHILE THE SERVER'S REDIS PUB/SUB SUBSCRIBER IS
+CONNECTED AND SUBSCRIBED, AND `503` WHEN THAT SUBSCRIBER HAS DROPPED (THE SERVER
+CAN'T DELIVER MESSAGES UNTIL IT RECONNECTS). WIRE CONNECTION DRAINING TO `/ready`,
+NOT `/health`, SO A DEGRADED POD STOPS RECEIVING NEW CONNECTIONS WHILE IT RECOVERS.
 
-## Containerization
+## CONTAINERIZATION
 
-The server ships in the official Superset image (launched via
-`/app/docker/entrypoints/run-websocket.sh`, see "Running" above). A standalone
-`Dockerfile` is also provided in this directory for building the server on its
-own during development.
+THE SERVER SHIPS IN THE OFFICIAL SUPERSET IMAGE (LAUNCHED VIA
+`/app/docker/entrypoints/run-websocket.sh`, SEE "RUNNING" ABOVE). A STANDALONE
+`Dockerfile` IS ALSO PROVIDED IN THIS DIRECTORY FOR BUILDING THE SERVER ON ITS
+OWN DURING DEVELOPMENT.

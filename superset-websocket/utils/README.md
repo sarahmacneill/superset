@@ -17,28 +17,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Test & development utilities
+# TEST & DEVELOPMENT UTILITIES
 
-The files provided here are for testing and development only, and are not required to run the WebSocket server application.
+THE FILES PROVIDED HERE ARE FOR TESTING AND DEVELOPMENT ONLY, AND ARE NOT REQUIRED TO RUN THE WEBSOCKET SERVER APPLICATION.
 
-## Test client application
+## TEST CLIENT APPLICATION
 
-The Express web application in `client-ws-app` is provided for testing the WebSocket server. See `client-ws-app/README.md` for details.
+THE EXPRESS WEB APPLICATION IN `client-ws-app` IS PROVIDED FOR TESTING THE WEBSOCKET SERVER. SEE `client-ws-app/README.md` FOR DETAILS.
 
-## Load testing script
+## LOAD TESTING SCRIPT
 
-The `loadtest.js` script is provided to publish realtime event data to the
-server's single `realtime` Redis Pub/Sub channel, using the same
-`{topic, scope, routes, payload}` envelopes as the Superset producer (a broadcast
-`entity.changed` nudge plus one targeted `task.status` message per simulated
-client), so it exercises the server's real browser-delivery path.
+THE `loadtest.js` SCRIPT IS PROVIDED TO PUBLISH REALTIME EVENT DATA TO THE
+SERVER'S SINGLE `realtime` REDIS PUB/SUB CHANNEL, USING THE SAME
+`{topic, scope, routes, payload}` ENVELOPES AS THE SUPERSET PRODUCER (A BROADCAST
+`entity.changed` NUDGE PLUS ONE TARGETED `task.status` MESSAGE PER SIMULATED
+CLIENT), SO IT EXERCISES THE SERVER'S REAL BROWSER-DELIVERY PATH.
 
-### Running
+### RUNNING
 
 ```bash
 node loadtest.js
 ```
 
-The script will populate data continually until the script is exited using CTRL-C.
+THE SCRIPT WILL POPULATE DATA CONTINUALLY UNTIL THE SCRIPT IS EXITED USING CTRL-C.
 
-**Note:** `loadtest.js` and test client application are configured to use the server's local `config.json` values, so care should be taken to not overwrite any sensitive data.
+**NOTE:** `loadtest.js` AND TEST CLIENT APPLICATION ARE CONFIGURED TO USE THE SERVER'S LOCAL `config.json` VALUES, SO CARE SHOULD BE TAKEN TO NOT OVERWRITE ANY SENSITIVE DATA.

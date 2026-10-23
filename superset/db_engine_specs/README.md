@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Database engine specifications
+# DATABASE ENGINE SPECIFICATIONS
 
-Superset uses [SQLAlchemy](https://www.sqlalchemy.org/) as an abstraction layer for running queries and fetching metadata from tables (like column names and types). Unfortunately, while SQLAlchemy offers enough functionality to allow connecting Superset to dozens of databases, there are still implementation details that differ across them. Because of this, Superset has an additional abstraction on top of SQLAlchemy, called a "database engine specification" or, simply, "DB engine spec".
+SUPERSET USES [SQLALCHEMY](https://www.sqlalchemy.org/) AS AN ABSTRACTION LAYER FOR RUNNING QUERIES AND FETCHING METADATA FROM TABLES (LIKE COLUMN NAMES AND TYPES). UNFORTUNATELY, WHILE SQLALCHEMY OFFERS ENOUGH FUNCTIONALITY TO ALLOW CONNECTING SUPERSET TO DOZENS OF DATABASES, THERE ARE STILL IMPLEMENTATION DETAILS THAT DIFFER ACROSS THEM. BECAUSE OF THIS, SUPERSET HAS AN ADDITIONAL ABSTRACTION ON TOP OF SQLALCHEMY, CALLED A "DATABASE ENGINE SPECIFICATION" OR, SIMPLY, "DB ENGINE SPEC".
 
-DB engine specs were created initially because there's no SQL standard for computing aggregations at different time grains. For example, to compute a daily metric in Trino or Postgres we could run a query like this:
+DB ENGINE SPECS WERE CREATED INITIALLY BECAUSE THERE'S NO SQL STANDARD FOR COMPUTING AGGREGATIONS AT DIFFERENT TIME GRAINS. FOR EXAMPLE, TO COMPUTE A DAILY METRIC IN TRINO OR POSTGRES WE COULD RUN A QUERY LIKE THIS:
 
 ```sql
 SELECT
@@ -33,7 +33,7 @@ GROUP BY
   1
 ```
 
-For MySQL, instead of using the `date_trunc` function, we would need to write:
+FOR MYSQL, INSTEAD OF USING THE `date_trunc` FUNCTION, WE WOULD NEED TO WRITE:
 
 ```sql
 SELECT
@@ -45,529 +45,529 @@ GROUP BY
   1
 ```
 
-Over time, more and more functionality was added to DB engine specs, including validating SQL, estimating the cost of queries before they are run, and understanding the semantics of error messages. These are all described in detail in this document, and in the table below you can see a summary of what features are supported by each database.
+OVER TIME, MORE AND MORE FUNCTIONALITY WAS ADDED TO DB ENGINE SPECS, INCLUDING VALIDATING SQL, ESTIMATING THE COST OF QUERIES BEFORE THEY ARE RUN, AND UNDERSTANDING THE SEMANTICS OF ERROR MESSAGES. THESE ARE ALL DESCRIBED IN DETAIL IN THIS DOCUMENT, AND IN THE TABLE BELOW YOU CAN SEE A SUMMARY OF WHAT FEATURES ARE SUPPORTED BY EACH DATABASE.
 
-Note that DB engine specs are completely optional. Superset can connect to any database supported by SQLAlchemy (or 3rd party dialects) even if there's no DB engine spec associated with it. But DB engine specs greatly improve the experience of working with a database in Superset.
+NOTE THAT DB ENGINE SPECS ARE COMPLETELY OPTIONAL. SUPERSET CAN CONNECT TO ANY DATABASE SUPPORTED BY SQLALCHEMY (OR 3RD PARTY DIALECTS) EVEN IF THERE'S NO DB ENGINE SPEC ASSOCIATED WITH IT. BUT DB ENGINE SPECS GREATLY IMPROVE THE EXPERIENCE OF WORKING WITH A DATABASE IN SUPERSET.
 
-## Features
+## FEATURES
 
-The tables below (generated via `python superset/db_engine_specs/lib.py`) summarize the status of all DB engine specs in Superset, organized by feature category for easier navigation (note that this excludes 3rd party DB engine specs).
+THE TABLES BELOW (GENERATED VIA `python superset/db_engine_specs/lib.py`) SUMMARIZE THE STATUS OF ALL DB ENGINE SPECS IN SUPERSET, ORGANIZED BY FEATURE CATEGORY FOR EASIER NAVIGATION (NOTE THAT THIS EXCLUDES 3RD PARTY DB ENGINE SPECS).
 
-### Quick Navigation
+### QUICK NAVIGATION
 
-- [Feature Overview](#feature-overview) - High-level summary of support across all databases
-- [Database Information](#database-information) - Module paths and core metadata
-- [SQL Capabilities](#sql-capabilities) - SQL language features and capabilities
-- [Time Grains – Common](#time-grains--common) - Standard time granularity support
-- [Time Grains – Extended](#time-grains--extended) - Sub-hour and week variant time grains
-- [Core Platform & Metadata Features](#core-platform--metadata-features) - Platform integration and metadata capabilities
-- [Operational & Advanced Features](#operational--advanced-features) - Advanced operational capabilities
+- [FEATURE OVERVIEW](#feature-overview) - HIGH-LEVEL SUMMARY OF SUPPORT ACROSS ALL DATABASES
+- [DATABASE INFORMATION](#database-information) - MODULE PATHS AND CORE METADATA
+- [SQL CAPABILITIES](#sql-capabilities) - SQL LANGUAGE FEATURES AND CAPABILITIES
+- [TIME GRAINS – COMMON](#time-grains--common) - STANDARD TIME GRANULARITY SUPPORT
+- [TIME GRAINS – EXTENDED](#time-grains--extended) - SUB-HOUR AND WEEK VARIANT TIME GRAINS
+- [CORE PLATFORM & METADATA FEATURES](#core-platform--metadata-features) - PLATFORM INTEGRATION AND METADATA CAPABILITIES
+- [OPERATIONAL & ADVANCED FEATURES](#operational--advanced-features) - ADVANCED OPERATIONAL CAPABILITIES
 
-### Feature Overview
+### FEATURE OVERVIEW
 
-| Database | Score | SQL Basics | Advanced SQL | Common Time Grains | Extended Time Grains | Integrations | Advanced Features |
+| DATABASE | SCORE | SQL BASICS | ADVANCED SQL | COMMON TIME GRAINS | EXTENDED TIME GRAINS | INTEGRATIONS | ADVANCED FEATURES |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Presto | 159 | Supported | Partial | Supported | Partial | Partial | Supported |
-| Trino | 149 | Supported | Partial | Supported | Partial | Partial | Partial |
-| Apache Hive | 140 | Supported | Not supported | Supported | Partial | Partial | Partial |
-| Apache Spark SQL | 140 | Supported | Not supported | Supported | Partial | Partial | Partial |
-| Databricks Interactive Cluster | 140 | Supported | Not supported | Supported | Partial | Partial | Partial |
-| base | 109 | Supported | Partial | Supported | Partial | Partial | Partial |
-| Aurora PostgreSQL (Data API) | 94 | Supported | Partial | Supported | Partial | Partial | Partial |
-| CockroachDB | 94 | Supported | Partial | Supported | Partial | Partial | Partial |
-| RisingWave | 94 | Supported | Partial | Supported | Partial | Partial | Partial |
-| Google BigQuery | 83 | Supported | Partial | Supported | Partial | Partial | Partial |
-| Apache Doris | 79 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Snowflake | 72 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Databricks | 70 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Databricks (legacy) | 70 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| StarRocks | 69 | Supported | Partial | Supported | Partial | Partial | Partial |
-| SingleStore | 68 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| ClickHouse Connect (Superset) | 62 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Google Sheets | 61 | Supported | Partial | Supported | Supported | Partial | Partial |
-| Aurora MySQL (Data API) | 59 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| MariaDB | 59 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| MySQL | 59 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| OceanBase | 59 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| MotherDuck | 58 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| KustoSQL | 54 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| ClickHouse | 52 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Databend | 51 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Apache Drill | 50 | Supported | Partial | Supported | Partial | Partial | Partial |
-| Apache Druid | 47 | Partial | Partial | Supported | Partial | Partial | Not supported |
-| Amazon Redshift | 44 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Azure Synapse | 44 | Partial | Partial | Supported | Partial | Partial | Not supported |
-| Microsoft SQL Server | 44 | Partial | Partial | Supported | Partial | Partial | Not supported |
-| SQLite | 41 | Supported | Partial | Supported | Supported | Not supported | Not supported |
-| Shillelagh | 41 | Supported | Partial | Supported | Supported | Not supported | Not supported |
-| KustoKQL | 40 | Supported | Partial | Partial | Partial | Partial | Not supported |
-| Ascend | 38 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| DuckDB | 38 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| IBM Db2 | 38 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| IBM Db2 for i | 38 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| Ocient | 38 | Partial | Partial | Partial | Partial | Partial | Not supported |
-| Apache Impala | 37 | Supported | Partial | Partial | Not supported | Partial | Not supported |
-| ElasticSearch (SQL API) | 37 | Partial | Partial | Partial | Not supported | Partial | Not supported |
-| PostgreSQL | 34 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Vertica | 34 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Amazon DynamoDB | 32 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Apache Pinot | 32 | Partial | Partial | Supported | Partial | Partial | Not supported |
-| Superset meta database | 31 | Supported | Partial | Supported | Supported | Not supported | Not supported |
-| Databricks SQL Endpoint | 30 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Apache Kylin | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| CrateDB | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| Dremio | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| Exasol | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| Firebolt | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| IBM Netezza Performance Server | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| Oracle | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| Parseable | 28 | Supported | Partial | Supported | Not supported | Partial | Not supported |
-| Couchbase | 27 | Partial | Partial | Partial | Not supported | Partial | Not supported |
-| Denodo | 27 | Supported | Partial | Partial | Not supported | Partial | Not supported |
-| SAP HANA | 27 | Supported | Partial | Partial | Not supported | Partial | Not supported |
-| Teradata | 27 | Supported | Partial | Partial | Not supported | Partial | Not supported |
-| ElasticSearch (OpenDistro SQL) | 26 | Partial | Partial | Partial | Not supported | Partial | Not supported |
-| Firebird | 26 | Supported | Partial | Partial | Not supported | Partial | Not supported |
-| TDengine | 25 | Supported | Partial | Partial | Not supported | Partial | Not supported |
-| YDB | 23 | Supported | Partial | Supported | Partial | Partial | Not supported |
-| Amazon Athena | 20 | Supported | Partial | Supported | Partial | Not supported | Not supported |
-| Apache Solr | 20 | Partial | Partial | Not supported | Not supported | Partial | Not supported |
+| PRESTO | 159 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | SUPPORTED |
+| TRINO | 149 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| APACHE HIVE | 140 | SUPPORTED | NOT SUPPORTED | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| APACHE SPARK SQL | 140 | SUPPORTED | NOT SUPPORTED | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| DATABRICKS INTERACTIVE CLUSTER | 140 | SUPPORTED | NOT SUPPORTED | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| BASE | 109 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| AURORA POSTGRESQL (DATA API) | 94 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| COCKROACHDB | 94 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| RISINGWAVE | 94 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| GOOGLE BIGQUERY | 83 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| APACHE DORIS | 79 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| SNOWFLAKE | 72 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| DATABRICKS | 70 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| DATABRICKS (LEGACY) | 70 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| STARROCKS | 69 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| SINGLESTORE | 68 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| CLICKHOUSE CONNECT (SUPERSET) | 62 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| GOOGLE SHEETS | 61 | SUPPORTED | PARTIAL | SUPPORTED | SUPPORTED | PARTIAL | PARTIAL |
+| AURORA MYSQL (DATA API) | 59 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| MARIADB | 59 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| MYSQL | 59 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| OCEANBASE | 59 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| MOTHERDUCK | 58 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| KUSTOSQL | 54 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| CLICKHOUSE | 52 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| DATABEND | 51 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| APACHE DRILL | 50 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | PARTIAL |
+| APACHE DRUID | 47 | PARTIAL | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| AMAZON REDSHIFT | 44 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| AZURE SYNAPSE | 44 | PARTIAL | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| MICROSOFT SQL SERVER | 44 | PARTIAL | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| SQLITE | 41 | SUPPORTED | PARTIAL | SUPPORTED | SUPPORTED | NOT SUPPORTED | NOT SUPPORTED |
+| SHILLELAGH | 41 | SUPPORTED | PARTIAL | SUPPORTED | SUPPORTED | NOT SUPPORTED | NOT SUPPORTED |
+| KUSTOKQL | 40 | SUPPORTED | PARTIAL | PARTIAL | PARTIAL | PARTIAL | NOT SUPPORTED |
+| ASCEND | 38 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| DUCKDB | 38 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| IBM DB2 | 38 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| IBM DB2 FOR I | 38 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| OCIENT | 38 | PARTIAL | PARTIAL | PARTIAL | PARTIAL | PARTIAL | NOT SUPPORTED |
+| APACHE IMPALA | 37 | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| ELASTICSEARCH (SQL API) | 37 | PARTIAL | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| POSTGRESQL | 34 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| VERTICA | 34 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| AMAZON DYNAMODB | 32 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| APACHE PINOT | 32 | PARTIAL | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| SUPERSET META DATABASE | 31 | SUPPORTED | PARTIAL | SUPPORTED | SUPPORTED | NOT SUPPORTED | NOT SUPPORTED |
+| DATABRICKS SQL ENDPOINT | 30 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| APACHE KYLIN | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| CRATEDB | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| DREMIO | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| EXASOL | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| FIREBOLT | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| IBM NETEZZA PERFORMANCE SERVER | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| ORACLE | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| PARSEABLE | 28 | SUPPORTED | PARTIAL | SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| COUCHBASE | 27 | PARTIAL | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| DENODO | 27 | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| SAP HANA | 27 | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| TERADATA | 27 | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| ELASTICSEARCH (OPENDISTRO SQL) | 26 | PARTIAL | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| FIREBIRD | 26 | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| TDENGINE | 25 | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
+| YDB | 23 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | PARTIAL | NOT SUPPORTED |
+| AMAZON ATHENA | 20 | SUPPORTED | PARTIAL | SUPPORTED | PARTIAL | NOT SUPPORTED | NOT SUPPORTED |
+| APACHE SOLR | 20 | PARTIAL | PARTIAL | NOT SUPPORTED | NOT SUPPORTED | PARTIAL | NOT SUPPORTED |
 
-### Database Information
+### DATABASE INFORMATION
 
-| Database | Module | Limit Method | Limit Clause | Max Column Name |
+| DATABASE | MODULE | LIMIT METHOD | LIMIT CLAUSE | MAX COLUMN NAME |
 | --- | --- | --- | --- | --- |
-| Amazon Athena | superset.db_engine_specs.athena | FORCE_LIMIT | True | None |
-| Amazon DynamoDB | superset.db_engine_specs.dynamodb | FORCE_LIMIT | True | None |
-| Amazon Redshift | superset.db_engine_specs.redshift | FORCE_LIMIT | True | 127 |
-| Apache Doris | superset.db_engine_specs.doris | FORCE_LIMIT | True | 64 |
-| Apache Drill | superset.db_engine_specs.drill | FORCE_LIMIT | True | None |
-| Apache Druid | superset.db_engine_specs.druid | FORCE_LIMIT | True | None |
-| Apache Hive | superset.db_engine_specs.hive | FORCE_LIMIT | True | 767 |
-| Apache Impala | superset.db_engine_specs.impala | FORCE_LIMIT | True | None |
-| Apache Kylin | superset.db_engine_specs.kylin | FORCE_LIMIT | True | None |
-| Apache Pinot | superset.db_engine_specs.pinot | FORCE_LIMIT | True | None |
-| Apache Solr | superset.db_engine_specs.solr | FORCE_LIMIT | True | None |
-| Apache Spark SQL | superset.db_engine_specs.spark | FORCE_LIMIT | True | 767 |
-| Ascend | superset.db_engine_specs.ascend | FORCE_LIMIT | True | None |
-| Aurora MySQL (Data API) | superset.db_engine_specs.aurora | FORCE_LIMIT | True | 64 |
-| Aurora PostgreSQL (Data API) | superset.db_engine_specs.aurora | FORCE_LIMIT | True | 63 |
-| Azure Synapse | superset.db_engine_specs.mssql | FORCE_LIMIT | True | 128 |
-| ClickHouse | superset.db_engine_specs.clickhouse | FORCE_LIMIT | True | None |
-| ClickHouse Connect (Superset) | superset.db_engine_specs.clickhouse | FORCE_LIMIT | True | None |
-| CockroachDB | superset.db_engine_specs.cockroachdb | FORCE_LIMIT | True | 63 |
-| Couchbase | superset.db_engine_specs.couchbase | FORCE_LIMIT | True | None |
-| CrateDB | superset.db_engine_specs.crate | FORCE_LIMIT | True | None |
-| Databend | superset.db_engine_specs.databend | FORCE_LIMIT | True | None |
-| Databricks | superset.db_engine_specs.databricks | FORCE_LIMIT | True | None |
-| Databricks (legacy) | superset.db_engine_specs.databricks | FORCE_LIMIT | True | None |
-| Databricks Interactive Cluster | superset.db_engine_specs.databricks | FORCE_LIMIT | True | 767 |
-| Databricks SQL Endpoint | superset.db_engine_specs.databricks | FORCE_LIMIT | True | None |
-| Denodo | superset.db_engine_specs.denodo | FORCE_LIMIT | True | None |
-| Dremio | superset.db_engine_specs.dremio | FORCE_LIMIT | True | None |
-| DuckDB | superset.db_engine_specs.duckdb | FORCE_LIMIT | True | None |
-| ElasticSearch (OpenDistro SQL) | superset.db_engine_specs.elasticsearch | FORCE_LIMIT | True | None |
-| ElasticSearch (SQL API) | superset.db_engine_specs.elasticsearch | FORCE_LIMIT | True | None |
-| Exasol | superset.db_engine_specs.exasol | FORCE_LIMIT | True | 128 |
-| Firebird | superset.db_engine_specs.firebird | FETCH_MANY | True | None |
-| Firebolt | superset.db_engine_specs.firebolt | FORCE_LIMIT | True | None |
-| Google BigQuery | superset.db_engine_specs.bigquery | FORCE_LIMIT | True | 128 |
-| Google Sheets | superset.db_engine_specs.gsheets | FORCE_LIMIT | True | None |
-| IBM Db2 | superset.db_engine_specs.db2 | WRAP_SQL | True | 30 |
-| IBM Db2 for i | superset.db_engine_specs.ibmi | WRAP_SQL | True | 128 |
-| IBM Netezza Performance Server | superset.db_engine_specs.netezza | FORCE_LIMIT | True | None |
-| KustoKQL | superset.db_engine_specs.kusto | FORCE_LIMIT | True | None |
-| KustoSQL | superset.db_engine_specs.kusto | WRAP_SQL | True | None |
-| MariaDB | superset.db_engine_specs.mariadb | FORCE_LIMIT | True | 64 |
-| Microsoft SQL Server | superset.db_engine_specs.mssql | FORCE_LIMIT | True | 128 |
-| MotherDuck | superset.db_engine_specs.duckdb | FORCE_LIMIT | True | None |
-| MySQL | superset.db_engine_specs.mysql | FORCE_LIMIT | True | 64 |
-| OceanBase | superset.db_engine_specs.oceanbase | FORCE_LIMIT | True | 128 |
-| Ocient | superset.db_engine_specs.ocient | FORCE_LIMIT | True | 30 |
-| Oracle | superset.db_engine_specs.oracle | FORCE_LIMIT | True | 128 |
-| Parseable | superset.db_engine_specs.parseable | FORCE_LIMIT | True | None |
-| PostgreSQL | superset.db_engine_specs.postgres | FORCE_LIMIT | True | None |
-| Presto | superset.db_engine_specs.presto | FORCE_LIMIT | True | None |
-| RisingWave | superset.db_engine_specs.risingwave | FORCE_LIMIT | True | 63 |
-| SAP HANA | superset.db_engine_specs.hana | WRAP_SQL | True | 30 |
-| SQLite | superset.db_engine_specs.sqlite | FORCE_LIMIT | True | None |
-| Shillelagh | superset.db_engine_specs.shillelagh | FORCE_LIMIT | True | None |
-| SingleStore | superset.db_engine_specs.singlestore | FORCE_LIMIT | True | 256 |
-| Snowflake | superset.db_engine_specs.snowflake | FORCE_LIMIT | True | 256 |
-| StarRocks | superset.db_engine_specs.starrocks | FORCE_LIMIT | True | 64 |
-| Superset meta database | superset.db_engine_specs.superset | FORCE_LIMIT | True | None |
-| TDengine | superset.db_engine_specs.tdengine | FORCE_LIMIT | True | 64 |
-| Teradata | superset.db_engine_specs.teradata | FORCE_LIMIT | True | 30 |
-| Trino | superset.db_engine_specs.trino | FORCE_LIMIT | True | None |
-| Vertica | superset.db_engine_specs.vertica | FORCE_LIMIT | True | None |
-| YDB | superset.db_engine_specs.ydb | FORCE_LIMIT | True | None |
-| base | superset.db_engine_specs.presto | FORCE_LIMIT | True | None |
+| AMAZON ATHENA | SUPERSET.DB_ENGINE_SPECS.ATHENA | FORCE_LIMIT | TRUE | NONE |
+| AMAZON DYNAMODB | SUPERSET.DB_ENGINE_SPECS.DYNAMODB | FORCE_LIMIT | TRUE | NONE |
+| AMAZON REDSHIFT | SUPERSET.DB_ENGINE_SPECS.REDSHIFT | FORCE_LIMIT | TRUE | 127 |
+| APACHE DORIS | SUPERSET.DB_ENGINE_SPECS.DORIS | FORCE_LIMIT | TRUE | 64 |
+| APACHE DRILL | SUPERSET.DB_ENGINE_SPECS.DRILL | FORCE_LIMIT | TRUE | NONE |
+| APACHE DRUID | SUPERSET.DB_ENGINE_SPECS.DRUID | FORCE_LIMIT | TRUE | NONE |
+| APACHE HIVE | SUPERSET.DB_ENGINE_SPECS.HIVE | FORCE_LIMIT | TRUE | 767 |
+| APACHE IMPALA | SUPERSET.DB_ENGINE_SPECS.IMPALA | FORCE_LIMIT | TRUE | NONE |
+| APACHE KYLIN | SUPERSET.DB_ENGINE_SPECS.KYLIN | FORCE_LIMIT | TRUE | NONE |
+| APACHE PINOT | SUPERSET.DB_ENGINE_SPECS.PINOT | FORCE_LIMIT | TRUE | NONE |
+| APACHE SOLR | SUPERSET.DB_ENGINE_SPECS.SOLR | FORCE_LIMIT | TRUE | NONE |
+| APACHE SPARK SQL | SUPERSET.DB_ENGINE_SPECS.SPARK | FORCE_LIMIT | TRUE | 767 |
+| ASCEND | SUPERSET.DB_ENGINE_SPECS.ASCEND | FORCE_LIMIT | TRUE | NONE |
+| AURORA MYSQL (DATA API) | SUPERSET.DB_ENGINE_SPECS.AURORA | FORCE_LIMIT | TRUE | 64 |
+| AURORA POSTGRESQL (DATA API) | SUPERSET.DB_ENGINE_SPECS.AURORA | FORCE_LIMIT | TRUE | 63 |
+| AZURE SYNAPSE | SUPERSET.DB_ENGINE_SPECS.MSSQL | FORCE_LIMIT | TRUE | 128 |
+| CLICKHOUSE | SUPERSET.DB_ENGINE_SPECS.CLICKHOUSE | FORCE_LIMIT | TRUE | NONE |
+| CLICKHOUSE CONNECT (SUPERSET) | SUPERSET.DB_ENGINE_SPECS.CLICKHOUSE | FORCE_LIMIT | TRUE | NONE |
+| COCKROACHDB | SUPERSET.DB_ENGINE_SPECS.COCKROACHDB | FORCE_LIMIT | TRUE | 63 |
+| COUCHBASE | SUPERSET.DB_ENGINE_SPECS.COUCHBASE | FORCE_LIMIT | TRUE | NONE |
+| CRATEDB | SUPERSET.DB_ENGINE_SPECS.CRATE | FORCE_LIMIT | TRUE | NONE |
+| DATABEND | SUPERSET.DB_ENGINE_SPECS.DATABEND | FORCE_LIMIT | TRUE | NONE |
+| DATABRICKS | SUPERSET.DB_ENGINE_SPECS.DATABRICKS | FORCE_LIMIT | TRUE | NONE |
+| DATABRICKS (LEGACY) | SUPERSET.DB_ENGINE_SPECS.DATABRICKS | FORCE_LIMIT | TRUE | NONE |
+| DATABRICKS INTERACTIVE CLUSTER | SUPERSET.DB_ENGINE_SPECS.DATABRICKS | FORCE_LIMIT | TRUE | 767 |
+| DATABRICKS SQL ENDPOINT | SUPERSET.DB_ENGINE_SPECS.DATABRICKS | FORCE_LIMIT | TRUE | NONE |
+| DENODO | SUPERSET.DB_ENGINE_SPECS.DENODO | FORCE_LIMIT | TRUE | NONE |
+| DREMIO | SUPERSET.DB_ENGINE_SPECS.DREMIO | FORCE_LIMIT | TRUE | NONE |
+| DUCKDB | SUPERSET.DB_ENGINE_SPECS.DUCKDB | FORCE_LIMIT | TRUE | NONE |
+| ELASTICSEARCH (OPENDISTRO SQL) | SUPERSET.DB_ENGINE_SPECS.ELASTICSEARCH | FORCE_LIMIT | TRUE | NONE |
+| ELASTICSEARCH (SQL API) | SUPERSET.DB_ENGINE_SPECS.ELASTICSEARCH | FORCE_LIMIT | TRUE | NONE |
+| EXASOL | SUPERSET.DB_ENGINE_SPECS.EXASOL | FORCE_LIMIT | TRUE | 128 |
+| FIREBIRD | SUPERSET.DB_ENGINE_SPECS.FIREBIRD | FETCH_MANY | TRUE | NONE |
+| FIREBOLT | SUPERSET.DB_ENGINE_SPECS.FIREBOLT | FORCE_LIMIT | TRUE | NONE |
+| GOOGLE BIGQUERY | SUPERSET.DB_ENGINE_SPECS.BIGQUERY | FORCE_LIMIT | TRUE | 128 |
+| GOOGLE SHEETS | SUPERSET.DB_ENGINE_SPECS.GSHEETS | FORCE_LIMIT | TRUE | NONE |
+| IBM DB2 | SUPERSET.DB_ENGINE_SPECS.DB2 | WRAP_SQL | TRUE | 30 |
+| IBM DB2 FOR I | SUPERSET.DB_ENGINE_SPECS.IBMI | WRAP_SQL | TRUE | 128 |
+| IBM NETEZZA PERFORMANCE SERVER | SUPERSET.DB_ENGINE_SPECS.NETEZZA | FORCE_LIMIT | TRUE | NONE |
+| KUSTOKQL | SUPERSET.DB_ENGINE_SPECS.KUSTO | FORCE_LIMIT | TRUE | NONE |
+| KUSTOSQL | SUPERSET.DB_ENGINE_SPECS.KUSTO | WRAP_SQL | TRUE | NONE |
+| MARIADB | SUPERSET.DB_ENGINE_SPECS.MARIADB | FORCE_LIMIT | TRUE | 64 |
+| MICROSOFT SQL SERVER | SUPERSET.DB_ENGINE_SPECS.MSSQL | FORCE_LIMIT | TRUE | 128 |
+| MOTHERDUCK | SUPERSET.DB_ENGINE_SPECS.DUCKDB | FORCE_LIMIT | TRUE | NONE |
+| MYSQL | SUPERSET.DB_ENGINE_SPECS.MYSQL | FORCE_LIMIT | TRUE | 64 |
+| OCEANBASE | SUPERSET.DB_ENGINE_SPECS.OCEANBASE | FORCE_LIMIT | TRUE | 128 |
+| OCIENT | SUPERSET.DB_ENGINE_SPECS.OCIENT | FORCE_LIMIT | TRUE | 30 |
+| ORACLE | SUPERSET.DB_ENGINE_SPECS.ORACLE | FORCE_LIMIT | TRUE | 128 |
+| PARSEABLE | SUPERSET.DB_ENGINE_SPECS.PARSEABLE | FORCE_LIMIT | TRUE | NONE |
+| POSTGRESQL | SUPERSET.DB_ENGINE_SPECS.POSTGRES | FORCE_LIMIT | TRUE | NONE |
+| PRESTO | SUPERSET.DB_ENGINE_SPECS.PRESTO | FORCE_LIMIT | TRUE | NONE |
+| RISINGWAVE | SUPERSET.DB_ENGINE_SPECS.RISINGWAVE | FORCE_LIMIT | TRUE | 63 |
+| SAP HANA | SUPERSET.DB_ENGINE_SPECS.HANA | WRAP_SQL | TRUE | 30 |
+| SQLITE | SUPERSET.DB_ENGINE_SPECS.SQLITE | FORCE_LIMIT | TRUE | NONE |
+| SHILLELAGH | SUPERSET.DB_ENGINE_SPECS.SHILLELAGH | FORCE_LIMIT | TRUE | NONE |
+| SINGLESTORE | SUPERSET.DB_ENGINE_SPECS.SINGLESTORE | FORCE_LIMIT | TRUE | 256 |
+| SNOWFLAKE | SUPERSET.DB_ENGINE_SPECS.SNOWFLAKE | FORCE_LIMIT | TRUE | 256 |
+| STARROCKS | SUPERSET.DB_ENGINE_SPECS.STARROCKS | FORCE_LIMIT | TRUE | 64 |
+| SUPERSET META DATABASE | SUPERSET.DB_ENGINE_SPECS.SUPERSET | FORCE_LIMIT | TRUE | NONE |
+| TDENGINE | SUPERSET.DB_ENGINE_SPECS.TDENGINE | FORCE_LIMIT | TRUE | 64 |
+| TERADATA | SUPERSET.DB_ENGINE_SPECS.TERADATA | FORCE_LIMIT | TRUE | 30 |
+| TRINO | SUPERSET.DB_ENGINE_SPECS.TRINO | FORCE_LIMIT | TRUE | NONE |
+| VERTICA | SUPERSET.DB_ENGINE_SPECS.VERTICA | FORCE_LIMIT | TRUE | NONE |
+| YDB | SUPERSET.DB_ENGINE_SPECS.YDB | FORCE_LIMIT | TRUE | NONE |
+| BASE | SUPERSET.DB_ENGINE_SPECS.PRESTO | FORCE_LIMIT | TRUE | NONE |
 
-### SQL Capabilities
+### SQL CAPABILITIES
 
-| Database | JOINs | Subqueries | Aliases in SELECT | Aliases in ORDER BY | CTEs | Comments | Escaped Colons | Inline Time Groupby | Source Column When Aliased | Aggregations in ORDER BY | Expressions in ORDER BY |
+| DATABASE | JOINS | SUBQUERIES | ALIASES IN SELECT | ALIASES IN ORDER BY | CTES | COMMENTS | ESCAPED COLONS | INLINE TIME GROUPBY | SOURCE COLUMN WHEN ALIASED | AGGREGATIONS IN ORDER BY | EXPRESSIONS IN ORDER BY |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Amazon Athena | True | True | True | True | True | True | False | False | False | True | False |
-| Amazon DynamoDB | True | True | True | True | True | True | True | False | False | True | False |
-| Amazon Redshift | True | True | True | True | True | True | True | False | False | True | False |
-| Apache Doris | True | True | True | True | True | True | True | False | False | True | False |
-| Apache Drill | True | True | True | True | True | True | True | False | False | True | False |
-| Apache Druid | False | True | True | True | True | True | True | False | False | True | False |
-| Apache Hive | True | True | True | True | True | True | True | False | False | False | False |
-| Apache Impala | True | True | True | True | True | True | True | False | False | True | False |
-| Apache Kylin | True | True | True | True | True | True | True | False | False | True | False |
-| Apache Pinot | False | False | False | False | True | True | True | False | False | True | False |
-| Apache Solr | False | False | True | True | True | True | True | False | False | True | False |
-| Apache Spark SQL | True | True | True | True | True | True | True | False | False | False | False |
-| Ascend | True | True | True | True | True | True | True | False | False | True | False |
-| Aurora MySQL (Data API) | True | True | True | True | True | True | True | False | False | True | False |
-| Aurora PostgreSQL (Data API) | True | True | True | True | True | True | True | False | False | True | False |
-| Azure Synapse | True | True | True | True | False | True | True | False | False | True | False |
-| ClickHouse | True | True | True | True | True | True | True | True | False | True | False |
-| ClickHouse Connect (Superset) | True | True | True | True | True | True | True | True | False | True | False |
-| CockroachDB | True | True | True | True | True | True | True | False | False | True | False |
-| Couchbase | False | False | True | True | True | True | True | False | False | True | False |
-| CrateDB | True | True | True | True | True | True | True | False | False | True | False |
-| Databend | True | True | True | True | True | True | True | True | False | True | False |
-| Databricks | True | True | True | True | True | True | True | False | False | True | False |
-| Databricks (legacy) | True | True | True | True | True | True | True | False | False | True | False |
-| Databricks Interactive Cluster | True | True | True | True | True | True | True | False | False | False | False |
-| Databricks SQL Endpoint | True | True | True | True | True | True | True | False | False | True | False |
-| Denodo | True | True | True | True | True | True | True | False | False | True | False |
-| Dremio | True | True | True | True | True | True | True | False | False | True | False |
-| DuckDB | True | True | True | True | True | True | True | False | False | True | False |
-| ElasticSearch (OpenDistro SQL) | False | True | True | True | True | False | True | True | False | True | False |
-| ElasticSearch (SQL API) | False | True | True | True | True | False | True | True | False | True | False |
-| Exasol | True | True | True | True | True | True | True | False | False | True | False |
-| Firebird | True | True | True | True | True | True | True | False | False | True | False |
-| Firebolt | True | True | True | True | True | True | True | False | False | True | False |
-| Google BigQuery | True | True | True | True | True | True | True | False | False | True | True |
-| Google Sheets | True | True | True | True | True | True | True | False | False | True | False |
-| IBM Db2 | True | True | True | True | True | True | True | False | False | True | False |
-| IBM Db2 for i | True | True | True | True | True | True | True | False | False | True | False |
-| IBM Netezza Performance Server | True | True | True | True | True | True | True | False | False | True | False |
-| KustoKQL | True | True | True | True | True | False | True | True | False | True | False |
-| KustoSQL | True | True | True | True | True | False | True | True | False | True | False |
-| MariaDB | True | True | True | True | True | True | True | False | False | True | False |
-| Microsoft SQL Server | True | True | True | True | False | True | True | False | False | True | False |
-| MotherDuck | True | True | True | True | True | True | True | False | False | True | False |
-| MySQL | True | True | True | True | True | True | True | False | False | True | False |
-| OceanBase | True | True | True | True | True | True | True | False | False | True | False |
-| Ocient | True | True | True | True | False | True | True | False | False | True | False |
-| Oracle | True | True | True | True | True | True | True | False | False | True | False |
-| Parseable | True | True | True | True | True | True | True | False | False | True | False |
-| PostgreSQL | True | True | True | True | True | True | True | False | False | True | False |
-| Presto | True | True | True | True | True | True | True | False | True | True | False |
-| RisingWave | True | True | True | True | True | True | True | False | False | True | False |
-| SAP HANA | True | True | True | True | True | True | True | False | False | True | False |
-| SQLite | True | True | True | True | True | True | True | False | False | True | False |
-| Shillelagh | True | True | True | True | True | True | True | False | False | True | False |
-| SingleStore | True | True | True | True | True | True | True | False | False | True | False |
-| Snowflake | True | True | True | True | True | True | True | False | False | True | False |
-| StarRocks | True | True | True | True | True | True | True | False | False | True | False |
-| Superset meta database | True | True | True | True | True | True | True | False | False | True | False |
-| TDengine | True | True | True | True | True | True | True | False | False | True | False |
-| Teradata | True | True | True | True | True | True | True | False | False | True | False |
-| Trino | True | True | True | True | True | True | True | False | True | True | False |
-| Vertica | True | True | True | True | True | True | True | False | False | True | False |
-| YDB | True | True | True | True | True | True | True | False | False | True | False |
-| base | True | True | True | True | True | True | True | False | False | True | False |
+| AMAZON ATHENA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| AMAZON DYNAMODB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| AMAZON REDSHIFT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE DORIS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE DRILL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE DRUID | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE HIVE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| APACHE IMPALA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE KYLIN | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE PINOT | FALSE | FALSE | FALSE | FALSE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE SOLR | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| APACHE SPARK SQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| ASCEND | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| AURORA MYSQL (DATA API) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| AURORA POSTGRESQL (DATA API) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| AZURE SYNAPSE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| CLICKHOUSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE |
+| CLICKHOUSE CONNECT (SUPERSET) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE |
+| COCKROACHDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| COUCHBASE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| CRATEDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| DATABEND | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE |
+| DATABRICKS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| DATABRICKS (LEGACY) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| DATABRICKS INTERACTIVE CLUSTER | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| DATABRICKS SQL ENDPOINT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| DENODO | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| DREMIO | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| DUCKDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| ELASTICSEARCH (OPENDISTRO SQL) | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | TRUE | FALSE |
+| ELASTICSEARCH (SQL API) | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | TRUE | FALSE |
+| EXASOL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| FIREBIRD | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| FIREBOLT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| GOOGLE BIGQUERY | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | TRUE |
+| GOOGLE SHEETS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| IBM DB2 | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| IBM DB2 FOR I | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| IBM NETEZZA PERFORMANCE SERVER | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| KUSTOKQL | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | TRUE | FALSE |
+| KUSTOSQL | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | TRUE | FALSE |
+| MARIADB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| MICROSOFT SQL SERVER | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| MOTHERDUCK | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| MYSQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| OCEANBASE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| OCIENT | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| ORACLE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| PARSEABLE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| POSTGRESQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| PRESTO | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE |
+| RISINGWAVE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| SAP HANA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| SQLITE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| SHILLELAGH | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| SINGLESTORE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| SNOWFLAKE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| STARROCKS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| SUPERSET META DATABASE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| TDENGINE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| TERADATA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| TRINO | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE |
+| VERTICA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| YDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
+| BASE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE |
 
-### Time Grains – Common
+### TIME GRAINS – COMMON
 
-| Database | SECOND | MINUTE | HOUR | DAY | WEEK | MONTH | QUARTER | YEAR |
+| DATABASE | SECOND | MINUTE | HOUR | DAY | WEEK | MONTH | QUARTER | YEAR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Amazon Athena | True | True | True | True | True | True | True | True |
-| Amazon DynamoDB | True | True | True | True | True | True | True | True |
-| Amazon Redshift | True | True | True | True | True | True | True | True |
-| Apache Doris | True | True | True | True | True | True | True | True |
-| Apache Drill | True | True | True | True | True | True | True | True |
-| Apache Druid | True | True | True | True | True | True | True | True |
-| Apache Hive | True | True | True | True | True | True | True | True |
-| Apache Impala | False | True | True | True | True | True | True | True |
-| Apache Kylin | True | True | True | True | True | True | True | True |
-| Apache Pinot | True | True | True | True | True | True | True | True |
-| Apache Solr | False | False | False | False | False | False | False | False |
-| Apache Spark SQL | True | True | True | True | True | True | True | True |
-| Ascend | True | True | True | True | True | True | True | True |
-| Aurora MySQL (Data API) | True | True | True | True | True | True | True | True |
-| Aurora PostgreSQL (Data API) | True | True | True | True | True | True | True | True |
-| Azure Synapse | True | True | True | True | True | True | True | True |
-| ClickHouse | True | True | True | True | True | True | True | True |
-| ClickHouse Connect (Superset) | True | True | True | True | True | True | True | True |
-| CockroachDB | True | True | True | True | True | True | True | True |
-| Couchbase | True | True | True | True | False | True | True | True |
-| CrateDB | True | True | True | True | True | True | True | True |
-| Databend | True | True | True | True | True | True | True | True |
-| Databricks | True | True | True | True | True | True | True | True |
-| Databricks (legacy) | True | True | True | True | True | True | True | True |
-| Databricks Interactive Cluster | True | True | True | True | True | True | True | True |
-| Databricks SQL Endpoint | True | True | True | True | True | True | True | True |
-| Denodo | False | True | True | True | True | True | True | True |
-| Dremio | True | True | True | True | True | True | True | True |
-| DuckDB | True | True | True | True | True | True | True | True |
-| ElasticSearch (OpenDistro SQL) | True | True | True | True | False | True | False | True |
-| ElasticSearch (SQL API) | True | True | True | True | True | True | False | True |
-| Exasol | True | True | True | True | True | True | True | True |
-| Firebird | True | True | True | True | False | True | False | True |
-| Firebolt | True | True | True | True | True | True | True | True |
-| Google BigQuery | True | True | True | True | True | True | True | True |
-| Google Sheets | True | True | True | True | True | True | True | True |
-| IBM Db2 | True | True | True | True | True | True | True | True |
-| IBM Db2 for i | True | True | True | True | True | True | True | True |
-| IBM Netezza Performance Server | True | True | True | True | True | True | True | True |
-| KustoKQL | True | True | True | True | True | True | False | True |
-| KustoSQL | True | True | True | True | True | True | True | True |
-| MariaDB | True | True | True | True | True | True | True | True |
-| Microsoft SQL Server | True | True | True | True | True | True | True | True |
-| MotherDuck | True | True | True | True | True | True | True | True |
-| MySQL | True | True | True | True | True | True | True | True |
-| OceanBase | True | True | True | True | True | True | True | True |
-| Ocient | True | True | True | True | True | True | False | True |
-| Oracle | True | True | True | True | True | True | True | True |
-| Parseable | True | True | True | True | True | True | True | True |
-| PostgreSQL | True | True | True | True | True | True | True | True |
-| Presto | True | True | True | True | True | True | True | True |
-| RisingWave | True | True | True | True | True | True | True | True |
-| SAP HANA | True | True | True | True | False | True | True | True |
-| SQLite | True | True | True | True | True | True | True | True |
-| Shillelagh | True | True | True | True | True | True | True | True |
-| SingleStore | True | True | True | True | True | True | True | True |
-| Snowflake | True | True | True | True | True | True | True | True |
-| StarRocks | True | True | True | True | True | True | True | True |
-| Superset meta database | True | True | True | True | True | True | True | True |
-| TDengine | True | True | True | True | True | False | False | False |
-| Teradata | False | True | True | True | True | True | True | True |
-| Trino | True | True | True | True | True | True | True | True |
-| Vertica | True | True | True | True | True | True | True | True |
-| YDB | True | True | True | True | True | True | True | True |
-| base | True | True | True | True | True | True | True | True |
+| AMAZON ATHENA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| AMAZON DYNAMODB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| AMAZON REDSHIFT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE DORIS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE DRILL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE DRUID | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE HIVE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE IMPALA | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE KYLIN | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE PINOT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| APACHE SOLR | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE SPARK SQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| ASCEND | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| AURORA MYSQL (DATA API) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| AURORA POSTGRESQL (DATA API) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| AZURE SYNAPSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| CLICKHOUSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| CLICKHOUSE CONNECT (SUPERSET) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| COCKROACHDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| COUCHBASE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | TRUE |
+| CRATEDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DATABEND | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DATABRICKS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DATABRICKS (LEGACY) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DATABRICKS INTERACTIVE CLUSTER | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DATABRICKS SQL ENDPOINT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DENODO | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DREMIO | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| DUCKDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| ELASTICSEARCH (OPENDISTRO SQL) | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | TRUE |
+| ELASTICSEARCH (SQL API) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE |
+| EXASOL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| FIREBIRD | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | TRUE |
+| FIREBOLT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| GOOGLE BIGQUERY | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| GOOGLE SHEETS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| IBM DB2 | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| IBM DB2 FOR I | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| IBM NETEZZA PERFORMANCE SERVER | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| KUSTOKQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE |
+| KUSTOSQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| MARIADB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| MICROSOFT SQL SERVER | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| MOTHERDUCK | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| MYSQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| OCEANBASE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| OCIENT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE |
+| ORACLE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| PARSEABLE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| POSTGRESQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| PRESTO | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| RISINGWAVE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| SAP HANA | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | TRUE |
+| SQLITE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| SHILLELAGH | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| SINGLESTORE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| SNOWFLAKE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| STARROCKS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| SUPERSET META DATABASE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| TDENGINE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE |
+| TERADATA | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| TRINO | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| VERTICA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| YDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| BASE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
 
-### Time Grains – Extended
+### TIME GRAINS – EXTENDED
 
-| Database | FIVE_SECONDS | THIRTY_SECONDS | FIVE_MINUTES | TEN_MINUTES | FIFTEEN_MINUTES | THIRTY_MINUTES | HALF_HOUR | SIX_HOURS | WEEK_STARTING_SUNDAY | WEEK_STARTING_MONDAY | WEEK_ENDING_SATURDAY | WEEK_ENDING_SUNDAY | QUARTER_YEAR |
+| DATABASE | FIVE_SECONDS | THIRTY_SECONDS | FIVE_MINUTES | TEN_MINUTES | FIFTEEN_MINUTES | THIRTY_MINUTES | HALF_HOUR | SIX_HOURS | WEEK_STARTING_SUNDAY | WEEK_STARTING_MONDAY | WEEK_ENDING_SATURDAY | WEEK_ENDING_SUNDAY | QUARTER_YEAR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Amazon Athena | False | False | False | False | False | False | False | False | True | False | True | False | False |
-| Amazon DynamoDB | False | False | False | False | False | False | False | False | True | True | True | True | False |
-| Amazon Redshift | True | True | True | True | True | True | False | False | False | False | False | False | False |
-| Apache Doris | False | False | False | False | False | False | False | False | False | True | False | False | False |
-| Apache Drill | False | False | False | False | True | True | False | False | False | False | False | False | False |
-| Apache Druid | True | True | True | True | True | True | False | True | True | False | True | False | False |
-| Apache Hive | False | False | False | False | False | False | False | False | True | False | True | False | False |
-| Apache Impala | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Apache Kylin | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Apache Pinot | False | False | True | True | True | True | False | False | False | False | False | False | False |
-| Apache Solr | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Apache Spark SQL | False | False | False | False | False | False | False | False | True | False | True | False | False |
-| Ascend | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Aurora MySQL (Data API) | False | False | False | False | False | False | False | False | False | True | False | False | False |
-| Aurora PostgreSQL (Data API) | True | True | True | True | True | True | False | False | False | False | False | False | False |
-| Azure Synapse | False | False | True | True | True | True | False | False | True | True | False | False | False |
-| ClickHouse | False | False | True | True | True | True | False | False | False | False | False | False | False |
-| ClickHouse Connect (Superset) | False | False | True | True | True | True | False | False | False | False | False | False | False |
-| CockroachDB | True | True | True | True | True | True | False | False | False | False | False | False | False |
-| Couchbase | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| CrateDB | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Databend | False | False | True | True | True | False | False | False | False | False | False | False | False |
-| Databricks | False | False | False | False | False | False | False | False | True | False | True | False | False |
-| Databricks (legacy) | False | False | False | False | False | False | False | False | True | False | True | False | False |
-| Databricks Interactive Cluster | False | False | False | False | False | False | False | False | True | False | True | False | False |
-| Databricks SQL Endpoint | False | False | False | False | False | False | False | False | True | False | True | False | False |
-| Denodo | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Dremio | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| DuckDB | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| ElasticSearch (OpenDistro SQL) | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| ElasticSearch (SQL API) | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Exasol | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Firebird | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Firebolt | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Google BigQuery | False | False | True | True | True | True | False | False | False | True | False | False | False |
-| Google Sheets | True | True | True | True | True | True | True | True | True | True | True | True | True |
-| IBM Db2 | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| IBM Db2 for i | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| IBM Netezza Performance Server | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| KustoKQL | False | True | True | False | False | True | False | False | False | False | False | False | False |
-| KustoSQL | False | False | True | True | True | False | True | False | True | True | False | False | False |
-| MariaDB | False | False | False | False | False | False | False | False | False | True | False | False | False |
-| Microsoft SQL Server | False | False | True | True | True | True | False | False | True | True | False | False | False |
-| MotherDuck | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| MySQL | False | False | False | False | False | False | False | False | False | True | False | False | False |
-| OceanBase | False | False | False | False | False | False | False | False | False | True | False | False | False |
-| Ocient | False | False | False | False | False | False | False | False | False | False | False | False | True |
-| Oracle | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Parseable | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| PostgreSQL | True | True | True | True | True | True | False | False | False | False | False | False | False |
-| Presto | True | True | True | True | True | False | True | True | True | True | True | True | False |
-| RisingWave | True | True | True | True | True | True | False | False | False | False | False | False | False |
-| SAP HANA | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| SQLite | True | True | True | True | True | True | True | True | True | True | True | True | True |
-| Shillelagh | True | True | True | True | True | True | True | True | True | True | True | True | True |
-| SingleStore | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Snowflake | False | False | True | True | True | True | False | False | False | False | False | False | False |
-| StarRocks | False | False | False | False | False | False | False | False | False | True | False | False | False |
-| Superset meta database | True | True | True | True | True | True | True | True | True | True | True | True | True |
-| TDengine | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Teradata | False | False | False | False | False | False | False | False | False | False | False | False | False |
-| Trino | True | True | True | True | True | False | True | True | True | True | True | True | False |
-| Vertica | True | True | True | True | True | True | False | False | False | False | False | False | False |
-| YDB | False | True | True | True | True | True | False | False | False | False | False | False | False |
-| base | True | True | True | True | True | False | True | True | True | True | True | True | False |
+| AMAZON ATHENA | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| AMAZON DYNAMODB | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE |
+| AMAZON REDSHIFT | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE DORIS | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE |
+| APACHE DRILL | FALSE | FALSE | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE DRUID | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| APACHE HIVE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| APACHE IMPALA | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE KYLIN | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE PINOT | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE SOLR | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE SPARK SQL | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| ASCEND | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| AURORA MYSQL (DATA API) | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE |
+| AURORA POSTGRESQL (DATA API) | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| AZURE SYNAPSE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE |
+| CLICKHOUSE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| CLICKHOUSE CONNECT (SUPERSET) | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| COCKROACHDB | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| COUCHBASE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| CRATEDB | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DATABEND | FALSE | FALSE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DATABRICKS | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| DATABRICKS (LEGACY) | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| DATABRICKS INTERACTIVE CLUSTER | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| DATABRICKS SQL ENDPOINT | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| DENODO | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DREMIO | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DUCKDB | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| ELASTICSEARCH (OPENDISTRO SQL) | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| ELASTICSEARCH (SQL API) | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| EXASOL | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| FIREBIRD | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| FIREBOLT | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| GOOGLE BIGQUERY | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE |
+| GOOGLE SHEETS | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| IBM DB2 | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| IBM DB2 FOR I | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| IBM NETEZZA PERFORMANCE SERVER | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| KUSTOKQL | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| KUSTOSQL | FALSE | FALSE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE |
+| MARIADB | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE |
+| MICROSOFT SQL SERVER | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE |
+| MOTHERDUCK | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| MYSQL | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE |
+| OCEANBASE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE |
+| OCIENT | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE |
+| ORACLE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| PARSEABLE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| POSTGRESQL | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| PRESTO | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE |
+| RISINGWAVE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| SAP HANA | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| SQLITE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| SHILLELAGH | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| SINGLESTORE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| SNOWFLAKE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| STARROCKS | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE |
+| SUPERSET META DATABASE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE |
+| TDENGINE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| TERADATA | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| TRINO | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE |
+| VERTICA | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| YDB | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| BASE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE |
 
-### Core Platform & Metadata Features
+### CORE PLATFORM & METADATA FEATURES
 
 
-Integration with platform features and metadata handling.
+INTEGRATION WITH PLATFORM FEATURES AND METADATA HANDLING.
 
-| Database | Masked Encrypted Extra | Column Type Mappings | Function Names | File Upload | Dynamic Schema | Catalog | Dynamic Catalog | SSH Tunneling | Latest Partition | Query Cancellation | Get Metrics | Extra Table Metadata | Exception Mapping | Custom Errors |
+| DATABASE | MASKED ENCRYPTED EXTRA | COLUMN TYPE MAPPINGS | FUNCTION NAMES | FILE UPLOAD | DYNAMIC SCHEMA | CATALOG | DYNAMIC CATALOG | SSH TUNNELING | LATEST PARTITION | QUERY CANCELLATION | GET METRICS | EXTRA TABLE METADATA | EXCEPTION MAPPING | CUSTOM ERRORS |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Amazon Athena | False | False | False | True | False | False | False | False | False | False | False | False | False | False |
-| Amazon DynamoDB | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Amazon Redshift | False | False | False | True | False | False | False | True | False | True | False | False | False | False |
-| Apache Doris | False | True | False | True | True | True | True | True | False | True | False | False | False | False |
-| Apache Drill | False | False | False | True | True | False | False | True | False | False | False | False | False | False |
-| Apache Druid | False | False | False | True | False | False | False | True | False | False | False | False | True | False |
-| Apache Hive | False | True | True | True | True | True | True | True | True | True | False | True | False | False |
-| Apache Impala | False | False | False | True | False | False | False | True | False | True | False | False | False | False |
-| Apache Kylin | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Apache Pinot | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Apache Solr | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Apache Spark SQL | False | True | True | True | True | True | True | True | True | True | False | True | False | False |
-| Ascend | False | False | False | True | False | False | False | True | False | True | False | False | False | False |
-| Aurora MySQL (Data API) | False | True | False | True | True | False | False | True | False | True | False | False | False | False |
-| Aurora PostgreSQL (Data API) | False | True | False | True | True | True | True | True | False | True | False | False | False | False |
-| Azure Synapse | False | True | False | True | False | False | False | True | False | False | False | False | False | False |
-| ClickHouse | False | True | True | False | False | False | False | True | False | False | False | False | True | False |
-| ClickHouse Connect (Superset) | False | True | True | False | True | False | False | True | False | False | False | False | True | False |
-| CockroachDB | False | True | False | True | True | True | True | True | False | True | False | False | False | False |
-| Couchbase | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| CrateDB | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Databend | False | True | True | False | False | False | False | True | False | False | False | False | True | False |
-| Databricks | False | False | False | True | True | True | True | True | False | False | False | False | False | True |
-| Databricks (legacy) | False | False | False | True | True | True | True | True | False | False | False | False | False | True |
-| Databricks Interactive Cluster | False | True | True | True | True | True | True | True | True | True | False | True | False | False |
-| Databricks SQL Endpoint | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Denodo | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Dremio | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| DuckDB | False | True | False | True | False | False | False | True | False | False | False | False | False | False |
-| ElasticSearch (OpenDistro SQL) | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| ElasticSearch (SQL API) | False | False | False | True | False | False | False | True | False | False | False | False | True | False |
-| Exasol | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Firebird | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Firebolt | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Google BigQuery | False | False | False | True | False | True | True | False | True | False | False | True | True | False |
-| Google Sheets | False | False | True | True | False | False | False | False | False | False | False | True | False | False |
-| IBM Db2 | False | False | False | True | True | False | False | True | False | False | False | False | False | False |
-| IBM Db2 for i | False | False | False | True | True | False | False | True | False | False | False | False | False | False |
-| IBM Netezza Performance Server | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| KustoKQL | False | False | False | True | False | False | False | True | False | False | False | False | True | False |
-| KustoSQL | False | True | False | True | False | False | False | True | False | False | False | False | True | False |
-| MariaDB | False | True | False | True | True | False | False | True | False | True | False | False | False | False |
-| Microsoft SQL Server | False | True | False | True | False | False | False | True | False | False | False | False | False | False |
-| MotherDuck | False | True | False | True | False | True | True | True | False | False | False | False | False | False |
-| MySQL | False | True | False | True | True | False | False | True | False | True | False | False | False | False |
-| OceanBase | False | True | False | True | True | False | False | True | False | True | False | False | False | False |
-| Ocient | False | False | False | True | False | False | False | True | False | True | False | False | False | False |
-| Oracle | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Parseable | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| PostgreSQL | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Presto | False | True | True | True | True | True | True | True | True | True | False | True | False | False |
-| RisingWave | False | True | False | True | True | True | True | True | False | True | False | False | False | False |
-| SAP HANA | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| SQLite | False | False | True | True | False | False | False | False | False | False | False | False | False | False |
-| Shillelagh | False | False | True | True | False | False | False | False | False | False | False | False | False | False |
-| SingleStore | False | True | True | True | True | False | False | True | False | True | False | False | False | False |
-| Snowflake | False | False | False | True | True | True | True | True | False | True | False | False | False | False |
-| StarRocks | False | True | False | True | True | False | False | True | False | True | False | False | False | False |
-| Superset meta database | False | False | True | False | False | False | False | False | False | False | False | False | False | False |
-| TDengine | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Teradata | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| Trino | False | True | True | True | True | True | True | True | True | True | False | True | True | False |
-| Vertica | False | False | False | True | False | False | False | True | False | False | False | False | False | False |
-| YDB | False | False | False | False | False | False | False | True | False | False | False | False | False | False |
-| base | False | True | True | True | True | True | True | True | True | False | False | False | False | False |
+| AMAZON ATHENA | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| AMAZON DYNAMODB | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| AMAZON REDSHIFT | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| APACHE DORIS | FALSE | TRUE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| APACHE DRILL | FALSE | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE DRUID | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| APACHE HIVE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| APACHE IMPALA | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| APACHE KYLIN | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE PINOT | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE SOLR | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| APACHE SPARK SQL | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| ASCEND | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| AURORA MYSQL (DATA API) | FALSE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| AURORA POSTGRESQL (DATA API) | FALSE | TRUE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| AZURE SYNAPSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| CLICKHOUSE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| CLICKHOUSE CONNECT (SUPERSET) | FALSE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| COCKROACHDB | FALSE | TRUE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| COUCHBASE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| CRATEDB | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DATABEND | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| DATABRICKS | FALSE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE |
+| DATABRICKS (LEGACY) | FALSE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE |
+| DATABRICKS INTERACTIVE CLUSTER | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| DATABRICKS SQL ENDPOINT | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DENODO | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DREMIO | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| DUCKDB | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| ELASTICSEARCH (OPENDISTRO SQL) | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| ELASTICSEARCH (SQL API) | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| EXASOL | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| FIREBIRD | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| FIREBOLT | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| GOOGLE BIGQUERY | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE | TRUE | TRUE | FALSE |
+| GOOGLE SHEETS | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE |
+| IBM DB2 | FALSE | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| IBM DB2 FOR I | FALSE | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| IBM NETEZZA PERFORMANCE SERVER | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| KUSTOKQL | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| KUSTOSQL | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE |
+| MARIADB | FALSE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| MICROSOFT SQL SERVER | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| MOTHERDUCK | FALSE | TRUE | FALSE | TRUE | FALSE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| MYSQL | FALSE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| OCEANBASE | FALSE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| OCIENT | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| ORACLE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| PARSEABLE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| POSTGRESQL | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| PRESTO | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE |
+| RISINGWAVE | FALSE | TRUE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| SAP HANA | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| SQLITE | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| SHILLELAGH | FALSE | FALSE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| SINGLESTORE | FALSE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| SNOWFLAKE | FALSE | FALSE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| STARROCKS | FALSE | TRUE | FALSE | TRUE | TRUE | FALSE | FALSE | TRUE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE |
+| SUPERSET META DATABASE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| TDENGINE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| TERADATA | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| TRINO | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | TRUE | TRUE | FALSE |
+| VERTICA | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| YDB | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE | FALSE |
+| BASE | FALSE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | TRUE | FALSE | FALSE | FALSE | FALSE | FALSE |
 
-### Operational & Advanced Features
+### OPERATIONAL & ADVANCED FEATURES
 
-| Database | User Impersonation | Expand Data | Cost Estimation | SQL Validation |
+| DATABASE | USER IMPERSONATION | EXPAND DATA | COST ESTIMATION | SQL VALIDATION |
 | --- | --- | --- | --- | --- |
-| Amazon Athena | False | False | False | False |
-| Amazon DynamoDB | False | False | False | False |
-| Amazon Redshift | False | False | False | False |
-| Apache Doris | False | False | False | False |
-| Apache Drill | True | False | False | False |
-| Apache Druid | False | False | False | False |
-| Apache Hive | True | True | True | False |
-| Apache Impala | False | False | False | False |
-| Apache Kylin | False | False | False | False |
-| Apache Pinot | False | False | False | False |
-| Apache Solr | False | False | False | False |
-| Apache Spark SQL | True | True | True | False |
-| Ascend | False | False | False | False |
-| Aurora MySQL (Data API) | False | False | False | False |
-| Aurora PostgreSQL (Data API) | False | False | True | False |
-| Azure Synapse | False | False | False | False |
-| ClickHouse | False | False | False | False |
-| ClickHouse Connect (Superset) | False | False | False | False |
-| CockroachDB | False | False | True | False |
-| Couchbase | False | False | False | False |
-| CrateDB | False | False | False | False |
-| Databend | False | False | False | False |
-| Databricks | False | False | False | False |
-| Databricks (legacy) | False | False | False | False |
-| Databricks Interactive Cluster | True | True | True | False |
-| Databricks SQL Endpoint | False | False | False | False |
-| Denodo | False | False | False | False |
-| Dremio | False | False | False | False |
-| DuckDB | False | False | False | False |
-| ElasticSearch (OpenDistro SQL) | False | False | False | False |
-| ElasticSearch (SQL API) | False | False | False | False |
-| Exasol | False | False | False | False |
-| Firebird | False | False | False | False |
-| Firebolt | False | False | False | False |
-| Google BigQuery | False | False | True | False |
-| Google Sheets | True | False | False | False |
-| IBM Db2 | False | False | False | False |
-| IBM Db2 for i | False | False | False | False |
-| IBM Netezza Performance Server | False | False | False | False |
-| KustoKQL | False | False | False | False |
-| KustoSQL | False | False | False | False |
-| MariaDB | False | False | False | False |
-| Microsoft SQL Server | False | False | False | False |
-| MotherDuck | False | False | False | False |
-| MySQL | False | False | False | False |
-| OceanBase | False | False | False | False |
-| Ocient | False | False | False | False |
-| Oracle | False | False | False | False |
-| Parseable | False | False | False | False |
-| PostgreSQL | False | False | False | False |
-| Presto | True | True | True | True |
-| RisingWave | False | False | True | False |
-| SAP HANA | False | False | False | False |
-| SQLite | False | False | False | False |
-| Shillelagh | False | False | False | False |
-| SingleStore | False | False | False | False |
-| Snowflake | False | False | False | False |
-| StarRocks | True | False | False | False |
-| Superset meta database | False | False | False | False |
-| TDengine | False | False | False | False |
-| Teradata | False | False | False | False |
-| Trino | True | False | True | False |
-| Vertica | False | False | False | False |
-| YDB | False | False | False | False |
-| base | False | False | True | False |
+| AMAZON ATHENA | FALSE | FALSE | FALSE | FALSE |
+| AMAZON DYNAMODB | FALSE | FALSE | FALSE | FALSE |
+| AMAZON REDSHIFT | FALSE | FALSE | FALSE | FALSE |
+| APACHE DORIS | FALSE | FALSE | FALSE | FALSE |
+| APACHE DRILL | TRUE | FALSE | FALSE | FALSE |
+| APACHE DRUID | FALSE | FALSE | FALSE | FALSE |
+| APACHE HIVE | TRUE | TRUE | TRUE | FALSE |
+| APACHE IMPALA | FALSE | FALSE | FALSE | FALSE |
+| APACHE KYLIN | FALSE | FALSE | FALSE | FALSE |
+| APACHE PINOT | FALSE | FALSE | FALSE | FALSE |
+| APACHE SOLR | FALSE | FALSE | FALSE | FALSE |
+| APACHE SPARK SQL | TRUE | TRUE | TRUE | FALSE |
+| ASCEND | FALSE | FALSE | FALSE | FALSE |
+| AURORA MYSQL (DATA API) | FALSE | FALSE | FALSE | FALSE |
+| AURORA POSTGRESQL (DATA API) | FALSE | FALSE | TRUE | FALSE |
+| AZURE SYNAPSE | FALSE | FALSE | FALSE | FALSE |
+| CLICKHOUSE | FALSE | FALSE | FALSE | FALSE |
+| CLICKHOUSE CONNECT (SUPERSET) | FALSE | FALSE | FALSE | FALSE |
+| COCKROACHDB | FALSE | FALSE | TRUE | FALSE |
+| COUCHBASE | FALSE | FALSE | FALSE | FALSE |
+| CRATEDB | FALSE | FALSE | FALSE | FALSE |
+| DATABEND | FALSE | FALSE | FALSE | FALSE |
+| DATABRICKS | FALSE | FALSE | FALSE | FALSE |
+| DATABRICKS (LEGACY) | FALSE | FALSE | FALSE | FALSE |
+| DATABRICKS INTERACTIVE CLUSTER | TRUE | TRUE | TRUE | FALSE |
+| DATABRICKS SQL ENDPOINT | FALSE | FALSE | FALSE | FALSE |
+| DENODO | FALSE | FALSE | FALSE | FALSE |
+| DREMIO | FALSE | FALSE | FALSE | FALSE |
+| DUCKDB | FALSE | FALSE | FALSE | FALSE |
+| ELASTICSEARCH (OPENDISTRO SQL) | FALSE | FALSE | FALSE | FALSE |
+| ELASTICSEARCH (SQL API) | FALSE | FALSE | FALSE | FALSE |
+| EXASOL | FALSE | FALSE | FALSE | FALSE |
+| FIREBIRD | FALSE | FALSE | FALSE | FALSE |
+| FIREBOLT | FALSE | FALSE | FALSE | FALSE |
+| GOOGLE BIGQUERY | FALSE | FALSE | TRUE | FALSE |
+| GOOGLE SHEETS | TRUE | FALSE | FALSE | FALSE |
+| IBM DB2 | FALSE | FALSE | FALSE | FALSE |
+| IBM DB2 FOR I | FALSE | FALSE | FALSE | FALSE |
+| IBM NETEZZA PERFORMANCE SERVER | FALSE | FALSE | FALSE | FALSE |
+| KUSTOKQL | FALSE | FALSE | FALSE | FALSE |
+| KUSTOSQL | FALSE | FALSE | FALSE | FALSE |
+| MARIADB | FALSE | FALSE | FALSE | FALSE |
+| MICROSOFT SQL SERVER | FALSE | FALSE | FALSE | FALSE |
+| MOTHERDUCK | FALSE | FALSE | FALSE | FALSE |
+| MYSQL | FALSE | FALSE | FALSE | FALSE |
+| OCEANBASE | FALSE | FALSE | FALSE | FALSE |
+| OCIENT | FALSE | FALSE | FALSE | FALSE |
+| ORACLE | FALSE | FALSE | FALSE | FALSE |
+| PARSEABLE | FALSE | FALSE | FALSE | FALSE |
+| POSTGRESQL | FALSE | FALSE | FALSE | FALSE |
+| PRESTO | TRUE | TRUE | TRUE | TRUE |
+| RISINGWAVE | FALSE | FALSE | TRUE | FALSE |
+| SAP HANA | FALSE | FALSE | FALSE | FALSE |
+| SQLITE | FALSE | FALSE | FALSE | FALSE |
+| SHILLELAGH | FALSE | FALSE | FALSE | FALSE |
+| SINGLESTORE | FALSE | FALSE | FALSE | FALSE |
+| SNOWFLAKE | FALSE | FALSE | FALSE | FALSE |
+| STARROCKS | TRUE | FALSE | FALSE | FALSE |
+| SUPERSET META DATABASE | FALSE | FALSE | FALSE | FALSE |
+| TDENGINE | FALSE | FALSE | FALSE | FALSE |
+| TERADATA | FALSE | FALSE | FALSE | FALSE |
+| TRINO | TRUE | FALSE | TRUE | FALSE |
+| VERTICA | FALSE | FALSE | FALSE | FALSE |
+| YDB | FALSE | FALSE | FALSE | FALSE |
+| BASE | FALSE | FALSE | TRUE | FALSE |
 
-## How to Add a New Database
+## HOW TO ADD A NEW DATABASE
 
-Adding a new database to Superset involves creating a DB engine spec file with a `metadata` attribute. This metadata is used to generate documentation and provide connection information to users.
+ADDING A NEW DATABASE TO SUPERSET INVOLVES CREATING A DB ENGINE SPEC FILE WITH A `metadata` ATTRIBUTE. THIS METADATA IS USED TO GENERATE DOCUMENTATION AND PROVIDE CONNECTION INFORMATION TO USERS.
 
-### Quick Start
+### QUICK START
 
-1. **Create a new file** in `superset/db_engine_specs/` (e.g., `mydatabase.py`)
-2. **Add metadata** with required fields (description, category, pypi_packages, connection_string)
-3. **Run the linter** to verify completeness: `python superset/db_engine_specs/lint_metadata.py`
-4. **Add a logo** (optional) in `docs/static/img/databases/`
+1. **CREATE A NEW FILE** IN `superset/db_engine_specs/` (E.G., `mydatabase.py`)
+2. **ADD METADATA** WITH REQUIRED FIELDS (DESCRIPTION, CATEGORY, PYPI_PACKAGES, CONNECTION_STRING)
+3. **RUN THE LINTER** TO VERIFY COMPLETENESS: `python superset/db_engine_specs/lint_metadata.py`
+4. **ADD A LOGO** (OPTIONAL) IN `docs/static/img/databases/`
 
-### Minimal Example
+### MINIMAL EXAMPLE
 
 ```python
 from superset.db_engine_specs.base import BaseEngineSpec, DatabaseCategory
@@ -590,7 +590,7 @@ class MyDatabaseEngineSpec(BaseEngineSpec):
     }
 ```
 
-### Full Example with All Fields
+### FULL EXAMPLE WITH ALL FIELDS
 
 ```python
 from superset.db_engine_specs.base import BaseEngineSpec, DatabaseCategory
@@ -651,27 +651,27 @@ class MyDatabaseEngineSpec(BaseEngineSpec):
     }
 ```
 
-### Database Categories
+### DATABASE CATEGORIES
 
-Use constants from `DatabaseCategory` to categorize your database:
+USE CONSTANTS FROM `DatabaseCategory` TO CATEGORIZE YOUR DATABASE:
 
-| Category | Description | Examples |
+| CATEGORY | DESCRIPTION | EXAMPLES |
 |----------|-------------|----------|
-| `CLOUD_AWS` | AWS cloud services | Athena, Redshift, DynamoDB |
-| `CLOUD_GCP` | Google Cloud services | BigQuery, Sheets |
-| `CLOUD_AZURE` | Azure cloud services | Synapse, Kusto |
-| `CLOUD_DATA_WAREHOUSES` | Cloud data warehouses | Snowflake, Databricks |
-| `APACHE_PROJECTS` | Apache projects | Druid, Hive, Spark, Pinot |
-| `TRADITIONAL_RDBMS` | Traditional databases | PostgreSQL, MySQL, Oracle |
-| `ANALYTICAL_DATABASES` | Analytical/OLAP databases | ClickHouse, StarRocks |
-| `SEARCH_NOSQL` | Search and NoSQL databases | Elasticsearch, Couchbase |
-| `QUERY_ENGINES` | Query engines | Trino, Presto |
-| `TIME_SERIES` | Time-series databases | TDengine, TimescaleDB |
-| `OTHER` | Other databases | - |
+| `CLOUD_AWS` | AWS CLOUD SERVICES | ATHENA, REDSHIFT, DYNAMODB |
+| `CLOUD_GCP` | GOOGLE CLOUD SERVICES | BIGQUERY, SHEETS |
+| `CLOUD_AZURE` | AZURE CLOUD SERVICES | SYNAPSE, KUSTO |
+| `CLOUD_DATA_WAREHOUSES` | CLOUD DATA WAREHOUSES | SNOWFLAKE, DATABRICKS |
+| `APACHE_PROJECTS` | APACHE PROJECTS | DRUID, HIVE, SPARK, PINOT |
+| `TRADITIONAL_RDBMS` | TRADITIONAL DATABASES | POSTGRESQL, MYSQL, ORACLE |
+| `ANALYTICAL_DATABASES` | ANALYTICAL/OLAP DATABASES | CLICKHOUSE, STARROCKS |
+| `SEARCH_NOSQL` | SEARCH AND NOSQL DATABASES | ELASTICSEARCH, COUCHBASE |
+| `QUERY_ENGINES` | QUERY ENGINES | TRINO, PRESTO |
+| `TIME_SERIES` | TIME-SERIES DATABASES | TDENGINE, TIMESCALEDB |
+| `OTHER` | OTHER DATABASES | - |
 
-### Metadata Completeness Linter
+### METADATA COMPLETENESS LINTER
 
-A linter is available to check metadata completeness across all engine specs:
+A LINTER IS AVAILABLE TO CHECK METADATA COMPLETENESS ACROSS ALL ENGINE SPECS:
 
 ```bash
 # Run the linter to see current status
@@ -684,15 +684,15 @@ python superset/db_engine_specs/lint_metadata.py --markdown
 python superset/db_engine_specs/lint_metadata.py --markdown -o METADATA_STATUS.md
 ```
 
-The linter checks for:
-- **Required fields**: description, category, pypi_packages, connection_string
-- **Recommended fields**: logo, homepage_url, default_port
+THE LINTER CHECKS FOR:
+- **REQUIRED FIELDS**: DESCRIPTION, CATEGORY, PYPI_PACKAGES, CONNECTION_STRING
+- **RECOMMENDED FIELDS**: LOGO, HOMEPAGE_URL, DEFAULT_PORT
 
-See [METADATA_STATUS.md](METADATA_STATUS.md) for the current completeness report.
+SEE [METADATA_STATUS.MD](METADATA_STATUS.md) FOR THE CURRENT COMPLETENESS REPORT.
 
-### PostgreSQL-Compatible Databases
+### POSTGRESQL-COMPATIBLE DATABASES
 
-If your database is PostgreSQL-compatible, inherit from `PostgresBaseEngineSpec`:
+IF YOUR DATABASE IS POSTGRESQL-COMPATIBLE, INHERIT FROM `PostgresBaseEngineSpec`:
 
 ```python
 from superset.db_engine_specs.postgres import PostgresBaseEngineSpec
@@ -710,45 +710,45 @@ class MyPostgresCompatibleEngineSpec(PostgresBaseEngineSpec):
     }
 ```
 
-## Database information
+## DATABASE INFORMATION
 
-A DB engine spec has attributes that describe the underlying database engine, so that Superset can know how to build and run queries. For example, some databases don't support subqueries, which are needed for some of the queries produced by Superset for certain charts. When a database doesn't support subqueries the query is run in two-steps, using the results from the first query to build the second query.
+A DB ENGINE SPEC HAS ATTRIBUTES THAT DESCRIBE THE UNDERLYING DATABASE ENGINE, SO THAT SUPERSET CAN KNOW HOW TO BUILD AND RUN QUERIES. FOR EXAMPLE, SOME DATABASES DON'T SUPPORT SUBQUERIES, WHICH ARE NEEDED FOR SOME OF THE QUERIES PRODUCED BY SUPERSET FOR CERTAIN CHARTS. WHEN A DATABASE DOESN'T SUPPORT SUBQUERIES THE QUERY IS RUN IN TWO-STEPS, USING THE RESULTS FROM THE FIRST QUERY TO BUILD THE SECOND QUERY.
 
-These attributes and their default values (set in the base class, `BaseEngineSpec`) are described below:
+THESE ATTRIBUTES AND THEIR DEFAULT VALUES (SET IN THE BASE CLASS, `BaseEngineSpec`) ARE DESCRIBED BELOW:
 
 ### `limit_method = LimitMethod.FORCE_LIMIT`
 
-When running user queries in SQL Lab, Superset needs to limit the number of rows returned. The reason for that is cost and performance: there's no point in running a query that produces millions of rows when they can't be loaded into the browser.
+WHEN RUNNING USER QUERIES IN SQL LAB, SUPERSET NEEDS TO LIMIT THE NUMBER OF ROWS RETURNED. THE REASON FOR THAT IS COST AND PERFORMANCE: THERE'S NO POINT IN RUNNING A QUERY THAT PRODUCES MILLIONS OF ROWS WHEN THEY CAN'T BE LOADED INTO THE BROWSER.
 
-For most databases this is done by parsing the user submitted query and applying a limit, if one is not present, or replacing the existing limit if it's larger. This is called the `FORCE_LIMIT` method, and is the most efficient, since the database will produce at most the number of rows that Superset will display.
+FOR MOST DATABASES THIS IS DONE BY PARSING THE USER SUBMITTED QUERY AND APPLYING A LIMIT, IF ONE IS NOT PRESENT, OR REPLACING THE EXISTING LIMIT IF IT'S LARGER. THIS IS CALLED THE `FORCE_LIMIT` METHOD, AND IS THE MOST EFFICIENT, SINCE THE DATABASE WILL PRODUCE AT MOST THE NUMBER OF ROWS THAT SUPERSET WILL DISPLAY.
 
-For some databases this method might not work, and they can use the `WRAP_SQL` method, which wraps the original query in a `SELECT *` and applies a limit via the SQLAlchemy dialect, which should get translated to the correct syntax. This method might be inefficient, since the database optimizer might not be able to push the limit to the inner query.
+FOR SOME DATABASES THIS METHOD MIGHT NOT WORK, AND THEY CAN USE THE `WRAP_SQL` METHOD, WHICH WRAPS THE ORIGINAL QUERY IN A `SELECT *` AND APPLIES A LIMIT VIA THE SQLALCHEMY DIALECT, WHICH SHOULD GET TRANSLATED TO THE CORRECT SYNTAX. THIS METHOD MIGHT BE INEFFICIENT, SINCE THE DATABASE OPTIMIZER MIGHT NOT BE ABLE TO PUSH THE LIMIT TO THE INNER QUERY.
 
-Finally, as a last resource there is the `FETCH_MANY` method. When a DB engine spec uses this method the query runs unmodified, but Superset fetches only a certain number of rows from the cursor. It's possible that a database using this method can optimize the query execution and compute rows as they are being read by the cursor, but it's unlikely. This makes this method the least efficient of the three.
+FINALLY, AS A LAST RESOURCE THERE IS THE `FETCH_MANY` METHOD. WHEN A DB ENGINE SPEC USES THIS METHOD THE QUERY RUNS UNMODIFIED, BUT SUPERSET FETCHES ONLY A CERTAIN NUMBER OF ROWS FROM THE CURSOR. IT'S POSSIBLE THAT A DATABASE USING THIS METHOD CAN OPTIMIZE THE QUERY EXECUTION AND COMPUTE ROWS AS THEY ARE BEING READ BY THE CURSOR, BUT IT'S UNLIKELY. THIS MAKES THIS METHOD THE LEAST EFFICIENT OF THE THREE.
 
-Note that when Superset runs a query with a given limit, say 100, it always modifies the query to request one additional row (`LIMIT 101`, in this case). This extra row is dropped before the results are returned to the user, but it allows Superset to inform the users that the query was indeed limited. Otherwise a query with `LIMIT 100` that returns exactly 100 rows would seem like it was limited, when in fact it was not.
+NOTE THAT WHEN SUPERSET RUNS A QUERY WITH A GIVEN LIMIT, SAY 100, IT ALWAYS MODIFIES THE QUERY TO REQUEST ONE ADDITIONAL ROW (`LIMIT 101`, IN THIS CASE). THIS EXTRA ROW IS DROPPED BEFORE THE RESULTS ARE RETURNED TO THE USER, BUT IT ALLOWS SUPERSET TO INFORM THE USERS THAT THE QUERY WAS INDEED LIMITED. OTHERWISE A QUERY WITH `LIMIT 100` THAT RETURNS EXACTLY 100 ROWS WOULD SEEM LIKE IT WAS LIMITED, WHEN IN FACT IT WAS NOT.
 
 ### `allows_joins = True`
 
-Not all databases support `JOIN`s. When building complex charts, Superset will try to join the table to itself in order to compute `top_n` groups, for example. If the database doesn't support joins Superset will instead run a prequery, and use the results to build the final query.
+NOT ALL DATABASES SUPPORT `JOIN`S. WHEN BUILDING COMPLEX CHARTS, SUPERSET WILL TRY TO JOIN THE TABLE TO ITSELF IN ORDER TO COMPUTE `top_n` GROUPS, FOR EXAMPLE. IF THE DATABASE DOESN'T SUPPORT JOINS SUPERSET WILL INSTEAD RUN A PREQUERY, AND USE THE RESULTS TO BUILD THE FINAL QUERY.
 
 ### `allows_subqueries = True`
 
-Similarly, not all databases support subqueries. For more complex charts Superset will build subqueries if possible, or run the query in two-steps otherwise.
+SIMILARLY, NOT ALL DATABASES SUPPORT SUBQUERIES. FOR MORE COMPLEX CHARTS SUPERSET WILL BUILD SUBQUERIES IF POSSIBLE, OR RUN THE QUERY IN TWO-STEPS OTHERWISE.
 
 ### `allows_alias_in_select = True`
 
-Does the DB support aliases in the projection of a query, eg:
+DOES THE DB SUPPORT ALIASES IN THE PROJECTION OF A QUERY, EG:
 
 ```sql
 SELECT COUNT(*) AS cnt
 ```
 
-Superset will try to use aliases whenever possible, in order to give friendly names to expressions.
+SUPERSET WILL TRY TO USE ALIASES WHENEVER POSSIBLE, IN ORDER TO GIVE FRIENDLY NAMES TO EXPRESSIONS.
 
 ### `allows_alias_in_orderby = True`
 
-Does the DB support referencing alias in the `GROUP BY`, eg:
+DOES THE DB SUPPORT REFERENCING ALIAS IN THE `GROUP BY`, EG:
 
 ```sql
 SELECT
@@ -760,7 +760,7 @@ GROUP BY
   country
 ```
 
-Otherwise the query is written as:
+OTHERWISE THE QUERY IS WRITTEN AS:
 
 ```sql
 SELECT
@@ -774,7 +774,7 @@ GROUP BY
 
 ### `time_groupby_inline = False`
 
-In theory this attribute should be used to omit time filters from the self-joins. When the attribute is false the time attribute will be present in the subquery used to compute limited series, eg:
+IN THEORY THIS ATTRIBUTE SHOULD BE USED TO OMIT TIME FILTERS FROM THE SELF-JOINS. WHEN THE ATTRIBUTE IS FALSE THE TIME ATTRIBUTE WILL BE PRESENT IN THE SUBQUERY USED TO COMPUTE LIMITED SERIES, EG:
 
 ```sql
 SELECT DATE_TRUNC('day', ts) AS ts,
@@ -800,11 +800,11 @@ ORDER BY count DESC
 LIMIT 10000;
 ```
 
-In practice, the attribute doesn't seem to be working as of 2023-07-27.
+IN PRACTICE, THE ATTRIBUTE DOESN'T SEEM TO BE WORKING AS OF 2023-07-27.
 
 ### `allows_alias_to_source_column = True`
 
-When this is true the database allows queries where alias can overshadow existing column names. For example, in this query:
+WHEN THIS IS TRUE THE DATABASE ALLOWS QUERIES WHERE ALIAS CAN OVERSHADOW EXISTING COLUMN NAMES. FOR EXAMPLE, IN THIS QUERY:
 
 ```sql
 SELECT
@@ -817,7 +817,7 @@ ORDER BY
 
 ### `allows_hidden_orderby_agg = True`
 
-If set to true the database allows expressions in the `GROUP BY` that are not present in the projection (`SELECT`), eg:
+IF SET TO TRUE THE DATABASE ALLOWS EXPRESSIONS IN THE `GROUP BY` THAT ARE NOT PRESENT IN THE PROJECTION (`SELECT`), EG:
 
 ```sql
 SELECT
@@ -833,7 +833,7 @@ ORDER BY
 
 ### `allows_hidden_cc_in_orderby = False`
 
-This the opposite of `allows_alias_in_orderby`, for databases that require aliases in the `ORDER BY`. For example, BigQuery doesn't like this query:
+THIS THE OPPOSITE OF `allows_alias_in_orderby`, FOR DATABASES THAT REQUIRE ALIASES IN THE `ORDER BY`. FOR EXAMPLE, BIGQUERY DOESN'T LIKE THIS QUERY:
 
 ```sql
 SELECT
@@ -854,7 +854,7 @@ ORDER BY
   END
 ```
 
-Instead, it must be written as:
+INSTEAD, IT MUST BE WRITTEN AS:
 
 ```sql
 SELECT
@@ -873,21 +873,21 @@ ORDER BY
 
 ### `allows_cte_in_subquery = True`
 
-When a virtual dataset is used in a chart the original query is converted into a subquery, and is wrapped in an outer query that is generated based on the chart controls. The virtual dataset query might have a CTE, and some databases don't like subqueries with CTEs in them.
+WHEN A VIRTUAL DATASET IS USED IN A CHART THE ORIGINAL QUERY IS CONVERTED INTO A SUBQUERY, AND IS WRAPPED IN AN OUTER QUERY THAT IS GENERATED BASED ON THE CHART CONTROLS. THE VIRTUAL DATASET QUERY MIGHT HAVE A CTE, AND SOME DATABASES DON'T LIKE SUBQUERIES WITH CTES IN THEM.
 
-When this attribute is false Superset will extract the CTE and move it outside of the subquery when generating SQL for charts. The name of the new CTE will be `cte_alias`, also defined in the DB engine spec.
+WHEN THIS ATTRIBUTE IS FALSE SUPERSET WILL EXTRACT THE CTE AND MOVE IT OUTSIDE OF THE SUBQUERY WHEN GENERATING SQL FOR CHARTS. THE NAME OF THE NEW CTE WILL BE `cte_alias`, ALSO DEFINED IN THE DB ENGINE SPEC.
 
 ### `allow_limit_clause = True`
 
-Allows for the `LIMIT` clause. Otherwise, the database probably uses `TOP` to limit rows.
+ALLOWS FOR THE `LIMIT` CLAUSE. OTHERWISE, THE DATABASE PROBABLY USES `TOP` TO LIMIT ROWS.
 
 ### `max_column_name_length: int | None = None`
 
-Most databases have a well defined limit for the maximum length of a column name (SQLite is probably the one exception). While the can be set (and defaults) to `None,` it's highly recommended to set a value to prevent errors.
+MOST DATABASES HAVE A WELL DEFINED LIMIT FOR THE MAXIMUM LENGTH OF A COLUMN NAME (SQLITE IS PROBABLY THE ONE EXCEPTION). WHILE THE CAN BE SET (AND DEFAULTS) TO `None,` IT'S HIGHLY RECOMMENDED TO SET A VALUE TO PREVENT ERRORS.
 
 ### `allows_sql_comments = True`
 
-Are comments supported in the DB? In general SQL in comments are defined by double dashes:
+ARE COMMENTS SUPPORTED IN THE DB? IN GENERAL SQL IN COMMENTS ARE DEFINED BY DOUBLE DASHES:
 
 ```sql
 -- this is a comment
@@ -897,17 +897,17 @@ FROM some_table
 
 ### `allows_escaped_colons = True`
 
-SQLAlchemy recommends escaping colons to prevent them from being interpreted as bindings to parameters. Because of this, when building queries from virtual datasets Superset will escape all colons with `\:`.
+SQLALCHEMY RECOMMENDS ESCAPING COLONS TO PREVENT THEM FROM BEING INTERPRETED AS BINDINGS TO PARAMETERS. BECAUSE OF THIS, WHEN BUILDING QUERIES FROM VIRTUAL DATASETS SUPERSET WILL ESCAPE ALL COLONS WITH `\:`.
 
-This works for most databases except Athena. The `allows_escaped_colons` attribute specifies if the database supports the escape colon.
+THIS WORKS FOR MOST DATABASES EXCEPT ATHENA. THE `allows_escaped_colons` ATTRIBUTE SPECIFIES IF THE DATABASE SUPPORTS THE ESCAPE COLON.
 
-## Basic features
+## BASIC FEATURES
 
-These are features that all DB engine specs should support, as the name suggests. They provide a much better user experience for the user.
+THESE ARE FEATURES THAT ALL DB ENGINE SPECS SHOULD SUPPORT, AS THE NAME SUGGESTS. THEY PROVIDE A MUCH BETTER USER EXPERIENCE FOR THE USER.
 
-### Time grains
+### TIME GRAINS
 
-The most basic feature that DB engine specs need to support is defining time grain expressions. These are dialect-specific SQL expressions that are used to compute metrics on a given time grain when building charts. For example, when computing the metric `COUNT(*)` on a daily basis, Superset will generate the following query:
+THE MOST BASIC FEATURE THAT DB ENGINE SPECS NEED TO SUPPORT IS DEFINING TIME GRAIN EXPRESSIONS. THESE ARE DIALECT-SPECIFIC SQL EXPRESSIONS THAT ARE USED TO COMPUTE METRICS ON A GIVEN TIME GRAIN WHEN BUILDING CHARTS. FOR EXAMPLE, WHEN COMPUTING THE METRIC `COUNT(*)` ON A DAILY BASIS, SUPERSET WILL GENERATE THE FOLLOWING QUERY:
 
 ```sql
 SELECT
@@ -918,15 +918,15 @@ GROUP BY
   <DB engine spec expression for TimeGrain.DAY>
 ```
 
-For some databases with support for `DATE_TRUNC` or `TIME_FLOOR` this is easy. Here's how Apache Druid computes 15 minute aggregations:
+FOR SOME DATABASES WITH SUPPORT FOR `DATE_TRUNC` OR `TIME_FLOOR` THIS IS EASY. HERE'S HOW APACHE DRUID COMPUTES 15 MINUTE AGGREGATIONS:
 
 ```sql
 TIME_FLOOR(CAST({col} AS TIMESTAMP), 'PT15M')
 ```
 
-Where `{col}` is the time column being aggregated — the expression is actually a Jinja2 template. Druid uses the ISO standard for durations, with `PT15M` representing 15 minutes.
+WHERE `{col}` IS THE TIME COLUMN BEING AGGREGATED — THE EXPRESSION IS ACTUALLY A JINJA2 TEMPLATE. DRUID USES THE ISO STANDARD FOR DURATIONS, WITH `PT15M` REPRESENTING 15 MINUTES.
 
-On the other and, here's the same for SQLite:
+ON THE OTHER AND, HERE'S THE SAME FOR SQLITE:
 
 ```sql
 DATETIME(
@@ -941,11 +941,11 @@ DATETIME(
 )
 ```
 
-The SQLite version has to truncate the column down to the minute, and then subtract a number of minutes equals to the modulo 15.
+THE SQLITE VERSION HAS TO TRUNCATE THE COLUMN DOWN TO THE MINUTE, AND THEN SUBTRACT A NUMBER OF MINUTES EQUALS TO THE MODULO 15.
 
-Time grain expressions are defined in the `_time_grain_expressions` class attribute, which maps from a `superset.constants.TimeGrain` to the SQL expression. The dictionary has a special key `None`, that should map to the column directly, for when no time grain is specified.
+TIME GRAIN EXPRESSIONS ARE DEFINED IN THE `_time_grain_expressions` CLASS ATTRIBUTE, WHICH MAPS FROM A `superset.constants.TimeGrain` TO THE SQL EXPRESSION. THE DICTIONARY HAS A SPECIAL KEY `None`, THAT SHOULD MAP TO THE COLUMN DIRECTLY, FOR WHEN NO TIME GRAIN IS SPECIFIED.
 
-Note that it's possible to add new time grains via configuration. For example, if you want to add a "2 seconds" time grain to your installation you can add it to `TIME_GRAIN_ADDONS`, and implement it in `TIME_GRAIN_ADDON_EXPRESSIONS`:
+NOTE THAT IT'S POSSIBLE TO ADD NEW TIME GRAINS VIA CONFIGURATION. FOR EXAMPLE, IF YOU WANT TO ADD A "2 SECONDS" TIME GRAIN TO YOUR INSTALLATION YOU CAN ADD IT TO `TIME_GRAIN_ADDONS`, AND IMPLEMENT IT IN `TIME_GRAIN_ADDON_EXPRESSIONS`:
 
 ```python
 # superset_config.py
@@ -958,9 +958,9 @@ TIME_GRAIN_ADDON_EXPRESSIONS = {
 }
 ```
 
-### Column type mapping
+### COLUMN TYPE MAPPING
 
-Column type mapping, defined in the `column_type_mappings` class attribute, is just a way of mapping type names from the database to types Superset understand. The default values in `BaseEngineSpec` are sane:
+COLUMN TYPE MAPPING, DEFINED IN THE `column_type_mappings` CLASS ATTRIBUTE, IS JUST A WAY OF MAPPING TYPE NAMES FROM THE DATABASE TO TYPES SUPERSET UNDERSTAND. THE DEFAULT VALUES IN `BaseEngineSpec` ARE SANE:
 
 ```python
 _default_column_type_mappings: tuple[ColumnTypeMapping, ...] = (
@@ -988,7 +988,7 @@ _default_column_type_mappings: tuple[ColumnTypeMapping, ...] = (
 )
 ```
 
-But you might want to implement more specific types in the DB engine spec, or complex types. For example, for MSSQL we have:
+BUT YOU MIGHT WANT TO IMPLEMENT MORE SPECIFIC TYPES IN THE DB ENGINE SPEC, OR COMPLEX TYPES. FOR EXAMPLE, FOR MSSQL WE HAVE:
 
 ```python
 from sqlalchemy.dialects.mssql.base import SMALLDATETIME
@@ -1004,33 +1004,33 @@ class MssqlEngineSpec(BaseEngineSpec):
     )
 ```
 
-### Function names
+### FUNCTION NAMES
 
-DB engine specs should implement a class method called `get_function_names` that returns a list of strings, representing all the function names that the database supports. This is used for autocomplete in SQL Lab.
+DB ENGINE SPECS SHOULD IMPLEMENT A CLASS METHOD CALLED `get_function_names` THAT RETURNS A LIST OF STRINGS, REPRESENTING ALL THE FUNCTION NAMES THAT THE DATABASE SUPPORTS. THIS IS USED FOR AUTOCOMPLETE IN SQL LAB.
 
-### Masked encrypted extra
+### MASKED ENCRYPTED EXTRA
 
-Superset does a good job in keeping credentials secure. When you add a database with a password, for example:
+SUPERSET DOES A GOOD JOB IN KEEPING CREDENTIALS SECURE. WHEN YOU ADD A DATABASE WITH A PASSWORD, FOR EXAMPLE:
 
 ```text
 postgresql://admin:password123@db.example.org:5432/db
 ```
 
-The password is sent over the network only when the database is created. When you edit the database later, Superset will return this as the SQLAlchemy URI:
+THE PASSWORD IS SENT OVER THE NETWORK ONLY WHEN THE DATABASE IS CREATED. WHEN YOU EDIT THE DATABASE LATER, SUPERSET WILL RETURN THIS AS THE SQLALCHEMY URI:
 
 ```text
 postgresql://admin:XXXXXXXXXX@db.example.org:5432/db
 ```
 
-The password will be masked in the API response; it's not just masked in the browser UI. This is done in order to avoid sending the password unnecessarily over the network. Also, if a non-admin user has access to the API response, they won't be able to know the database password.
+THE PASSWORD WILL BE MASKED IN THE API RESPONSE; IT'S NOT JUST MASKED IN THE BROWSER UI. THIS IS DONE IN ORDER TO AVOID SENDING THE PASSWORD UNNECESSARILY OVER THE NETWORK. ALSO, IF A NON-ADMIN USER HAS ACCESS TO THE API RESPONSE, THEY WON'T BE ABLE TO KNOW THE DATABASE PASSWORD.
 
-When the database is edited, the Superset backend is smart enough to replace the masked password with the actual password, unless the password has changed. That is, if you change the database in the URI from `db` to `db2` the SQLAlchemy URI will be stored in the backend as:
+WHEN THE DATABASE IS EDITED, THE SUPERSET BACKEND IS SMART ENOUGH TO REPLACE THE MASKED PASSWORD WITH THE ACTUAL PASSWORD, UNLESS THE PASSWORD HAS CHANGED. THAT IS, IF YOU CHANGE THE DATABASE IN THE URI FROM `db` TO `db2` THE SQLALCHEMY URI WILL BE STORED IN THE BACKEND AS:
 
 ```text
 postgresql://admin:password123@db.example.org:5432/db2
 ```
 
-The password is not the only piece of information where security is critical. For many databases (like BigQuery), sensitive information is stored in the credentials JSON payload. For example:
+THE PASSWORD IS NOT THE ONLY PIECE OF INFORMATION WHERE SECURITY IS CRITICAL. FOR MANY DATABASES (LIKE BIGQUERY), SENSITIVE INFORMATION IS STORED IN THE CREDENTIALS JSON PAYLOAD. FOR EXAMPLE:
 
 ```json
 {
@@ -1047,9 +1047,9 @@ The password is not the only piece of information where security is critical. Fo
 }
 ```
 
-Similarly to password, we don't want to send `private_key` to the client when a database is edited; the Superset API should never return its actual contents. Instead, Superset should return a masked value, and users should be able to edit the JSON without having to type in the `private_key` on every edit.
+SIMILARLY TO PASSWORD, WE DON'T WANT TO SEND `private_key` TO THE CLIENT WHEN A DATABASE IS EDITED; THE SUPERSET API SHOULD NEVER RETURN ITS ACTUAL CONTENTS. INSTEAD, SUPERSET SHOULD RETURN A MASKED VALUE, AND USERS SHOULD BE ABLE TO EDIT THE JSON WITHOUT HAVING TO TYPE IN THE `private_key` ON EVERY EDIT.
 
-To do this, DB engine specs and implement 2 methods, `mask_encrypted_extra` and `unmask_encrypted_extra`. They have these names because the credentials are stored in an encrypted column called `encrypted_extra`. Here's how these methods look like for BigQuery:
+TO DO THIS, DB ENGINE SPECS AND IMPLEMENT 2 METHODS, `mask_encrypted_extra` AND `unmask_encrypted_extra`. THEY HAVE THESE NAMES BECAUSE THE CREDENTIALS ARE STORED IN AN ENCRYPTED COLUMN CALLED `encrypted_extra`. HERE'S HOW THESE METHODS LOOK LIKE FOR BIGQUERY:
 
 ```python
 from superset.constants import PASSWORD_MASK
@@ -1103,19 +1103,19 @@ class BigQueryEngineSpec(BaseEngineSpec):
         return json.dumps(new_config)
 ```
 
-This way, when a user edits an existing BigQuery connection, the `private_key` is shown as `XXXXXXXXXX`. Everything else in the JSON is still displayed, and the user can change any of the fields without having to provide the private key.
+THIS WAY, WHEN A USER EDITS AN EXISTING BIGQUERY CONNECTION, THE `private_key` IS SHOWN AS `XXXXXXXXXX`. EVERYTHING ELSE IN THE JSON IS STILL DISPLAYED, AND THE USER CAN CHANGE ANY OF THE FIELDS WITHOUT HAVING TO PROVIDE THE PRIVATE KEY.
 
-Note that while this is a basic feature that should be implemented for security reasons, it only makes sense in DB engine specs that use `encrypted_extra` to store connection information.
+NOTE THAT WHILE THIS IS A BASIC FEATURE THAT SHOULD BE IMPLEMENTED FOR SECURITY REASONS, IT ONLY MAKES SENSE IN DB ENGINE SPECS THAT USE `encrypted_extra` TO STORE CONNECTION INFORMATION.
 
-## Nice to have features
+## NICE TO HAVE FEATURES
 
-The next set of features are nice to have. They don't apply to all databases, and are not strictly needed for security or usability.
+THE NEXT SET OF FEATURES ARE NICE TO HAVE. THEY DON'T APPLY TO ALL DATABASES, AND ARE NOT STRICTLY NEEDED FOR SECURITY OR USABILITY.
 
-### User impersonation
+### USER IMPERSONATION
 
-In general there's no user-level granularity when accessing a database in Superset. A single database connection is shared by all users who have access to that database. There are many use cases when this is not desirable, and some databases implement mechanisms in which they can **impersonate users**, potentially reducing the scope of permissions available to run the query.
+IN GENERAL THERE'S NO USER-LEVEL GRANULARITY WHEN ACCESSING A DATABASE IN SUPERSET. A SINGLE DATABASE CONNECTION IS SHARED BY ALL USERS WHO HAVE ACCESS TO THAT DATABASE. THERE ARE MANY USE CASES WHEN THIS IS NOT DESIRABLE, AND SOME DATABASES IMPLEMENT MECHANISMS IN WHICH THEY CAN **IMPERSONATE USERS**, POTENTIALLY REDUCING THE SCOPE OF PERMISSIONS AVAILABLE TO RUN THE QUERY.
 
-For example, the Google Sheets DB engine spec implements this via the `get_url_for_impersonation` class method:
+FOR EXAMPLE, THE GOOGLE SHEETS DB ENGINE SPEC IMPLEMENTS THIS VIA THE `get_url_for_impersonation` CLASS METHOD:
 
 ```python
 class GSheetsEngineSpec(ShillelaghEngineSpec):
@@ -1136,15 +1136,15 @@ class GSheetsEngineSpec(ShillelaghEngineSpec):
         return url
 ```
 
-The method `get_url_for_impersonation` updates the SQLAlchemy URI before every query. In this particular case, it will fetch the user's email and add it to the `subject` query argument. The driver will then lower the permissions to match that given user. This allows the connection to be configured with a service account that has access to all the spreadsheets, while giving users access to only the spreadsheets they own are have been shared with them (or with their organization — Google will handle the authorization in this case, not Superset).
+THE METHOD `get_url_for_impersonation` UPDATES THE SQLALCHEMY URI BEFORE EVERY QUERY. IN THIS PARTICULAR CASE, IT WILL FETCH THE USER'S EMAIL AND ADD IT TO THE `subject` QUERY ARGUMENT. THE DRIVER WILL THEN LOWER THE PERMISSIONS TO MATCH THAT GIVEN USER. THIS ALLOWS THE CONNECTION TO BE CONFIGURED WITH A SERVICE ACCOUNT THAT HAS ACCESS TO ALL THE SPREADSHEETS, WHILE GIVING USERS ACCESS TO ONLY THE SPREADSHEETS THEY OWN ARE HAVE BEEN SHARED WITH THEM (OR WITH THEIR ORGANIZATION — GOOGLE WILL HANDLE THE AUTHORIZATION IN THIS CASE, NOT SUPERSET).
 
-Alternatively, it's also possible to impersonate users by implementing the `update_impersonation_config`. This is a class method which modifies `connect_args` in place. You can use either method, and ideally they [should be consolidated in a single one](https://github.com/apache/superset/issues/24910).
+ALTERNATIVELY, IT'S ALSO POSSIBLE TO IMPERSONATE USERS BY IMPLEMENTING THE `update_impersonation_config`. THIS IS A CLASS METHOD WHICH MODIFIES `connect_args` IN PLACE. YOU CAN USE EITHER METHOD, AND IDEALLY THEY [SHOULD BE CONSOLIDATED IN A SINGLE ONE](https://github.com/apache/superset/issues/24910).
 
-### OAuth2
+### OAUTH2
 
-Support for authenticating to a database using personal OAuth2 access tokens was introduced in [SIP-85](https://github.com/apache/superset/issues/20300). The Google Sheets DB engine spec is the reference implementation.
+SUPPORT FOR AUTHENTICATING TO A DATABASE USING PERSONAL OAUTH2 ACCESS TOKENS WAS INTRODUCED IN [SIP-85](https://github.com/apache/superset/issues/20300). THE GOOGLE SHEETS DB ENGINE SPEC IS THE REFERENCE IMPLEMENTATION.
 
-Note that this API is still experimental and evolving quickly, subject to breaking changes. Currently, to add support for OAuth2 to a DB engine spec, the following attributes are needed:
+NOTE THAT THIS API IS STILL EXPERIMENTAL AND EVOLVING QUICKLY, SUBJECT TO BREAKING CHANGES. CURRENTLY, TO ADD SUPPORT FOR OAUTH2 TO A DB ENGINE SPEC, THE FOLLOWING ATTRIBUTES ARE NEEDED:
 
 ```python
 class BaseEngineSpec:
@@ -1160,11 +1160,11 @@ class BaseEngineSpec:
     oauth2_token_request_uri = "https://example.org/token"
 ```
 
-The `oauth2_exception` is an exception that is raised by `cursor.execute` when OAuth2 is needed. This will start the OAuth2 dance when `BaseEngineSpec.execute` is called, by returning the custom error `OAUTH2_REDIRECT` to the frontend. If the database driver doesn't have a specific exception, it might be necessary to overload the `execute` method in the DB engine spec, so that the `BaseEngineSpec.start_oauth2_dance` method gets called whenever OAuth2 is needed.
+THE `oauth2_exception` IS AN EXCEPTION THAT IS RAISED BY `cursor.execute` WHEN OAUTH2 IS NEEDED. THIS WILL START THE OAUTH2 DANCE WHEN `BaseEngineSpec.execute` IS CALLED, BY RETURNING THE CUSTOM ERROR `OAUTH2_REDIRECT` TO THE FRONTEND. IF THE DATABASE DRIVER DOESN'T HAVE A SPECIFIC EXCEPTION, IT MIGHT BE NECESSARY TO OVERLOAD THE `execute` METHOD IN THE DB ENGINE SPEC, SO THAT THE `BaseEngineSpec.start_oauth2_dance` METHOD GETS CALLED WHENEVER OAUTH2 IS NEEDED.
 
-The DB engine should implement logic in either `get_url_for_impersonation` or `update_impersonation_config` to update the connection with the personal access token. See the Google Sheets DB engine spec for a reference implementation.
+THE DB ENGINE SHOULD IMPLEMENT LOGIC IN EITHER `get_url_for_impersonation` OR `update_impersonation_config` TO UPDATE THE CONNECTION WITH THE PERSONAL ACCESS TOKEN. SEE THE GOOGLE SHEETS DB ENGINE SPEC FOR A REFERENCE IMPLEMENTATION.
 
-Currently OAuth2 needs to be configured at the DB engine spec level, ie, with one client for each DB engien spec. The configuration lives in `superset_config.py`:
+CURRENTLY OAUTH2 NEEDS TO BE CONFIGURED AT THE DB ENGINE SPEC LEVEL, IE, WITH ONE CLIENT FOR EACH DB ENGIEN SPEC. THE CONFIGURATION LIVES IN `superset_config.py`:
 
 ```python
 # superset_config.py
@@ -1188,25 +1188,25 @@ DATABASE_OAUTH2_REDIRECT_URI = "http://localhost:8088/api/v1/database/oauth2/"
 DATABASE_OAUTH2_TIMEOUT = timedelta(seconds=30)
 ```
 
-When configuring a client only the ID and secret are required; the DB engine spec should have default values for the scope and endpoints. The `DATABASE_OAUTH2_REDIRECT_URI` attribute is optional, and defaults to `/api/v1/databases/oauth2/` in Superset.
+WHEN CONFIGURING A CLIENT ONLY THE ID AND SECRET ARE REQUIRED; THE DB ENGINE SPEC SHOULD HAVE DEFAULT VALUES FOR THE SCOPE AND ENDPOINTS. THE `DATABASE_OAUTH2_REDIRECT_URI` ATTRIBUTE IS OPTIONAL, AND DEFAULTS TO `/api/v1/databases/oauth2/` IN SUPERSET.
 
-In the future we plan to support adding custom clients via the Superset UI, and being able to manually assign clients to specific databases.
+IN THE FUTURE WE PLAN TO SUPPORT ADDING CUSTOM CLIENTS VIA THE SUPERSET UI, AND BEING ABLE TO MANUALLY ASSIGN CLIENTS TO SPECIFIC DATABASES.
 
-### File upload
+### FILE UPLOAD
 
-When a DB engine spec supports file upload it declares so via the `supports_file_upload` class attribute. The base class implementation is very generic and should work for any database that has support for `CREATE TABLE`. It leverages Pandas and the [`df_to_sql`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html) method.
+WHEN A DB ENGINE SPEC SUPPORTS FILE UPLOAD IT DECLARES SO VIA THE `supports_file_upload` CLASS ATTRIBUTE. THE BASE CLASS IMPLEMENTATION IS VERY GENERIC AND SHOULD WORK FOR ANY DATABASE THAT HAS SUPPORT FOR `CREATE TABLE`. IT LEVERAGES PANDAS AND THE [`df_to_sql`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html) METHOD.
 
-For some databases the `df_to_sql` classmethod needs to be implemented. For example, for BigQuery the DB engine spec implements a custom method that uses the [`to_gbq`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_gbq.html) method.
+FOR SOME DATABASES THE `df_to_sql` CLASSMETHOD NEEDS TO BE IMPLEMENTED. FOR EXAMPLE, FOR BIGQUERY THE DB ENGINE SPEC IMPLEMENTS A CUSTOM METHOD THAT USES THE [`to_gbq`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_gbq.html) METHOD.
 
-### Extra table metadata
+### EXTRA TABLE METADATA
 
-DB engine specs can return additional metadata associated with a table. This is done via the `get_extra_table_metadata` class method. Trino uses this to return information about the latest partition, for example, and Bigquery returns clustering information. This information is then surfaced in the SQL Lab UI, when browsing tables in the metadata explorer (on the left panel).
+DB ENGINE SPECS CAN RETURN ADDITIONAL METADATA ASSOCIATED WITH A TABLE. THIS IS DONE VIA THE `get_extra_table_metadata` CLASS METHOD. TRINO USES THIS TO RETURN INFORMATION ABOUT THE LATEST PARTITION, FOR EXAMPLE, AND BIGQUERY RETURNS CLUSTERING INFORMATION. THIS INFORMATION IS THEN SURFACED IN THE SQL LAB UI, WHEN BROWSING TABLES IN THE METADATA EXPLORER (ON THE LEFT PANEL).
 
-### DB API exception mapping
+### DB API EXCEPTION MAPPING
 
-Different DB API 2.0 drivers implement different exceptions, even if they have the same name. The `get_dbapi_exception_mapping` class method returns a dictionary mapping these custom exceptions to Superset exceptions, so that Superset can return more specific errors when an exception is raised by the underlying driver.
+DIFFERENT DB API 2.0 DRIVERS IMPLEMENT DIFFERENT EXCEPTIONS, EVEN IF THEY HAVE THE SAME NAME. THE `get_dbapi_exception_mapping` CLASS METHOD RETURNS A DICTIONARY MAPPING THESE CUSTOM EXCEPTIONS TO SUPERSET EXCEPTIONS, SO THAT SUPERSET CAN RETURN MORE SPECIFIC ERRORS WHEN AN EXCEPTION IS RAISED BY THE UNDERLYING DRIVER.
 
-For example, for ClickHouse we have:
+FOR EXAMPLE, FOR CLICKHOUSE WE HAVE:
 
 ```python
 from urllib3.exceptions import NewConnectionError
@@ -1221,11 +1221,11 @@ class ClickHouseEngineSpec(ClickHouseBaseEngineSpec):
         return {NewConnectionError: SupersetDBAPIDatabaseError}
 ```
 
-This way, if the ClickHouse driver raises a `NewConnectionError` it would get wrapped in a `SupersetDBAPIDatabaseError`.
+THIS WAY, IF THE CLICKHOUSE DRIVER RAISES A `NewConnectionError` IT WOULD GET WRAPPED IN A `SupersetDBAPIDatabaseError`.
 
-### Custom errors
+### CUSTOM ERRORS
 
-Queries can fail in many different ways. For example, in SQLite:
+QUERIES CAN FAIL IN MANY DIFFERENT WAYS. FOR EXAMPLE, IN SQLITE:
 
 ```sql
 sqlite> CREATE TABLE a (b INT);
@@ -1234,9 +1234,9 @@ Error: no such column: c
 sqlite>
 ```
 
-When a query fails, Superset will return the message, "Error: no such column: c", to the user as a generic error.
+WHEN A QUERY FAILS, SUPERSET WILL RETURN THE MESSAGE, "ERROR: NO SUCH COLUMN: C", TO THE USER AS A GENERIC ERROR.
 
-Since ideally we want to return specific and actionable error messages, DB engine specs can implement methods that map error messages to more specific errors. For example, the SQLite DB engine specs defines:
+SINCE IDEALLY WE WANT TO RETURN SPECIFIC AND ACTIONABLE ERROR MESSAGES, DB ENGINE SPECS CAN IMPLEMENT METHODS THAT MAP ERROR MESSAGES TO MORE SPECIFIC ERRORS. FOR EXAMPLE, THE SQLITE DB ENGINE SPECS DEFINES:
 
 ```python
 COLUMN_DOES_NOT_EXIST_REGEX = re.compile("no such column: (?P<column_name>.+)")
@@ -1253,124 +1253,124 @@ class SqliteEngineSpec(BaseEngineSpec):
     }
 ```
 
-This way, when a user selects a column that doesn't exist Superset can return a more informative error.
+THIS WAY, WHEN A USER SELECTS A COLUMN THAT DOESN'T EXIST SUPERSET CAN RETURN A MORE INFORMATIVE ERROR.
 
-### Dynamic schema
+### DYNAMIC SCHEMA
 
-In SQL Lab it's possible to select a database, and then a schema in that database. Ideally, when running a query in SQL Lab, any unqualified table names (eg, `table`, instead of `schema.table`) should be in the selected schema. For example, if the user selects `dev` as the schema and then runs the following query:
+IN SQL LAB IT'S POSSIBLE TO SELECT A DATABASE, AND THEN A SCHEMA IN THAT DATABASE. IDEALLY, WHEN RUNNING A QUERY IN SQL LAB, ANY UNQUALIFIED TABLE NAMES (EG, `table`, INSTEAD OF `schema.table`) SHOULD BE IN THE SELECTED SCHEMA. FOR EXAMPLE, IF THE USER SELECTS `dev` AS THE SCHEMA AND THEN RUNS THE FOLLOWING QUERY:
 
 ```sql
 SELECT * FROM my_table
 ```
 
-The table `my_table` should live in the `dev` schema. In order to do that, it's necessary to modify the SQLAlchemy URI before running the query. Since different databases have different ways of doing that, this functionality is implemented via the `adjust_engine_params` class method. The method receives the SQLAlchemy URI and `connect_args`, as well as the schema in which the query should run. It then returns a potentially modified URI and `connect_args` to ensure that the query runs in the specified schema.
+THE TABLE `my_table` SHOULD LIVE IN THE `dev` SCHEMA. IN ORDER TO DO THAT, IT'S NECESSARY TO MODIFY THE SQLALCHEMY URI BEFORE RUNNING THE QUERY. SINCE DIFFERENT DATABASES HAVE DIFFERENT WAYS OF DOING THAT, THIS FUNCTIONALITY IS IMPLEMENTED VIA THE `adjust_engine_params` CLASS METHOD. THE METHOD RECEIVES THE SQLALCHEMY URI AND `connect_args`, AS WELL AS THE SCHEMA IN WHICH THE QUERY SHOULD RUN. IT THEN RETURNS A POTENTIALLY MODIFIED URI AND `connect_args` TO ENSURE THAT THE QUERY RUNS IN THE SPECIFIED SCHEMA.
 
-When a DB engine specs implements `adjust_engine_params` it should have the class attribute `supports_dynamic_schema` set to true. This is critical for security, since **it allows Superset to know to which schema any unqualified table names belong to**. For example, in the query above, if the database supports dynamic schema, Superset would check to see if the user running the query has access to `dev.my_table`. On the other hand, if the database doesn't support dynamic schema, Superset would use the default database schema instead of `dev`.
+WHEN A DB ENGINE SPECS IMPLEMENTS `adjust_engine_params` IT SHOULD HAVE THE CLASS ATTRIBUTE `supports_dynamic_schema` SET TO TRUE. THIS IS CRITICAL FOR SECURITY, SINCE **IT ALLOWS SUPERSET TO KNOW TO WHICH SCHEMA ANY UNQUALIFIED TABLE NAMES BELONG TO**. FOR EXAMPLE, IN THE QUERY ABOVE, IF THE DATABASE SUPPORTS DYNAMIC SCHEMA, SUPERSET WOULD CHECK TO SEE IF THE USER RUNNING THE QUERY HAS ACCESS TO `dev.my_table`. ON THE OTHER HAND, IF THE DATABASE DOESN'T SUPPORT DYNAMIC SCHEMA, SUPERSET WOULD USE THE DEFAULT DATABASE SCHEMA INSTEAD OF `dev`.
 
-Implementing this method is also important for usability. When the method is not implemented selecting the schema in SQL Lab has no effect on the schema in which the query runs, resulting in a confusing results when using unqualified table names.
+IMPLEMENTING THIS METHOD IS ALSO IMPORTANT FOR USABILITY. WHEN THE METHOD IS NOT IMPLEMENTED SELECTING THE SCHEMA IN SQL LAB HAS NO EFFECT ON THE SCHEMA IN WHICH THE QUERY RUNS, RESULTING IN A CONFUSING RESULTS WHEN USING UNQUALIFIED TABLE NAMES.
 
-### Catalog
+### CATALOG
 
-In general, databases support a hierarchy of one-to-many concepts:
+IN GENERAL, DATABASES SUPPORT A HIERARCHY OF ONE-TO-MANY CONCEPTS:
 
-1. Database
-2. Catalog
-3. Namespace
-4. Table
-5. Column
+1. DATABASE
+2. CATALOG
+3. NAMESPACE
+4. TABLE
+5. COLUMN
 
-These concepts have different names depending on the database. For example, Postgres uses the following terminology:
+THESE CONCEPTS HAVE DIFFERENT NAMES DEPENDING ON THE DATABASE. FOR EXAMPLE, POSTGRES USES THE FOLLOWING TERMINOLOGY:
 
-1. Cluster (database)
-2. Database (catalog)
-3. Schema (namespace)
-4. Table
-5. Column
+1. CLUSTER (DATABASE)
+2. DATABASE (CATALOG)
+3. SCHEMA (NAMESPACE)
+4. TABLE
+5. COLUMN
 
-BigQuery, on the other hand:
+BIGQUERY, ON THE OTHER HAND:
 
-1. BigQuery (database)
-2. Project (catalog)
-3. Schema (namespace)
-4. Table
-5. Column
+1. BIGQUERY (DATABASE)
+2. PROJECT (CATALOG)
+3. SCHEMA (NAMESPACE)
+4. TABLE
+5. COLUMN
 
-Hive and Trino:
+HIVE AND TRINO:
 
-1. Database
-2. Catalog
-3. Schema
-4. Table
-5. Column
+1. DATABASE
+2. CATALOG
+3. SCHEMA
+4. TABLE
+5. COLUMN
 
-If the database supports catalogs, then the DB engine spec should have the `supports_catalog` class attribute set to true. It should also implement the `get_default_catalog` method, so that the proper permissions can be created when datasets are added.
+IF THE DATABASE SUPPORTS CATALOGS, THEN THE DB ENGINE SPEC SHOULD HAVE THE `supports_catalog` CLASS ATTRIBUTE SET TO TRUE. IT SHOULD ALSO IMPLEMENT THE `get_default_catalog` METHOD, SO THAT THE PROPER PERMISSIONS CAN BE CREATED WHEN DATASETS ARE ADDED.
 
-### Dynamic catalog
+### DYNAMIC CATALOG
 
-Superset support for multiple catalogs. Since, in general, a given SQLAlchemy URI connects only to a single catalog, it requires DB engine specs to implement the `adjust_engine_params` method to rewrite the URL to connect to a different catalog, similar to how dynamic schemas work. Additionally, DB engine specs should also implement the `get_catalog_names` method, so that users can browse the available catalogs.
+SUPERSET SUPPORT FOR MULTIPLE CATALOGS. SINCE, IN GENERAL, A GIVEN SQLALCHEMY URI CONNECTS ONLY TO A SINGLE CATALOG, IT REQUIRES DB ENGINE SPECS TO IMPLEMENT THE `adjust_engine_params` METHOD TO REWRITE THE URL TO CONNECT TO A DIFFERENT CATALOG, SIMILAR TO HOW DYNAMIC SCHEMAS WORK. ADDITIONALLY, DB ENGINE SPECS SHOULD ALSO IMPLEMENT THE `get_catalog_names` METHOD, SO THAT USERS CAN BROWSE THE AVAILABLE CATALOGS.
 
-### SSH tunneling
+### SSH TUNNELING
 
-Superset can connect to databases via an SSH tunnel. For databases where this doesn't make sense (eg, SQLite or BigQuery) the DB engine spec should have `disable_ssh_tunneling` set to true.
+SUPERSET CAN CONNECT TO DATABASES VIA AN SSH TUNNEL. FOR DATABASES WHERE THIS DOESN'T MAKE SENSE (EG, SQLITE OR BIGQUERY) THE DB ENGINE SPEC SHOULD HAVE `disable_ssh_tunneling` SET TO TRUE.
 
-### Query cancelation
+### QUERY CANCELATION
 
-Superset will try to cancel running queries if the users wants so, but it's up to the DB engine spec to handle this.
+SUPERSET WILL TRY TO CANCEL RUNNING QUERIES IF THE USERS WANTS SO, BUT IT'S UP TO THE DB ENGINE SPEC TO HANDLE THIS.
 
-Some databases have an implicit query cancelation. When a cursor stops being polled it will cancel the query. For databases that behave like this, the class method `has_implicit_cancel` (which should really be a class attribute) should return true.
+SOME DATABASES HAVE AN IMPLICIT QUERY CANCELATION. WHEN A CURSOR STOPS BEING POLLED IT WILL CANCEL THE QUERY. FOR DATABASES THAT BEHAVE LIKE THIS, THE CLASS METHOD `has_implicit_cancel` (WHICH SHOULD REALLY BE A CLASS ATTRIBUTE) SHOULD RETURN TRUE.
 
-For other databases, DB engine specs can implement query cancelation via the `prepare_cancel_query` and `cancel_query` methods. Implementation of query cancelation is usually heavily dependent on the database, but the DB engine specs that support it can serve as an example.
+FOR OTHER DATABASES, DB ENGINE SPECS CAN IMPLEMENT QUERY CANCELATION VIA THE `prepare_cancel_query` AND `cancel_query` METHODS. IMPLEMENTATION OF QUERY CANCELATION IS USUALLY HEAVILY DEPENDENT ON THE DATABASE, BUT THE DB ENGINE SPECS THAT SUPPORT IT CAN SERVE AS AN EXAMPLE.
 
-### Get metrics on dataset creation
+### GET METRICS ON DATASET CREATION
 
-When a physical dataset is first created, the `get_metrics` class method is called on the table. The base implementation returns the `COUNT(*)` metric, but DB engine specs can override `get_metrics` to return other metrics. This method is useful for semantic layers that contain their own metrics definitions; when Superset connect to them it can automatically create those metrics when a dataset is added.
+WHEN A PHYSICAL DATASET IS FIRST CREATED, THE `get_metrics` CLASS METHOD IS CALLED ON THE TABLE. THE BASE IMPLEMENTATION RETURNS THE `COUNT(*)` METRIC, BUT DB ENGINE SPECS CAN OVERRIDE `get_metrics` TO RETURN OTHER METRICS. THIS METHOD IS USEFUL FOR SEMANTIC LAYERS THAT CONTAIN THEIR OWN METRICS DEFINITIONS; WHEN SUPERSET CONNECT TO THEM IT CAN AUTOMATICALLY CREATE THOSE METRICS WHEN A DATASET IS ADDED.
 
-This feature is still experimental, and ideally there would be a mechanism for calling it periodically or when a dataset is explored, in order to sync new metric definitions to the dataset.
+THIS FEATURE IS STILL EXPERIMENTAL, AND IDEALLY THERE WOULD BE A MECHANISM FOR CALLING IT PERIODICALLY OR WHEN A DATASET IS EXPLORED, IN ORDER TO SYNC NEW METRIC DEFINITIONS TO THE DATASET.
 
-### `WHERE` on latest partition
+### `WHERE` ON LATEST PARTITION
 
-In some databases, running `SELECT *` can be a **very expensive** operation, since the query might scan all partitions for a given table. Because of that, some DB engine specs implement the `where_latest_partition` method, which returns a modified SQLAlchemy query with an additional predicate that filters on the latest partition.
+IN SOME DATABASES, RUNNING `SELECT *` CAN BE A **VERY EXPENSIVE** OPERATION, SINCE THE QUERY MIGHT SCAN ALL PARTITIONS FOR A GIVEN TABLE. BECAUSE OF THAT, SOME DB ENGINE SPECS IMPLEMENT THE `where_latest_partition` METHOD, WHICH RETURNS A MODIFIED SQLALCHEMY QUERY WITH AN ADDITIONAL PREDICATE THAT FILTERS ON THE LATEST PARTITION.
 
-## Advanced features
+## ADVANCED FEATURES
 
-### Expand complex types
+### EXPAND COMPLEX TYPES
 
-Some databases will visually expand complex types (arrays and structures) when displaying results from queries. For example, the BigQuery UI is able to expand objects into columns and array into rows, so that this:
+SOME DATABASES WILL VISUALLY EXPAND COMPLEX TYPES (ARRAYS AND STRUCTURES) WHEN DISPLAYING RESULTS FROM QUERIES. FOR EXAMPLE, THE BIGQUERY UI IS ABLE TO EXPAND OBJECTS INTO COLUMNS AND ARRAY INTO ROWS, SO THAT THIS:
 
-|   array   |      struct      |
+|   ARRAY   |      STRUCT      |
 | --------- | ---------------- |
-| [1, 2, 3] | {a: one, b: two} |
+| [1, 2, 3] | {A: ONE, B: TWO} |
 
-Is shown as:
+IS SHOWN AS:
 
-| array |      struct      | struct.a | struct.b |
+| ARRAY |      STRUCT      | STRUCT.A | STRUCT.B |
 | ----- | ---------------- | -------- | -------- |
-| 1     | {a: one, b: two} | one      | two      |
+| 1     | {A: ONE, B: TWO} | ONE      | TWO      |
 | 2     |                  |          |          |
 | 3     |                  |          |          |
 
-A similar behavior has been implemented in Superset for Presto, and can be enabled via the `PRESTO_EXPAND_DATA` feature flag. To implement this feature a DB engine spec should implement the `expand_data` method, which takes the columns and rows and returns modified columns and rows.
+A SIMILAR BEHAVIOR HAS BEEN IMPLEMENTED IN SUPERSET FOR PRESTO, AND CAN BE ENABLED VIA THE `PRESTO_EXPAND_DATA` FEATURE FLAG. TO IMPLEMENT THIS FEATURE A DB ENGINE SPEC SHOULD IMPLEMENT THE `expand_data` METHOD, WHICH TAKES THE COLUMNS AND ROWS AND RETURNS MODIFIED COLUMNS AND ROWS.
 
-Note that despite being implemented only for Presto, this behavior has nothing that is Presto specific, and in theory could be implemented in a generic way for all database without requiring custom DB engine spec implementations (that is, the Presto `expand_data` method could be moved to the base class, after being cleaned up, and we could then enable the feature per DB in the configuration).
+NOTE THAT DESPITE BEING IMPLEMENTED ONLY FOR PRESTO, THIS BEHAVIOR HAS NOTHING THAT IS PRESTO SPECIFIC, AND IN THEORY COULD BE IMPLEMENTED IN A GENERIC WAY FOR ALL DATABASE WITHOUT REQUIRING CUSTOM DB ENGINE SPEC IMPLEMENTATIONS (THAT IS, THE PRESTO `expand_data` METHOD COULD BE MOVED TO THE BASE CLASS, AFTER BEING CLEANED UP, AND WE COULD THEN ENABLE THE FEATURE PER DB IN THE CONFIGURATION).
 
-### Query cost estimation
+### QUERY COST ESTIMATION
 
-Some databases allow uses to estimate the cost of running a query before running it. This is done via the `estimate_query_cost` method in DB engine specs, which receives the SQL and returns a list of "costs". The definition of what "cost" is varies from database to database (in the few that support this functionality), and it can be formatted via the `query_cost_formatter`.
+SOME DATABASES ALLOW USES TO ESTIMATE THE COST OF RUNNING A QUERY BEFORE RUNNING IT. THIS IS DONE VIA THE `estimate_query_cost` METHOD IN DB ENGINE SPECS, WHICH RECEIVES THE SQL AND RETURNS A LIST OF "COSTS". THE DEFINITION OF WHAT "COST" IS VARIES FROM DATABASE TO DATABASE (IN THE FEW THAT SUPPORT THIS FUNCTIONALITY), AND IT CAN BE FORMATTED VIA THE `query_cost_formatter`.
 
-The `query_cost_formatter` can be overridden with an arbitrary function via the config `QUERY_COST_FORMATTERS_BY_ENGINE`. This allows custom deployments of Superset to format the results in different ways. For example, at some point in Lyft the cost for running Presto queries would also show the carbon footprint (in trees).
+THE `query_cost_formatter` CAN BE OVERRIDDEN WITH AN ARBITRARY FUNCTION VIA THE CONFIG `QUERY_COST_FORMATTERS_BY_ENGINE`. THIS ALLOWS CUSTOM DEPLOYMENTS OF SUPERSET TO FORMAT THE RESULTS IN DIFFERENT WAYS. FOR EXAMPLE, AT SOME POINT IN LYFT THE COST FOR RUNNING PRESTO QUERIES WOULD ALSO SHOW THE CARBON FOOTPRINT (IN TREES).
 
-### SQL validation
+### SQL VALIDATION
 
-A few databases support validating the syntax of the SQL as the user is typing it, indicating in SQL Lab any errors. This is usually done using an `EXPLAIN` query and, because it gets called every few seconds as the user types, it's important that the database returns the result quickly.
+A FEW DATABASES SUPPORT VALIDATING THE SYNTAX OF THE SQL AS THE USER IS TYPING IT, INDICATING IN SQL LAB ANY ERRORS. THIS IS USUALLY DONE USING AN `EXPLAIN` QUERY AND, BECAUSE IT GETS CALLED EVERY FEW SECONDS AS THE USER TYPES, IT'S IMPORTANT THAT THE DATABASE RETURNS THE RESULT QUICKLY.
 
-This is implemented for Presto, via a custom class in `superset/sql_validators` that is enabled by default in the configuration. A SQLite-family validator also ships there, but it is opt-in: it requires the optional `syntaqlite` package and an explicit `SQL_VALIDATORS_BY_ENGINE` entry, so the tables above report it as unsupported. Implementing this as custom classes, instead of a `validate_sql` method in the DB engine spec offers no advantages, and ideally in the future we should move the logic to DB engine specs.
+THIS IS IMPLEMENTED FOR PRESTO, VIA A CUSTOM CLASS IN `superset/sql_validators` THAT IS ENABLED BY DEFAULT IN THE CONFIGURATION. A SQLITE-FAMILY VALIDATOR ALSO SHIPS THERE, BUT IT IS OPT-IN: IT REQUIRES THE OPTIONAL `syntaqlite` PACKAGE AND AN EXPLICIT `SQL_VALIDATORS_BY_ENGINE` ENTRY, SO THE TABLES ABOVE REPORT IT AS UNSUPPORTED. IMPLEMENTING THIS AS CUSTOM CLASSES, INSTEAD OF A `validate_sql` METHOD IN THE DB ENGINE SPEC OFFERS NO ADVANTAGES, AND IDEALLY IN THE FUTURE WE SHOULD MOVE THE LOGIC TO DB ENGINE SPECS.
 
-## Testing DB engine specs
+## TESTING DB ENGINE SPECS
 
-Superset has a command to test the connection to a given database, as well as checking if the SQLAlchemy dialect implements all necessary methods used by Superset, and checking which features are supported by the DB engine spec (if one exists). To run the tool just call the `test-db` command with the SQLAlchemy URI to be tested:
+SUPERSET HAS A COMMAND TO TEST THE CONNECTION TO A GIVEN DATABASE, AS WELL AS CHECKING IF THE SQLALCHEMY DIALECT IMPLEMENTS ALL NECESSARY METHODS USED BY SUPERSET, AND CHECKING WHICH FEATURES ARE SUPPORTED BY THE DB ENGINE SPEC (IF ONE EXISTS). TO RUN THE TOOL JUST CALL THE `test-db` COMMAND WITH THE SQLALCHEMY URI TO BE TESTED:
 
 ```bash
 superset test-db sqlite://
 ```
 
-If the connection needs additional arguments they can be passed when the command runs.
+IF THE CONNECTION NEEDS ADDITIONAL ARGUMENTS THEY CAN BE PASSED WHEN THE COMMAND RUNS.
