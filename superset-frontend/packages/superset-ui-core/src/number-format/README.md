@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/CORE/NUMBER-FORMAT
+## <u>@SUPERSET-UI/CORE/NUMBER-FORMAT</u>
 
 DESCRIPTION
 
-#### EXAMPLE USAGE
+#### <u>EXAMPLE USAGE</u>
 
 FUNCTIONS `getNumberFormatter` AND `formatNumber` SHOULD BE USED INSTEAD OF CALLING `d3.format`
 DIRECTLY.
@@ -75,7 +75,7 @@ console.log(formatNumber('my_duration_format', 95500))
 // prints '0:01:35'
 ```
 
-#### API
+#### <u>API</u>
 
 `fn(args)`
 

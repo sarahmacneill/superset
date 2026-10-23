@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# APACHE-SUPERSET-CORE
+# <u>APACHE-SUPERSET-CORE</u>
 
 [![PYPI VERSION](https://badge.fury.io/py/apache-superset-core.svg)](https://badge.fury.io/py/apache-superset-core)
 [![LICENSE](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -25,13 +25,13 @@ under the License.
 
 THE OFFICIAL CORE PACKAGE FOR BUILDING APACHE SUPERSET BACKEND EXTENSIONS AND INTEGRATIONS. THIS PACKAGE PROVIDES ESSENTIAL BUILDING BLOCKS INCLUDING BASE CLASSES, API UTILITIES, TYPE DEFINITIONS, AND DECORATORS FOR BOTH THE HOST APPLICATION AND EXTENSIONS.
 
-## 📦 INSTALLATION
+## <u>📦 INSTALLATION</u>
 
 ```bash
 pip install apache-superset-core
 ```
 
-## 🏗️ PACKAGE STRUCTURE
+## <u>🏗️ PACKAGE STRUCTURE</u>
 
 ```
 src/superset_core/
@@ -44,9 +44,9 @@ src/superset_core/
 └── __init__.py
 ```
 
-## 🚀 QUICK START
+## <u>🚀 QUICK START</u>
 
-### BASIC EXTENSION API
+### <u>BASIC EXTENSION API</u>
 
 ```python
 from flask_appbuilder.api import expose, permission_name, protect, safe
@@ -65,7 +65,7 @@ class DatasetReferencesAPI(RestApi):
         # ... endpoint implementation
 ```
 
-### BACKGROUND TASKS
+### <u>BACKGROUND TASKS</u>
 
 ```python
 from superset_core.tasks.decorators import task
@@ -76,7 +76,7 @@ def generate_report(chart_id: int) -> None:
     # ... task implementation
 ```
 
-### MCP TOOLS
+### <u>MCP TOOLS</u>
 
 ```python
 from superset_core.mcp.decorators import tool
@@ -86,7 +86,7 @@ def my_extension_tool(param: str) -> dict:
     # ... tool implementation
 ```
 
-### MCP PROMPTS
+### <u>MCP PROMPTS</u>
 
 ```python
 from superset_core.mcp.decorators import prompt
@@ -96,11 +96,11 @@ async def my_prompt_handler(ctx: Context) -> str:
     # ... prompt implementation
 ```
 
-## 📄 LICENSE
+## <u>📄 LICENSE</u>
 
 LICENSED UNDER THE APACHE LICENSE, VERSION 2.0. SEE [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) FOR DETAILS.
 
-## 🔗 LINKS
+## <u>🔗 LINKS</u>
 
 - [COMMUNITY](https://superset.apache.org/community/)
 - [GITHUB REPOSITORY](https://github.com/apache/superset)

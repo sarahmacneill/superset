@@ -17,15 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# RELEASE NOTES FOR SUPERSET 0.38
+# <u>RELEASE NOTES FOR SUPERSET 0.38</u>
 
-## WHAT'S NEW
+## <u>WHAT'S NEW</u>
 - [NEW FEATURES](#new-features)
 - [BUGFIXES](#bugfixes)
 - [BREAKING CHANGES](#breaking-changes)
 - [COMPLETE CHANGELOG](#complete-changelog)
 
-### NEW FEATURES
+### <u>NEW FEATURES</u>
 **DATABASES, DATASETS, QUERIES**
 
 [SIP-40] PROPOSAL FOR CUSTOM ERROR MESSAGES #9194 ([SIP](https://github.com/apache/superset/issues/9194))
@@ -192,7 +192,7 @@ OTHER
 - FEAT: GETTING FANCIER WITH STORYBOOK  (#[10647](https://github.com/apache/superset/pull/10647))
 
 
-### BUGFIXES
+### <u>BUGFIXES</u>
 
 - FIX(PERMISSIONS): ALPHA ROLE HAS ALL FULL FEATURES  (#[10241](https://github.com/apache/superset/pull/10241))
 - FIX: BROKEN GLYPHICONS USED IN REACT-JSON-SCHEMA  (#[10267](https://github.com/apache/superset/pull/10267))
@@ -311,8 +311,8 @@ OTHER
 - FIX: PRIOR NPM FONT SOURCE HAD A GLITCH  (#[11724](https://github.com/apache/superset/pull/11724))
 
 
-## BREAKING CHANGES
+## <u>BREAKING CHANGES</u>
 [LIST OF BACKWARDS INCOMPATIBLE CHANGES](https://github.com/apache/superset/blob/master/UPDATING.md#0380)
 
-## COMPLETE CHANGELOG
+## <u>COMPLETE CHANGELOG</u>
 FOR THE COMPLETE CHANGELOG PLEASE SEE [APACHE/SUPERSET/CHANGELOG.MD](https://github.com/apache/superset/blob/master/CHANGELOG.md)

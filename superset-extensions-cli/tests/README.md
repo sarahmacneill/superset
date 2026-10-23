@@ -17,75 +17,75 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# LICENSED TO THE APACHE SOFTWARE FOUNDATION (ASF) UNDER ONE
+# <u>LICENSED TO THE APACHE SOFTWARE FOUNDATION (ASF) UNDER ONE</u>
 
-# OR MORE CONTRIBUTOR LICENSE AGREEMENTS. SEE THE NOTICE FILE
+# <u>OR MORE CONTRIBUTOR LICENSE AGREEMENTS. SEE THE NOTICE FILE</u>
 
-# DISTRIBUTED WITH THIS WORK FOR ADDITIONAL INFORMATION
+# <u>DISTRIBUTED WITH THIS WORK FOR ADDITIONAL INFORMATION</u>
 
-# REGARDING COPYRIGHT OWNERSHIP. THE ASF LICENSES THIS FILE
+# <u>REGARDING COPYRIGHT OWNERSHIP. THE ASF LICENSES THIS FILE</u>
 
-# TO YOU UNDER THE APACHE LICENSE, VERSION 2.0 (THE
+# <u>TO YOU UNDER THE APACHE LICENSE, VERSION 2.0 (THE</u>
 
-# "LICENSE"); YOU MAY NOT USE THIS FILE EXCEPT IN COMPLIANCE
+# <u>"LICENSE"); YOU MAY NOT USE THIS FILE EXCEPT IN COMPLIANCE</u>
 
-# WITH THE LICENSE. YOU MAY OBTAIN A COPY OF THE LICENSE AT
-
-#
-
-# http://www.apache.org/licenses/LICENSE-2.0
+# <u>WITH THE LICENSE. YOU MAY OBTAIN A COPY OF THE LICENSE AT</u>
 
 #
 
-# UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING,
+# <u>http://www.apache.org/licenses/LICENSE-2.0</u>
 
-# SOFTWARE DISTRIBUTED UNDER THE LICENSE IS DISTRIBUTED ON AN
+#
 
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# <u>UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING,</u>
 
-# KIND, EITHER EXPRESS OR IMPLIED. SEE THE LICENSE FOR THE
+# <u>SOFTWARE DISTRIBUTED UNDER THE LICENSE IS DISTRIBUTED ON AN</u>
 
-# SPECIFIC LANGUAGE GOVERNING PERMISSIONS AND LIMITATIONS
+# <u>"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</u>
 
-# UNDER THE LICENSE.
+# <u>KIND, EITHER EXPRESS OR IMPLIED. SEE THE LICENSE FOR THE</u>
 
-# SUPERSET CLI TESTS
+# <u>SPECIFIC LANGUAGE GOVERNING PERMISSIONS AND LIMITATIONS</u>
+
+# <u>UNDER THE LICENSE.</u>
+
+# <u>SUPERSET CLI TESTS</u>
 
 THIS DIRECTORY CONTAINS TESTS FOR THE SUPERSET-EXTENSIONS-CLI PACKAGE, FOCUSING ON THE `init` COMMAND AND OTHER CLI FUNCTIONALITY.
 
-## TEST STRUCTURE
+## <u>TEST STRUCTURE</u>
 
-### CORE TEST FILES
+### <u>CORE TEST FILES</u>
 
 - **`test_cli_init.py`**: COMPREHENSIVE TESTS FOR THE `init` COMMAND SCAFFOLDER
 - **`test_templates.py`**: UNIT TESTS FOR JINJA2 TEMPLATE RENDERING
 - **`conftest.py`**: PYTEST FIXTURES AND CONFIGURATION
 - **`utils.py`**: REUSABLE TESTING UTILITIES AND HELPERS
 
-### TEST CATEGORIES
+### <u>TEST CATEGORIES</u>
 
-#### UNIT TESTS (`@pytest.mark.unit`)
+#### <u>UNIT TESTS (`@pytest.mark.unit`)</u>
 
 - TEMPLATE RENDERING FUNCTIONALITY
 - INDIVIDUAL FUNCTION TESTING
 - INPUT VALIDATION LOGIC
 
-#### INTEGRATION TESTS (`@pytest.mark.integration`)
+#### <u>INTEGRATION TESTS (`@pytest.mark.integration`)</u>
 
 - COMPLETE CLI COMMAND WORKFLOWS
 - END-TO-END SCAFFOLDING PROCESSES
 
-#### CLI TESTS (`@pytest.mark.cli`)
+#### <u>CLI TESTS (`@pytest.mark.cli`)</u>
 
 - CLICK COMMAND INTERFACE TESTING
 - USER INPUT SIMULATION
 - COMMAND OUTPUT VERIFICATION
 
-## TESTING APPROACH FOR SCAFFOLDERS/GENERATORS
+## <u>TESTING APPROACH FOR SCAFFOLDERS/GENERATORS</u>
 
 THE TESTS USE THESE PATTERNS FOR TESTING CODE GENERATORS:
 
-### 1. ISOLATED ENVIRONMENT TESTING
+### <u>1. ISOLATED ENVIRONMENT TESTING</u>
 
 ```python
 @pytest.fixture
@@ -93,7 +93,7 @@ def isolated_filesystem(tmp_path):
     """Provide isolated temporary directory for each test."""
 ```
 
-### 2. CLICK CLI TESTING FRAMEWORK
+### <u>2. CLICK CLI TESTING FRAMEWORK</u>
 
 ```python
 from click.testing import CliRunner
@@ -101,21 +101,21 @@ runner = CliRunner()
 result = runner.invoke(app, ["init"], input="...")
 ```
 
-### 3. FILE STRUCTURE VALIDATION
+### <u>3. FILE STRUCTURE VALIDATION</u>
 
 ```python
 from tests.utils import assert_file_structure, assert_directory_structure
 assert_file_structure(extension_path, expected_files)
 ```
 
-### 4. TEMPLATE CONTENT VERIFICATION
+### <u>4. TEMPLATE CONTENT VERIFICATION</u>
 
 ```python
 from tests.utils import assert_json_content
 assert_json_content(json_path, {"name": "expected_value"})
 ```
 
-### 5. PARAMETRIZED TESTING
+### <u>5. PARAMETRIZED TESTING</u>
 
 ```python
 @pytest.mark.parametrize("include_frontend,include_backend", [
@@ -123,9 +123,9 @@ assert_json_content(json_path, {"name": "expected_value"})
 ])
 ```
 
-## KEY TEST CASES
+## <u>KEY TEST CASES</u>
 
-### INIT COMMAND TESTS
+### <u>INIT COMMAND TESTS</u>
 
 - ✅ CREATES EXTENSION WITH BOTH FRONTEND AND BACKEND
 - ✅ CREATES FRONTEND-ONLY EXTENSIONS
@@ -136,7 +136,7 @@ assert_json_content(json_path, {"name": "expected_value"})
 - ✅ TESTS CUSTOM VERSION AND LICENSE INPUTS
 - ✅ INTEGRATION TEST FOR COMPLETE WORKFLOW
 
-### TEMPLATE RENDERING TESTS
+### <u>TEMPLATE RENDERING TESTS</u>
 
 - ✅ EXTENSION.JSON TEMPLATE WITH VARIOUS CONFIGURATIONS
 - ✅ PACKAGE.JSON TEMPLATE RENDERING
@@ -145,15 +145,15 @@ assert_json_content(json_path, {"name": "expected_value"})
 - ✅ JSON VALIDITY VERIFICATION
 - ✅ WHITESPACE AND FORMATTING CHECKS
 
-## RUNNING TESTS
+## <u>RUNNING TESTS</u>
 
-### ALL TESTS
+### <u>ALL TESTS</u>
 
 ```bash
 pytest
 ```
 
-### SPECIFIC TEST CATEGORIES
+### <u>SPECIFIC TEST CATEGORIES</u>
 
 ```bash
 pytest -m unit          # Unit tests only
@@ -161,31 +161,31 @@ pytest -m integration   # Integration tests only
 pytest -m cli           # CLI tests only
 ```
 
-### WITH COVERAGE
+### <u>WITH COVERAGE</u>
 
 ```bash
 pytest --cov=superset_extensions_cli --cov-report=html
 ```
 
-### SPECIFIC TEST FILES
+### <u>SPECIFIC TEST FILES</u>
 
 ```bash
 pytest tests/test_cli_init.py
 pytest tests/test_templates.py
 ```
 
-## REUSABLE TESTING INFRASTRUCTURE
+## <u>REUSABLE TESTING INFRASTRUCTURE</u>
 
 THE TESTING INFRASTRUCTURE IS DESIGNED FOR REUSABILITY:
 
-### TEST UTILITIES (`tests/utils.py`)
+### <u>TEST UTILITIES (`tests/utils.py`)</u>
 
 - `assert_file_exists()` / `assert_directory_exists()`
 - `assert_file_structure()` / `assert_directory_structure()`
 - `assert_json_content()` / `load_json_file()`
 - `create_test_extension_structure()` - HELPER FOR EXPECTED STRUCTURES
 
-### FIXTURES (`tests/conftest.py`)
+### <u>FIXTURES (`tests/conftest.py`)</u>
 
 - `cli_runner` - CLICK CLI RUNNER
 - `isolated_filesystem` - TEMPORARY DIRECTORY WITH CLEANUP
@@ -194,7 +194,7 @@ THE TESTING INFRASTRUCTURE IS DESIGNED FOR REUSABILITY:
 
 THIS INFRASTRUCTURE CAN BE EASILY EXTENDED FOR TESTING ADDITIONAL CLI COMMANDS LIKE `build`, `bundle`, `dev`, AND `validate`.
 
-## BEST PRACTICES IMPLEMENTED
+## <u>BEST PRACTICES IMPLEMENTED</u>
 
 1. **ISOLATION**: EACH TEST RUNS IN ITS OWN TEMPORARY DIRECTORY
 2. **COMPREHENSIVE COVERAGE**: TESTS COVER HAPPY PATHS, EDGE CASES, AND ERROR CONDITIONS

@@ -17,26 +17,26 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/CHART-CONTROLS
+## <u>@SUPERSET-UI/CHART-CONTROLS</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/chart-controls.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/chart-controls)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fchart-controls)](https://libraries.io/npm/@superset-ui%2Fchart-controls)
 
 DESCRIPTION
 
-#### EXAMPLE USAGE
+#### <u>EXAMPLE USAGE</u>
 
 ```js
 import { xxx } from '@superset-ui/chart-controls';
 ```
 
-#### API
+#### <u>API</u>
 
 `fn(args)`
 
 - DO SOMETHING
 
-### DEVELOPMENT
+### <u>DEVELOPMENT</u>
 
 `@data-ui/build-config` IS USED TO MANAGE THE BUILD CONFIGURATION FOR THIS PACKAGE INCLUDING BABEL
 BUILDS, JEST TESTING, ESLINT, AND PRETTIER.

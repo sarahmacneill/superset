@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/PLUGIN-CHART-PAIRED-T-TEST
+## <u>@SUPERSET-UI/PLUGIN-CHART-PAIRED-T-TEST</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-paired-t-test.svg?style=flat)](hhttps://www.npmjs.com/package/@superset-ui/plugin-chart-paired-t-test)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-paired-t-test?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-paired-t-test)
 
 THIS PLUGIN PROVIDES PAIRED T TEST FOR SUPERSET.
 
-### USAGE
+### <u>USAGE</u>
 
 CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
 LOOKUP THIS CHART THROUGHOUT THE APP.

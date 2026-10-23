@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/CORE/QUERY
+## <u>@SUPERSET-UI/CORE/QUERY</u>
 
 UTILITY TO MAKE API REQUESTS TO SUPERSET BACKEND.
 
-#### EXAMPLE USAGE
+#### <u>EXAMPLE USAGE</u>
 
 TODO
 
-#### API
+#### <u>API</u>
 
 TODO

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/CORE
+## <u>@SUPERSET-UI/CORE</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/core.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/core)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fcore?style=flat)](https://libraries.io/npm/@superset-ui%2Fcore)
@@ -38,7 +38,7 @@ KEY MODULES INCLUDE:
 > THEY NOW LIVE IN `@apache-superset/core`, IMPORTED FROM
 > `@apache-superset/core/translation`.
 
-#### EXAMPLE USAGE
+#### <u>EXAMPLE USAGE</u>
 
 ```js
 import { getNumberFormatter, makeApi } from '@superset-ui/core';
@@ -58,7 +58,7 @@ const fetchDashboards = makeApi({
 });
 ```
 
-### DEVELOPMENT
+### <u>DEVELOPMENT</u>
 
 `@data-ui/build-config` IS USED TO MANAGE THE BUILD CONFIGURATION FOR THIS PACKAGE
 INCLUDING BABEL BUILDS, JEST TESTING, ESLINT, AND PRETTIER.

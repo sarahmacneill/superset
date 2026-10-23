@@ -17,20 +17,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# @APACHE-SUPERSET/CORE
+# <u>@APACHE-SUPERSET/CORE</u>
 
 [![NPM VERSION](https://badge.fury.io/js/%40apache-superset%2Fcore.svg)](https://badge.fury.io/js/%40apache-superset%2Fcore)
 [![LICENSE](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 THE OFFICIAL CORE PACKAGE FOR BUILDING APACHE SUPERSET EXTENSIONS AND INTEGRATIONS. THIS PACKAGE PROVIDES ESSENTIAL BUILDING BLOCKS INCLUDING SHARED UI COMPONENTS, UTILITY FUNCTIONS, APIS, AND TYPE DEFINITIONS FOR BOTH THE HOST APPLICATION AND EXTENSIONS.
 
-## 📦 INSTALLATION
+## <u>📦 INSTALLATION</u>
 
 ```bash
 npm install @apache-superset/core
 ```
 
-## 🏗️ PACKAGE STRUCTURE
+## <u>🏗️ PACKAGE STRUCTURE</u>
 
 THE SOURCE IS ORGANIZED INTO FOCUSED NAMESPACES, EACH IN ITS OWN DIRECTORY:
 
@@ -53,11 +53,11 @@ src/
 └── index.ts
 ```
 
-## 🚀 QUICK START
+## <u>🚀 QUICK START</u>
 
 FRONTEND CONTRIBUTIONS ARE REGISTERED AS MODULE-LEVEL SIDE EFFECTS FROM YOUR EXTENSION'S ENTRY POINT.
 
-### VIEWS
+### <u>VIEWS</u>
 
 ADD CUSTOM PANELS OR UI COMPONENTS AT SPECIFIC LOCATIONS IN THE APPLICATION:
 
@@ -72,7 +72,7 @@ views.registerView(
 );
 ```
 
-### COMMANDS
+### <u>COMMANDS</u>
 
 DEFINE NAMED ACTIONS THAT CAN BE TRIGGERED FROM MENUS, KEYBOARD SHORTCUTS, OR CODE:
 
@@ -92,7 +92,7 @@ commands.registerCommand(
 );
 ```
 
-### MENUS
+### <u>MENUS</u>
 
 ATTACH COMMANDS TO PRIMARY, SECONDARY, OR CONTEXT MENUS AT A GIVEN LOCATION:
 
@@ -106,7 +106,7 @@ menus.registerMenuItem(
 );
 ```
 
-### EDITORS
+### <u>EDITORS</u>
 
 REPLACE THE DEFAULT TEXT EDITOR FOR ONE OR MORE LANGUAGES:
 
@@ -124,11 +124,11 @@ editors.registerEditor(
 );
 ```
 
-## 📄 LICENSE
+## <u>📄 LICENSE</u>
 
 LICENSED UNDER THE APACHE LICENSE, VERSION 2.0. SEE [LICENSE](https://github.com/apache/superset/blob/master/LICENSE.txt) FOR DETAILS.
 
-## 🔗 LINKS
+## <u>🔗 LINKS</u>
 
 - [COMMUNITY](https://superset.apache.org/community/)
 - [GITHUB REPOSITORY](https://github.com/apache/superset)

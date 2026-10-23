@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/PLUGIN-CHART-WORLD-MAP
+## <u>@SUPERSET-UI/PLUGIN-CHART-WORLD-MAP</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-world-map.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-world-map)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-world-map?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-world-map)
 
 THIS PLUGIN PROVIDES WORLD MAP FOR SUPERSET.
 
-### USAGE
+### <u>USAGE</u>
 
 CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
 LOOKUP THIS CHART THROUGHOUT THE APP.
