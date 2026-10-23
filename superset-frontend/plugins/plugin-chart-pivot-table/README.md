@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/PLUGIN-CHART-PIVOT-TABLE
+## <u>@SUPERSET-UI/PLUGIN-CHART-PIVOT-TABLE</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-pivot-table.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-pivot-table)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-pivot-table?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-pivot-table)
@@ -27,7 +27,7 @@ THIS PLUGIN PROVIDES PIVOT TABLE FOR SUPERSET.
 IF YOU CHANGE THE LOGIC OF THIS PLUGIN, PLEASE UPDATE
 [`pivot_table`](https://github.com/apache/superset/blob/master/superset/charts/post_processing.py).
 
-### USAGE
+### <u>USAGE</u>
 
 CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
 LOOKUP THIS CHART THROUGHOUT THE APP.
@@ -54,7 +54,7 @@ FOR MORE DETAILS.
 />
 ```
 
-### FILE STRUCTURE GENERATED
+### <u>FILE STRUCTURE GENERATED</u>
 
 ```
 ├── package.json

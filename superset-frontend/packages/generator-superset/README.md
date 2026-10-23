@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# GENERATOR-SUPERSET
+# <u>GENERATOR-SUPERSET</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/generator-superset.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/generator-superset)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fgenerator-superset)](https://libraries.io/npm/@superset-ui%2Fgenerator-superset)
 
 > SCAFFOLDER FOR SUPERSET
 
-## INSTALLATION
+## <u>INSTALLATION</u>
 
 FIRST, INSTALL [YEOMAN](http://yeoman.io) AND `generator-superset` USING
 [NPM](https://www.npmjs.com/) (WE ASSUME YOU HAVE PRE-INSTALLED [NODE.JS](https://nodejs.org/)).
@@ -34,7 +34,7 @@ npm install -g yo
 npm install -g @superset-ui/generator-superset
 ```
 
-## USAGE
+## <u>USAGE</u>
 
 GENERATE A NEW PACKAGE OR VISUALIZATION PLUGIN:
 
@@ -44,7 +44,7 @@ cd /tmp/superset-plugin-chart-hello-world
 yo @superset-ui/superset
 ```
 
-## LICENSE
+## <u>LICENSE</u>
 
 APACHE-2.0
 

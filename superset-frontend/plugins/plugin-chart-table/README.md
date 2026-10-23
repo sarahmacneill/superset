@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/PLUGIN-CHART-TABLE
+## <u>@SUPERSET-UI/PLUGIN-CHART-TABLE</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-table.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-table)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-table?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-table)
 
 THIS PLUGIN PROVIDES TABLE CHART FOR SUPERSET.
 
-### USAGE
+### <u>USAGE</u>
 
 CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
 LOOKUP THIS CHART THROUGHOUT THE APP.

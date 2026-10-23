@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/CORE/TRANSLATION
+## <u>@SUPERSET-UI/CORE/TRANSLATION</u>
 
 `i18n` LOCALES AND TRANSLATION FOR SUPERSET.
 
-### SUPERSETTRANSLATION
+### <u>SUPERSETTRANSLATION</u>
 
-#### EXAMPLE USAGE
+#### <u>EXAMPLE USAGE</u>
 
 ```js
 import { configure, t, tn } from '@superset-ui/core';
@@ -36,7 +36,7 @@ console.log(t('text to be translated'));
 console.log(tn('singular text', 'plural text', value));
 ```
 
-#### API
+#### <u>API</u>
 
 `configure({ [languagePack] })`
 

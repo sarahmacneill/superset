@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/PLUGIN-CHART-PARTITION
+## <u>@SUPERSET-UI/PLUGIN-CHART-PARTITION</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-partition.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-partition)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-partition?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-partition)
 
 THIS PLUGIN PROVIDES PARTITION FOR SUPERSET.
 
-### USAGE
+### <u>USAGE</u>
 
 CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
 LOOKUP THIS CHART THROUGHOUT THE APP.

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# SUPERSET
+# <u>SUPERSET</u>
 
 [![LICENSE](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/license/apache-2-0)
 [![LATEST RELEASE ON GITHUB](https://img.shields.io/github/v/release/apache/superset?sort=semver)](https://github.com/apache/superset/releases/latest)
@@ -50,7 +50,7 @@ under the License.
 
 A MODERN, ENTERPRISE-READY BUSINESS INTELLIGENCE WEB APPLICATION.
 
-### DOCUMENTATION
+### <u>DOCUMENTATION</u>
 
 - **[USER GUIDE](https://superset.apache.org/user-docs/)** — FOR ANALYSTS AND BUSINESS USERS. EXPLORE DATA, BUILD CHARTS, CREATE DASHBOARDS, AND CONNECT DATABASES.
 - **[ADMINISTRATOR GUIDE](https://superset.apache.org/admin-docs/)** — INSTALL, CONFIGURE, AND OPERATE SUPERSET. COVERS SECURITY, SCALING, AND DATABASE DRIVERS.
@@ -63,7 +63,7 @@ A MODERN, ENTERPRISE-READY BUSINESS INTELLIGENCE WEB APPLICATION.
 [**RESOURCES**](#resources) |
 [**ORGANIZATIONS USING SUPERSET**](https://superset.apache.org/inTheWild)
 
-## WHY SUPERSET?
+## <u>WHY SUPERSET?</u>
 
 SUPERSET IS A MODERN DATA EXPLORATION AND DATA VISUALIZATION PLATFORM. SUPERSET CAN REPLACE OR AUGMENT PROPRIETARY BUSINESS INTELLIGENCE TOOLS FOR MANY TEAMS. SUPERSET INTEGRATES WELL WITH A VARIETY OF DATA SOURCES.
 
@@ -79,7 +79,7 @@ SUPERSET PROVIDES:
 - AN **API** FOR PROGRAMMATIC CUSTOMIZATION
 - A **CLOUD-NATIVE ARCHITECTURE** DESIGNED FROM THE GROUND UP FOR SCALE
 
-## SCREENSHOTS & GIFS
+## <u>SCREENSHOTS & GIFS</u>
 
 **VIDEO OVERVIEW**
 
@@ -105,7 +105,7 @@ SUPERSET PROVIDES:
 
 <kbd><img title="SQL Lab" src="https://superset.apache.org/img/screenshots/sql_lab.jpg"/></kbd><br/>
 
-## SUPPORTED DATABASES
+## <u>SUPPORTED DATABASES</u>
 
 SUPERSET CAN QUERY DATA FROM ANY SQL-SPEAKING DATASTORE OR DATA ENGINE (PRESTO, TRINO, ATHENA, [AND MORE](https://superset.apache.org/docs/databases)) THAT HAS A PYTHON DB-API DRIVER AND A SQLALCHEMY DIALECT.
 
@@ -181,11 +181,11 @@ HERE ARE SOME OF THE MAJOR DATABASE SOLUTIONS THAT ARE SUPPORTED:
 
 WANT TO ADD SUPPORT FOR YOUR DATASTORE OR DATA ENGINE? READ MORE [HERE](https://superset.apache.org/docs/frequently-asked-questions#does-superset-work-with-insert-database-engine-here) ABOUT THE TECHNICAL REQUIREMENTS.
 
-## INSTALLATION AND CONFIGURATION
+## <u>INSTALLATION AND CONFIGURATION</u>
 
 TRY OUT SUPERSET'S [QUICKSTART](https://superset.apache.org/docs/quickstart/) GUIDE OR LEARN ABOUT [THE OPTIONS FOR PRODUCTION DEPLOYMENTS](https://superset.apache.org/docs/installation/architecture/).
 
-## GET INVOLVED
+## <u>GET INVOLVED</u>
 
 - ASK AND ANSWER QUESTIONS ON [STACKOVERFLOW](https://stackoverflow.com/questions/tagged/apache-superset) USING THE **APACHE-SUPERSET** TAG
 - [JOIN OUR COMMUNITY'S SLACK](https://bit.ly/join-superset-slack)
@@ -199,14 +199,14 @@ TRY OUT SUPERSET'S [QUICKSTART](https://superset.apache.org/docs/quickstart/) GU
 - IF YOU WANT TO HELP TROUBLESHOOT GITHUB ISSUES INVOLVING THE NUMEROUS DATABASE DRIVERS THAT SUPERSET SUPPORTS, PLEASE CONSIDER ADDING YOUR NAME AND THE DATABASES YOU HAVE ACCESS TO ON THE [SUPERSET DATABASE FAMILIARITY ROLODEX](https://docs.google.com/spreadsheets/d/1U1qxiLvOX0kBTUGME1AHHi6Ywel6ECF8xk_Qy-V9R8c/edit#gid=0)
 - JOIN SUPERSET'S TOWN HALL AND [OPERATIONAL MODEL](https://preset.io/blog/the-superset-operational-model-wants-you/) RECURRING MEETINGS. MEETING INFO IS AVAILABLE ON THE [SUPERSET COMMUNITY CALENDAR](https://superset.apache.org/community)
 
-## CONTRIBUTOR GUIDE
+## <u>CONTRIBUTOR GUIDE</u>
 
 INTERESTED IN CONTRIBUTING? CHECK OUT OUR
 [DEVELOPER GUIDE](https://superset.apache.org/developer-docs/)
 TO FIND RESOURCES AROUND CONTRIBUTING ALONG WITH A DETAILED GUIDE ON
 HOW TO SET UP A DEVELOPMENT ENVIRONMENT.
 
-## RESOURCES
+## <u>RESOURCES</u>
 
 - [SUPERSET "IN THE WILD"](https://superset.apache.org/inTheWild) - SEE WHO'S USING SUPERSET, AND [ADD YOUR ORGANIZATION](https://github.com/apache/superset/edit/master/RESOURCES/INTHEWILD.yaml) TO THE LIST!
 - [FEATURE FLAGS](https://superset.apache.org/docs/configuration/feature-flags) - THE STATUS OF SUPERSET'S FEATURE FLAGS.

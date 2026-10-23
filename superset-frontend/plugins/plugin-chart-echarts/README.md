@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/PLUGIN-CHART-ECHARTS
+## <u>@SUPERSET-UI/PLUGIN-CHART-ECHARTS</u>
 
 [![VERSION](https://img.shields.io/npm/v/@superset-ui/plugin-chart-echarts.svg?style=flat)](https://www.npmjs.com/package/@superset-ui/plugin-chart-echarts)
 [![LIBRARIES.IO](https://img.shields.io/librariesio/release/npm/%40superset-ui%2Fplugin-chart-echarts?style=flat)](https://libraries.io/npm/@superset-ui%2Fplugin-chart-echarts)
@@ -27,7 +27,7 @@ THIS PLUGIN PROVIDES ECHARTS VIZ PLUGINS FOR SUPERSET:
 - TIMESERIES CHART (COMBINED LINE, AREA BAR WITH SUPPORT FOR PREDICTIVE ANALYTICS)
 - PIE CHART
 
-### USAGE
+### <u>USAGE</u>
 
 CONFIGURE `key`, WHICH CAN BE ANY `string`, AND REGISTER THE PLUGIN. THIS `key` WILL BE USED TO
 LOOKUP THIS CHART THROUGHOUT THE APP.

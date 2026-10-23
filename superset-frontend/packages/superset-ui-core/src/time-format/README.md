@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/CORE/TIME-FORMAT
+## <u>@SUPERSET-UI/CORE/TIME-FORMAT</u>
 
 DESCRIPTION
 
-#### EXAMPLE USAGE
+#### <u>EXAMPLE USAGE</u>
 
 ```js
 import { getTimeFormatter } from '@superset-ui/core';
@@ -61,7 +61,7 @@ TimeFormats.DATABASE_DATETIME; // '%Y-%m-%d %H:%M:%S'
 TimeFormats.US_DATE; // '%m/%d/%Y'
 ```
 
-#### API
+#### <u>API</u>
 
 `fn(args)`
 

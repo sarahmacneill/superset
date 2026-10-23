@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## @SUPERSET-UI/CORE/TIME-COMPARISON
+## <u>@SUPERSET-UI/CORE/TIME-COMPARISON</u>
 
 THIS IS A COLLECTION OF METHODS USED TO SUPPORT TIME COMPARISON IN CHARTS.
 
-#### EXAMPLE USAGE
+#### <u>EXAMPLE USAGE</u>
 
 ```js
 import { getComparisonTimeRangeInfo } from '@superset-ui/core';
@@ -40,7 +40,7 @@ ComparisonTimeRangeType.Custom; // 'c'
 ComparisonTimeRangeType.InheritRange; // 'r'
 ```
 
-#### API
+#### <u>API</u>
 
 `fn(args)`
 
